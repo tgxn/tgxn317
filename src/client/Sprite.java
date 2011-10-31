@@ -85,10 +85,9 @@ public final class Sprite extends DrawingArea {
         }
     }
 
-    public Sprite(Class44 class44, String s, int i) {
-
-        Stream class30_sub2_sub2 = new Stream(class44.method571((new StringBuilder()).append(s).append(".dat").toString(), ((byte[]) (null))));
-        Stream class30_sub2_sub2_1 = new Stream(class44.method571("index.dat", ((byte[]) (null))));
+    public Sprite(StreamLoader class44, String s, int i) {
+        Stream class30_sub2_sub2 = new Stream(class44.getDataForName((new StringBuilder()).append(s).append(".dat").toString()));
+        Stream class30_sub2_sub2_1 = new Stream(class44.getDataForName("index.dat"));
         class30_sub2_sub2_1.currentOffset = class30_sub2_sub2.readUnsignedWord();
         maxWidth = class30_sub2_sub2_1.readUnsignedWord();
         maxHeight = class30_sub2_sub2_1.readUnsignedWord();

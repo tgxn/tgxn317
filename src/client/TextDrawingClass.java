@@ -22,7 +22,7 @@ public final class TextDrawingClass extends DrawingArea {
     Random aRandom1498;
     boolean aBoolean1499;
     
-    public TextDrawingClass(boolean flag, String s, Class44 class44) {
+    public TextDrawingClass(boolean flag, String s, StreamLoader class44) {
         aBoolean1484 = false;
         anInt1485 = 445;
         anInt1486 = -471;
@@ -38,8 +38,8 @@ public final class TextDrawingClass extends DrawingArea {
         anIntArray1496 = new int[256];
         aRandom1498 = new Random();
         aBoolean1499 = false;
-        Stream class30_sub2_sub2 = new Stream(class44.method571(s + ".dat", null));
-        Stream class30_sub2_sub2_1 = new Stream(class44.method571("index.dat", null));
+        Stream class30_sub2_sub2 = new Stream(class44.getDataForName(s + ".dat"));
+        Stream class30_sub2_sub2_1 = new Stream(class44.getDataForName("index.dat"));
         class30_sub2_sub2_1.currentOffset = class30_sub2_sub2.readUnsignedWord() + 4;
         int k = class30_sub2_sub2_1.readUnsignedByte();
         if (k > 0) {

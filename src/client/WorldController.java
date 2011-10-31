@@ -333,15 +333,15 @@ public class WorldController {
         if (class30_sub2_sub4 == null) {
             return;
         }
-        Class49 class49 = new Class49();
-        class49.aClass30_Sub2_Sub4_814 = class30_sub2_sub4;
+        Object3 class49 = new Object3();
+        class49.animable = class30_sub2_sub4;
         class49.anInt812 = j1 * 128 + 64;
         class49.anInt813 = k * 128 + 64;
         if (l <= 0) {
             aBoolean435 = !aBoolean435;
         }
         class49.anInt811 = j;
-        class49.anInt815 = i1;
+        class49.uid = i1;
         class49.aByte816 = byte0;
         if (groundArray[i][j1][k] == null) {
             groundArray[i][j1][k] = new Ground(i, j1, k);
@@ -734,7 +734,7 @@ public class WorldController {
         return null;
     }
 
-    public Class49 method299(int i, int j, int k, int l) {
+    public Object3 method299(int i, int j, int k, int l) {
         Ground class30_sub3 = groundArray[k][j][i];
         if (l != 0) {
             for (int i1 = 1; i1 > 0; i1++);
@@ -787,7 +787,7 @@ public class WorldController {
         if (class30_sub3 == null || class30_sub3.obj3 == null) {
             return 0;
         } else {
-            return class30_sub3.obj3.anInt815;
+            return class30_sub3.obj3.uid;
         }
     }
 
@@ -802,7 +802,7 @@ public class WorldController {
         if (class30_sub3.obj2 != null && class30_sub3.obj2.uid == l) {
             return class30_sub3.obj2.aByte506 & 0xff;
         }
-        if (class30_sub3.obj3 != null && class30_sub3.obj3.anInt815 == l) {
+        if (class30_sub3.obj3 != null && class30_sub3.obj3.uid == l) {
             return class30_sub3.obj3.aByte816 & 0xff;
         }
         for (int i1 = 0; i1 < class30_sub3.anInt1317; i1++) {
@@ -843,10 +843,10 @@ public class WorldController {
                             }
                         }
 
-                        Class49 class49 = class30_sub3.obj3;
-                        if (class49 != null && class49.aClass30_Sub2_Sub4_814.aClass33Array1425 != null) {
-                            method306(i2, l1, (Model) class49.aClass30_Sub2_Sub4_814, (byte) 37, j2);
-                            ((Model) class49.aClass30_Sub2_Sub4_814).method480(j, k1, k, i, i1);
+                        Object3 class49 = class30_sub3.obj3;
+                        if (class49 != null && class49.animable.aClass33Array1425 != null) {
+                            method306(i2, l1, (Model) class49.animable, (byte) 37, j2);
+                            ((Model) class49.animable).method480(j, k1, k, i, i1);
                         }
                     }
                 }
@@ -863,26 +863,26 @@ public class WorldController {
         }
         if (i < anInt438) {
             Ground class30_sub3 = groundArray[j][i + 1][k];
-            if (class30_sub3 != null && class30_sub3.obj3 != null && class30_sub3.obj3.aClass30_Sub2_Sub4_814.aClass33Array1425 != null) {
-                method308(class30_sub2_sub4_sub6, (Model) class30_sub3.obj3.aClass30_Sub2_Sub4_814, 128, 0, 0, true);
+            if (class30_sub3 != null && class30_sub3.obj3 != null && class30_sub3.obj3.animable.aClass33Array1425 != null) {
+                method308(class30_sub2_sub4_sub6, (Model) class30_sub3.obj3.animable, 128, 0, 0, true);
             }
         }
         if (k < anInt438) {
             Ground class30_sub3_1 = groundArray[j][i][k + 1];
-            if (class30_sub3_1 != null && class30_sub3_1.obj3 != null && class30_sub3_1.obj3.aClass30_Sub2_Sub4_814.aClass33Array1425 != null) {
-                method308(class30_sub2_sub4_sub6, (Model) class30_sub3_1.obj3.aClass30_Sub2_Sub4_814, 0, 0, 128, true);
+            if (class30_sub3_1 != null && class30_sub3_1.obj3 != null && class30_sub3_1.obj3.animable.aClass33Array1425 != null) {
+                method308(class30_sub2_sub4_sub6, (Model) class30_sub3_1.obj3.animable, 0, 0, 128, true);
             }
         }
         if (i < anInt438 && k < anInt439) {
             Ground class30_sub3_2 = groundArray[j][i + 1][k + 1];
-            if (class30_sub3_2 != null && class30_sub3_2.obj3 != null && class30_sub3_2.obj3.aClass30_Sub2_Sub4_814.aClass33Array1425 != null) {
-                method308(class30_sub2_sub4_sub6, (Model) class30_sub3_2.obj3.aClass30_Sub2_Sub4_814, 128, 0, 128, true);
+            if (class30_sub3_2 != null && class30_sub3_2.obj3 != null && class30_sub3_2.obj3.animable.aClass33Array1425 != null) {
+                method308(class30_sub2_sub4_sub6, (Model) class30_sub3_2.obj3.animable, 128, 0, 128, true);
             }
         }
         if (i < anInt438 && k > 0) {
             Ground class30_sub3_3 = groundArray[j][i + 1][k - 1];
-            if (class30_sub3_3 != null && class30_sub3_3.obj3 != null && class30_sub3_3.obj3.aClass30_Sub2_Sub4_814.aClass33Array1425 != null) {
-                method308(class30_sub2_sub4_sub6, (Model) class30_sub3_3.obj3.aClass30_Sub2_Sub4_814, 128, 0, -128, true);
+            if (class30_sub3_3 != null && class30_sub3_3.obj3 != null && class30_sub3_3.obj3.animable.aClass33Array1425 != null) {
+                method308(class30_sub2_sub4_sub6, (Model) class30_sub3_3.obj3.animable, 128, 0, -128, true);
             }
         }
     }
@@ -1488,9 +1488,9 @@ public class WorldController {
                     }
                 }
                 if (flag1) {
-                    Class49 class49 = class30_sub3_1.obj3;
+                    Object3 class49 = class30_sub3_1.obj3;
                     if (class49 != null) {
-                        class49.aClass30_Sub2_Sub4_814.method443(0, anInt458, anInt459, anInt460, anInt461, class49.anInt812 - anInt455, class49.anInt811 - anInt456, class49.anInt813 - anInt457, class49.anInt815);
+                        class49.animable.method443(0, anInt458, anInt459, anInt460, anInt461, class49.anInt812 - anInt455, class49.anInt811 - anInt456, class49.anInt813 - anInt457, class49.uid);
                     }
                     Object4 class3_1 = class30_sub3_1.obj4;
                     if (class3_1 != null && class3_1.anInt52 == 0) {

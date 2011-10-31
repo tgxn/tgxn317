@@ -6,7 +6,7 @@ final class NPC extends Entity {
     private int anInt1693;
     private boolean aBoolean1694;
     private int anInt1695;
-    Class5 desc;
+    EntityDef desc;
     
     NPC() {
         aBoolean1694 = false;

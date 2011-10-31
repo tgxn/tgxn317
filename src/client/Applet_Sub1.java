@@ -38,7 +38,7 @@ public class Applet_Sub1 extends Applet implements Runnable, MouseListener, Mous
         int notches = e.getWheelRotation();
         if (anInt20 > 0 && anInt21 > 346 && anInt20 < 516 && anInt21 < 505) {
             if (notches < 0) {
-                if (client.chatBoxScrollbar.anInt224 < 1) {
+                if (client.chatBoxScrollbar.scrollPosition < 1) {
                     client.scrollableChatArea = client.scrollableChatArea;
                     client.needChatAreaRedraw = true;
                     client.inputTaken = true;
@@ -62,13 +62,13 @@ public class Applet_Sub1 extends Applet implements Runnable, MouseListener, Mous
         if (anInt21 > 210 && anInt21 < 473 && anInt20 > 514 && anInt20 < 762) { //Invertory
             if (client.tabInterfaceIDs[client.tabID] == 638) //quest tab
             {
-                Class9.aClass9Array210[639].anInt224 += notches * 30; //scrollPosition
+                RSInterface.interfaceCache[639].scrollPosition += notches * 30; //scrollPosition
             }
         }
 
         if (anInt20 > 0 && anInt20 < 512 && anInt21 > 0 && anInt21 < 334) { //Ingame
             if (client.openInterfaceID == 5292) {
-                Class9.aClass9Array210[5385].anInt224 += notches * 30;
+                RSInterface.interfaceCache[5385].scrollPosition += notches * 30;
             }
         }
     }

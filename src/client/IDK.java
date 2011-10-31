@@ -23,8 +23,8 @@ public class IDK {
         aBoolean662 = false;
     }
 
-    public static void unpackConfig(Class44 class44) {
-        Stream class30_sub2_sub2 = new Stream(class44.method571("idk.dat", null));
+    public static void unpackConfig(StreamLoader class44) {
+        Stream class30_sub2_sub2 = new Stream(class44.getDataForName("idk.dat"));
         length = class30_sub2_sub2.readUnsignedWord();
         if (cache == null) {
             cache = new IDK[length];

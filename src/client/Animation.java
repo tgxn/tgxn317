@@ -38,8 +38,8 @@ public class Animation {
         anInt365 = 2;
     }
     
-    public static void unpackConfig(Class44 class44) {
-        Stream class30_sub2_sub2 = new Stream(class44.method571("seq.dat", null));
+    public static void unpackConfig(StreamLoader class44) {
+        Stream class30_sub2_sub2 = new Stream(class44.getDataForName("seq.dat"));
         anInt350 = class30_sub2_sub2.readUnsignedWord();
         if (anims == null) {
             anims = new Animation[anInt350];

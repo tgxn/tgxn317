@@ -4,7 +4,7 @@ package client;
 final class Player extends Entity {
     
     long aLong1697;
-    Class5 desc;
+    EntityDef desc;
     boolean aBoolean1699;
     int anIntArray1700[];
     int team;
@@ -131,11 +131,11 @@ final class Player extends Entity {
             int i1 = class30_sub2_sub2.readUnsignedByte();
             equipment[j] = (k << 8) + i1;
             if (j == 0 && equipment[0] == 65535) {
-                desc = Class5.method159(class30_sub2_sub2.readUnsignedWord());
+                desc = EntityDef.forID(class30_sub2_sub2.readUnsignedWord());
                 break;
             }
-            if (equipment[j] >= 512 && equipment[j] - 512 < Class8.anInt203) {
-                int l1 = Class8.method198(equipment[j] - 512).anInt202;
+            if (equipment[j] >= 512 && equipment[j] - 512 < ItemDef.totalItems) {
+                int l1 = ItemDef.forID(equipment[j] - 512).team;
                 if (l1 != 0) {
                     team = l1;
                 }
@@ -178,7 +178,7 @@ final class Player extends Entity {
         if (super.anInt1505 == 65535) {
             super.anInt1505 = -1;
         }
-        name = Class50.method587(-45804, Class50.method584(class30_sub2_sub2.readQWord(), (byte) -99));
+        name = TextClass.fixName(TextClass.longForName(class30_sub2_sub2.readQWord()));
         combatLevel = class30_sub2_sub2.readUnsignedByte();
         skill = class30_sub2_sub2.readUnsignedWord();
         visible = true;
@@ -255,7 +255,7 @@ final class Player extends Entity {
                 if (k2 >= 256 && k2 < 512 && !IDK.cache[k2 - 256].method537()) {
                     flag = true;
                 }
-                if (k2 >= 512 && !Class8.method198(k2 - 512).method195(40903, anInt1702)) {
+                if (k2 >= 512 && !ItemDef.forID(k2 - 512).method195(40903, anInt1702)) {
                     flag = true;
                 }
             }
@@ -287,7 +287,7 @@ final class Player extends Entity {
                     }
                 }
                 if (i3 >= 512) {
-                    Model class30_sub2_sub4_sub6_4 = Class8.method198(i3 - 512).method196(false, anInt1702);
+                    Model class30_sub2_sub4_sub6_4 = ItemDef.forID(i3 - 512).method196(false, anInt1702);
                     if (class30_sub2_sub4_sub6_4 != null) {
                         aclass30_sub2_sub4_sub6[j2++] = class30_sub2_sub4_sub6_4;
                     }
@@ -346,7 +346,7 @@ final class Player extends Entity {
             if (j >= 256 && j < 512 && !IDK.cache[j - 256].method539()) {
                 flag = true;
             }
-            if (j >= 512 && !Class8.method198(j - 512).method192(-2836, anInt1702)) {
+            if (j >= 512 && !ItemDef.forID(j - 512).method192(-2836, anInt1702)) {
                 flag = true;
             }
         }
@@ -365,7 +365,7 @@ final class Player extends Entity {
                 }
             }
             if (i1 >= 512) {
-                Model class30_sub2_sub4_sub6_2 = Class8.method198(i1 - 512).method194(-705, anInt1702);
+                Model class30_sub2_sub4_sub6_2 = ItemDef.forID(i1 - 512).method194(-705, anInt1702);
                 if (class30_sub2_sub4_sub6_2 != null) {
                     aclass30_sub2_sub4_sub6[k++] = class30_sub2_sub4_sub6_2;
                 }

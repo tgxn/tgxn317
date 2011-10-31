@@ -269,12 +269,12 @@ public class OnDemandFetcher extends OnDemandFetcherParent implements Runnable {
         }
     }
 
-    public final void start(Class44 class44, client client) {
+    public final void start(StreamLoader class44, client client) {
         String as[] = {
             "model_version", "anim_version", "midi_version", "map_version"
         };
         for (int i = 0; i < 4; i++) {
-            byte abyte0[] = class44.method571(as[i], null);
+            byte abyte0[] = class44.getDataForName(as[i]);
             int j = abyte0.length / 2;
             Stream class30_sub2_sub2 = new Stream(abyte0);
             versions[i] = new int[j];
@@ -287,7 +287,7 @@ public class OnDemandFetcher extends OnDemandFetcherParent implements Runnable {
             "model_crc", "anim_crc", "midi_crc", "map_crc"
         };
         for (int k = 0; k < 4; k++) {
-            byte abyte1[] = class44.method571(as1[k], null);
+            byte abyte1[] = class44.getDataForName(as1[k]);
             int i1 = abyte1.length / 4;
             Stream class30_sub2_sub2_1 = new Stream(abyte1);
             crcs[k] = new int[i1];
@@ -296,7 +296,7 @@ public class OnDemandFetcher extends OnDemandFetcherParent implements Runnable {
             }
 
         }
-        byte abyte2[] = class44.method571("model_index", null);
+        byte abyte2[] = class44.getDataForName("model_index");
         int j1 = versions[0].length;
         modelIndices = new byte[j1];
         for (int k1 = 0; k1 < j1; k1++) {
@@ -306,7 +306,7 @@ public class OnDemandFetcher extends OnDemandFetcherParent implements Runnable {
                 modelIndices[k1] = 0;
             }
         }
-        abyte2 = class44.method571("map_index", null);
+        abyte2 = class44.getDataForName("map_index");
         Stream class30_sub2_sub2_2 = new Stream(abyte2);
         j1 = abyte2.length / 7;
         mapIndices1 = new int[j1];
@@ -319,7 +319,7 @@ public class OnDemandFetcher extends OnDemandFetcherParent implements Runnable {
             mapIndices3[i2] = class30_sub2_sub2_2.readUnsignedWord();
             mapIndices4[i2] = class30_sub2_sub2_2.readUnsignedByte();
         }
-        abyte2 = class44.method571("anim_index", null);
+        abyte2 = class44.getDataForName("anim_index");
         class30_sub2_sub2_2 = new Stream(abyte2);
         j1 = abyte2.length / 2;
         anIntArray1360 = new int[j1];
@@ -327,7 +327,7 @@ public class OnDemandFetcher extends OnDemandFetcherParent implements Runnable {
             anIntArray1360[j2] = class30_sub2_sub2_2.readUnsignedWord();
         }
 
-        abyte2 = class44.method571("midi_index", null);
+        abyte2 = class44.getDataForName("midi_index");
         class30_sub2_sub2_2 = new Stream(abyte2);
         j1 = abyte2.length;
         anIntArray1348 = new int[j1];

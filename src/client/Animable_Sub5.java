@@ -41,10 +41,10 @@ public class Animable_Sub5 extends Animable {
                 anInt1608 -= (int) (Math.random() * (double) aAnimation_1607.method258(anInt1599));
             }
         }
-        Class46 class46 = Class46.method572(anInt1610);
+        ObjectDef class46 = ObjectDef.forID(anInt1610);
         anInt1601 = class46.anInt774;
         anInt1602 = class46.anInt749;
-        anIntArray1600 = class46.anIntArray759;
+        anIntArray1600 = class46.childrenIDs;
     }
     public final Model getRotatedModel() {
         int j = -1;
@@ -71,11 +71,11 @@ public class Animable_Sub5 extends Animable {
                 j = aAnimation_1607.anIntArray353[anInt1599];
             }
         }
-        Class46 class46;
+        ObjectDef class46;
         if (anIntArray1600 != null) {
             class46 = method457();
         } else {
-            class46 = Class46.method572(anInt1610);
+            class46 = ObjectDef.forID(anInt1610);
         }
         if (class46 == null) {
             return null;
@@ -85,7 +85,7 @@ public class Animable_Sub5 extends Animable {
         }
     }
 
-    public final Class46 method457() {
+    public final ObjectDef method457() {
         int i = -1;
         if (anInt1601 != -1) {
             VarBit class37 = VarBit.cache[anInt1601];
@@ -100,7 +100,7 @@ public class Animable_Sub5 extends Animable {
         if (i < 0 || i >= anIntArray1600.length || anIntArray1600[i] == -1) {
             return null;
         } else {
-            return Class46.method572(anIntArray1600[i]);
+            return ObjectDef.forID(anIntArray1600[i]);
         }
     }
 }

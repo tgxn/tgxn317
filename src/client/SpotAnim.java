@@ -29,8 +29,8 @@ public class SpotAnim {
         anInt411 = 128;
     }
         
-    public static void unpackConfig(Class44 class44) {
-        Stream class30_sub2_sub2 = new Stream(class44.method571("spotanim.dat", null));
+    public static void unpackConfig(StreamLoader class44) {
+        Stream class30_sub2_sub2 = new Stream(class44.getDataForName("spotanim.dat"));
 
         int newSpotAnimCount = 5;
         /* Yarnova: Raise this by one every time you add a new GFX */

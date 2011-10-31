@@ -13,35 +13,35 @@ public final class Background extends DrawingArea {
     public int imageWidth;
     public int imageHeight;
     
-    public Background(Class44 class44, String s, int i) {
+    public Background(StreamLoader streamLoader, String s, int i) {
         aBoolean1447 = false;
-        Stream class30_sub2_sub2 = new Stream(class44.method571(s + ".dat", null));
-        Stream class30_sub2_sub2_1 = new Stream(class44.method571("index.dat", null));
-        class30_sub2_sub2_1.currentOffset = class30_sub2_sub2.readUnsignedWord();
-        imageWidth = class30_sub2_sub2_1.readUnsignedWord();
-        imageHeight = class30_sub2_sub2_1.readUnsignedWord();
-        int j = class30_sub2_sub2_1.readUnsignedByte();
+        Stream stream = new Stream(streamLoader.getDataForName(s + ".dat"));
+        Stream stream_1 = new Stream(streamLoader.getDataForName("index.dat"));
+        stream_1.currentOffset = stream.readUnsignedWord();
+        imageWidth = stream_1.readUnsignedWord();
+        imageHeight = stream_1.readUnsignedWord();
+        int j = stream_1.readUnsignedByte();
         imageColours = new int[j];
         for (int k = 0; k < j - 1; k++) {
-            imageColours[k + 1] = class30_sub2_sub2_1.read3Bytes();
+            imageColours[k + 1] = stream_1.read3Bytes();
         }
 
         for (int l = 0; l < i; l++) {
-            class30_sub2_sub2_1.currentOffset += 2;
-            class30_sub2_sub2.currentOffset += class30_sub2_sub2_1.readUnsignedWord() * class30_sub2_sub2_1.readUnsignedWord();
-            class30_sub2_sub2_1.currentOffset++;
+            stream_1.currentOffset += 2;
+            stream.currentOffset += stream_1.readUnsignedWord() * stream_1.readUnsignedWord();
+            stream_1.currentOffset++;
         }
 
-        anInt1454 = class30_sub2_sub2_1.readUnsignedByte();
-        anInt1455 = class30_sub2_sub2_1.readUnsignedByte();
-        myWidth = class30_sub2_sub2_1.readUnsignedWord();
-        myHeight = class30_sub2_sub2_1.readUnsignedWord();
-        int i1 = class30_sub2_sub2_1.readUnsignedByte();
+        anInt1454 = stream_1.readUnsignedByte();
+        anInt1455 = stream_1.readUnsignedByte();
+        myWidth = stream_1.readUnsignedWord();
+        myHeight = stream_1.readUnsignedWord();
+        int i1 = stream_1.readUnsignedByte();
         int j1 = myWidth * myHeight;
         pixelInfo = new byte[j1];
         if (i1 == 0) {
             for (int k1 = 0; k1 < j1; k1++) {
-                pixelInfo[k1] = class30_sub2_sub2.readSignedByte();
+                pixelInfo[k1] = stream.readSignedByte();
             }
 
             return;
@@ -49,7 +49,7 @@ public final class Background extends DrawingArea {
         if (i1 == 1) {
             for (int l1 = 0; l1 < myWidth; l1++) {
                 for (int i2 = 0; i2 < myHeight; i2++) {
-                    pixelInfo[l1 + i2 * myWidth] = class30_sub2_sub2.readSignedByte();
+                    pixelInfo[l1 + i2 * myWidth] = stream.readSignedByte();
                 }
 
             }

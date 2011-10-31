@@ -12,7 +12,7 @@ final class Ground extends Node {
     public Class40 aClass40_1312;
     Object1 obj1;
     Object2 obj2;
-    Class49 obj3;
+    Object3 obj3;
     Object4 obj4;
     int anInt1317;
     Object5 obj5Array[];

@@ -19,8 +19,8 @@ public class VarBit {
         anInt652 = -1;
     }
         
-    public static void unpackConfig(Class44 class44) {
-        Stream class30_sub2_sub2 = new Stream(class44.method571("varbit.dat", null));
+    public static void unpackConfig(StreamLoader class44) {
+        Stream class30_sub2_sub2 = new Stream(class44.getDataForName("varbit.dat"));
         anInt645 = class30_sub2_sub2.readUnsignedWord();
         if (cache == null) {
             cache = new VarBit[anInt645];

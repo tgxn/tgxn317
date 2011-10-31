@@ -108,7 +108,7 @@ public class Texture extends DrawingArea {
         }
     }
 
-    public static void method368(Class44 class44) {
+    public static void method368(StreamLoader class44) {
         anInt1473 = 0;
         for (int j = 0; j < 50; j++) {
             try {

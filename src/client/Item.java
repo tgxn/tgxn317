@@ -11,7 +11,7 @@ final class Item extends Animable {
     
     @Override
     public final Model getRotatedModel() {
-        Class8 class8 = Class8.method198(ID);
+        ItemDef class8 = ItemDef.forID(ID);
         return class8.method201(anInt1559);
     }
 }

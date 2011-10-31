@@ -17,8 +17,8 @@ public class client extends Applet_Sub1 {
     public static client client1 = null;
 
     public void sendQuest(String s, int i) {
-        Class9.aClass9Array210[i].aString248 = s;
-        if (Class9.aClass9Array210[i].anInt236 == tabInterfaceIDs[tabID]) {
+        RSInterface.interfaceCache[i].message = s;
+        if (RSInterface.interfaceCache[i].parentID == tabInterfaceIDs[tabID]) {
             needDrawTabArea = true;
         }
     }
@@ -273,10 +273,10 @@ public class client extends Applet_Sub1 {
     public void drawHP() {
         int health;
         String OrbDirectory = sign.signlink.findcachedir() + "sprites/misc/orbs/";
-        String cHP = Class9.aClass9Array210[4016].aString248;
+        String cHP = RSInterface.interfaceCache[4016].message;
         cHP = cHP.replaceAll("%", "");
         int currentHP = Integer.parseInt(cHP);
-        String mHP = Class9.aClass9Array210[4017].aString248;
+        String mHP = RSInterface.interfaceCache[4017].message;
         mHP = mHP.replaceAll("%", "");
         int maxHP2 = Integer.parseInt(mHP);
         health = (int) (((double) currentHP / (double) maxHP2) * 100D);
@@ -291,16 +291,16 @@ public class client extends Applet_Sub1 {
         } else {
             ORBS[3].method348(183, 25); //no flasjhing
         }
-        smallFont.drawCenteredText(getOrbTextColor(health), 218, Class9.aClass9Array210[4016].aString248, 40, true);
+        smallFont.drawCenteredText(getOrbTextColor(health), 218, RSInterface.interfaceCache[4016].message, 40, true);
     }
 
     public void drawPrayer() {
         int prayer;
         String OD = sign.signlink.findcachedir() + "sprites/misc/orbs/";
-        String cPR = Class9.aClass9Array210[4012].aString248;
+        String cPR = RSInterface.interfaceCache[4012].message;
         cPR = cPR.replaceAll("%", "");
         int currentPR = Integer.parseInt(cPR);
-        String mPR = Class9.aClass9Array210[4013].aString248;
+        String mPR = RSInterface.interfaceCache[4013].message;
         mPR = mPR.replaceAll("%", "");
         int maxPR2 = Integer.parseInt(mPR);
         prayer = (int) (((double) currentPR / (double) maxPR2) * 100D);
@@ -333,7 +333,7 @@ public class client extends Applet_Sub1 {
         }
         int Y = 79;
 
-        smallFont.drawCenteredText(getOrbTextColor(prayer), 234, Class9.aClass9Array210[4012].aString248, Y, true);
+        smallFont.drawCenteredText(getOrbTextColor(prayer), 234, RSInterface.interfaceCache[4012].message, Y, true);
     }
 
     public void drawRunOrb() {
@@ -806,9 +806,9 @@ public class client extends Applet_Sub1 {
             boldFont.drawText(0, aString844, 56, 260);
             boldFont.drawText(128, "Click to continue", 75, 260);
         } else if (backDialogID != -1) { //backDialogID
-            method105(0, 0, Class9.aClass9Array210[backDialogID], 0);
+            method105(0, 0, RSInterface.interfaceCache[backDialogID], 0);
         } else if (dialogID != -1) { //dialogID
-            method105(0, 0, Class9.aClass9Array210[dialogID], 0);
+            method105(0, 0, RSInterface.interfaceCache[dialogID], 0);
         } else { //NORMAL CHATBOX!!
             TextDrawingClass class30_sub2_sub1_sub4 = regularFont; //drawing area??
             int j = 0; //this increments after every line??
@@ -976,7 +976,7 @@ public class client extends Applet_Sub1 {
             {
                 s = aClass30_Sub2_Sub4_Sub1_Sub2_1126.name; //allready cleaned????
             } else {
-                s = Class50.method587(-45804, myUsername); //clean it
+                s = TextClass.fixName(myUsername); //clean it
             }/*
              * s = username
              * inputString = said text
@@ -1154,7 +1154,7 @@ public class client extends Applet_Sub1 {
                 if (i1 == 632 || i1 == 78 || i1 == 867 || i1 == 431 || i1 == 53 || i1 == 74 || i1 == 454 || i1 == 539 || i1 == 493 || i1 == 847 || i1 == 447 || i1 == 1125) {
                     int l1 = menuActionCmd2[menuActionRow - 1];
                     int j2 = menuActionCmd3[menuActionRow - 1];
-                    Class9 class9 = Class9.aClass9Array210[j2];
+                    RSInterface class9 = RSInterface.interfaceCache[j2];
                     if (class9.aBoolean259 || class9.aBoolean235) {
                         aBoolean1242 = false;
                         anInt989 = 0;
@@ -1163,10 +1163,10 @@ public class client extends Applet_Sub1 {
                         activeInterfaceType = 2;
                         anInt1087 = super.saveClickX;
                         anInt1088 = super.saveClickY;
-                        if (Class9.aClass9Array210[j2].anInt236 == openInterfaceID) {
+                        if (RSInterface.interfaceCache[j2].parentID == openInterfaceID) {
                             activeInterfaceType = 1;
                         }
-                        if (Class9.aClass9Array210[j2].anInt236 == backDialogID) {
+                        if (RSInterface.interfaceCache[j2].parentID == backDialogID) {
                             activeInterfaceType = 3;
                         }
                         return true;
@@ -1215,7 +1215,7 @@ public class client extends Applet_Sub1 {
                 }
             }
 
-            Class7 class7 = new Class7(byteGroundArray, -60, 104, 104, intGroundArray);
+            ObjectManager class7 = new ObjectManager(byteGroundArray, -60, 104, 104, intGroundArray);
             int k2 = aByteArrayArray1183.length;
             aClass30_Sub2_Sub2_1192.createFrame(0);
             if (!aBoolean1159) {
@@ -1233,7 +1233,7 @@ public class client extends Applet_Sub1 {
                     int k7 = (mapArea[j4] & 0xff) * 64 - baseY;
                     byte abyte2[] = aByteArrayArray1183[j4];
                     if (abyte2 == null && anInt1070 < 800) {
-                        class7.method174(k7, 64, 0, 64, l5);
+                        class7.method174(k7, 64, 64, l5);
                     }
                 }
 
@@ -1284,7 +1284,7 @@ public class client extends Applet_Sub1 {
                     for (int k6 = 0; k6 < 13; k6++) {
                         int i8 = anIntArrayArrayArray1129[0][l4][k6];
                         if (i8 == -1) {
-                            class7.method174(k6 * 8, 8, 0, 8, l4 * 8);
+                            class7.method174(k6 * 8, 8, 8, l4 * 8);
                         }
                     }
 
@@ -1321,7 +1321,7 @@ public class client extends Applet_Sub1 {
             class7.method171(aClass11Array1230, aClass25_946, 2);
             aClass15_1165.method237(0);
             aClass30_Sub2_Sub2_1192.createFrame(0);
-            int k3 = Class7.anInt145;
+            int k3 = ObjectManager.anInt145;
             if (k3 > plane) {
                 k3 = plane;
             }
@@ -1329,7 +1329,7 @@ public class client extends Applet_Sub1 {
                 k3 = plane - 1;
             }
             if (lowMem) {
-                aClass25_946.method275(Class7.anInt145, -34686);
+                aClass25_946.method275(ObjectManager.anInt145, -34686);
             } else {
                 aClass25_946.method275(0, -34686);
             }
@@ -1348,7 +1348,7 @@ public class client extends Applet_Sub1 {
             method63(-919);
         } catch (Exception exception) {
         }
-        Class46.aClass12_785.unlinkAll();
+        ObjectDef.mruNodes1.unlinkAll();
         loggedIn &= flag;
         if (super.aFrame_Sub1_15 != null) {
             aClass30_Sub2_Sub2_1192.createFrame(210);
@@ -1396,11 +1396,11 @@ public class client extends Applet_Sub1 {
     }
 
     public final void method23(boolean flag) {
-        Class46.aClass12_785.unlinkAll();
-        Class46.aClass12_780.unlinkAll();
-        Class5.aClass12_95.unlinkAll();
-        Class8.aClass12_159.unlinkAll();
-        Class8.aClass12_158.unlinkAll();
+        ObjectDef.mruNodes1.unlinkAll();
+        ObjectDef.mruNodes2.unlinkAll();
+        EntityDef.mruNodes.unlinkAll();
+        ItemDef.mruNodes2.unlinkAll();
+        ItemDef.mruNodes1.unlinkAll();
         if (flag) {
             pktType = -1;
         }
@@ -1452,7 +1452,7 @@ public class client extends Applet_Sub1 {
                 int i3 = aClass25_946.method303(plane, k2, l2);
                 if (i3 != 0) {
                     i3 = i3 >> 14 & 0x7fff;
-                    int j3 = Class46.method572(i3).anInt746;
+                    int j3 = ObjectDef.forID(i3).anInt746;
                     if (j3 >= 0) {
                         int k3 = k2;
                         int l3 = l2;
@@ -1498,9 +1498,9 @@ public class client extends Applet_Sub1 {
         int k = 0xfa0a1f01;
         Object obj = null;
         for (Item class30_sub2_sub4_sub2 = (Item) class19.reverseGetFirst(); class30_sub2_sub4_sub2 != null; class30_sub2_sub4_sub2 = (Item) class19.reverseGetNext()) {
-            Class8 class8 = Class8.method198(class30_sub2_sub4_sub2.ID);
-            int l = class8.anInt155;
-            if (class8.aBoolean176) {
+            ItemDef class8 = ItemDef.forID(class30_sub2_sub4_sub2.ID);
+            int l = class8.value;
+            if (class8.stackable) {
                 l *= class30_sub2_sub4_sub2.anInt1559 + 1;
             }
             if (l > k) {
@@ -1578,162 +1578,162 @@ public class client extends Applet_Sub1 {
         } while (true);
     }
 
-    public final void buildInterfaceMenu(int i, int j, Class9 class9, int k, int l, int i1, int j1) { //buildInterfaceMenu
-        if (class9.anInt262 != 0 || class9.anIntArray240 == null || class9.aBoolean266) {
+    public final void buildInterfaceMenu(int i, int j, RSInterface class9, int k, int l, int i1, int j1) { //buildInterfaceMenu
+        if (class9.type != 0 || class9.children == null || class9.aBoolean266) {
             return;
         }
-        if (k < i || i1 < l || k > i + class9.anInt220 || i1 > l + class9.anInt267) {
+        if (k < i || i1 < l || k > i + class9.width || i1 > l + class9.height) {
             return;
         }
-        int k1 = class9.anIntArray240.length;
+        int k1 = class9.children.length;
         if (j != 13037) {
             groundArray = null;
         }
         for (int l1 = 0; l1 < k1; l1++) {
-            int i2 = class9.anIntArray241[l1] + i;
-            int j2 = (class9.anIntArray272[l1] + l) - j1;
-            Class9 class9_1 = Class9.aClass9Array210[class9.anIntArray240[l1]];
+            int i2 = class9.childX[l1] + i;
+            int j2 = (class9.childY[l1] + l) - j1;
+            RSInterface class9_1 = RSInterface.interfaceCache[class9.children[l1]];
             i2 += class9_1.anInt263;
             j2 += class9_1.anInt265;
-            if ((class9_1.anInt230 >= 0 || class9_1.anInt216 != 0) && k >= i2 && i1 >= j2 && k < i2 + class9_1.anInt220 && i1 < j2 + class9_1.anInt267) {
+            if ((class9_1.anInt230 >= 0 || class9_1.anInt216 != 0) && k >= i2 && i1 >= j2 && k < i2 + class9_1.width && i1 < j2 + class9_1.height) {
                 if (class9_1.anInt230 >= 0) {
                     hoverSpriteid = class9_1.anInt230;
                 } else {
-                    hoverSpriteid = class9_1.anInt250;
+                    hoverSpriteid = class9_1.id;
                 }
             }
-            if (class9_1.anInt262 == 0) {
-                buildInterfaceMenu(i2, 13037, class9_1, k, j2, i1, class9_1.anInt224);
-                if (class9_1.anInt261 > class9_1.anInt267) {
-                    method65(i2 + class9_1.anInt220, class9_1.anInt267, k, i1, class9_1, j2, true, class9_1.anInt261, 0);
+            if (class9_1.type == 0) {
+                buildInterfaceMenu(i2, 13037, class9_1, k, j2, i1, class9_1.scrollPosition);
+                if (class9_1.scrollMax > class9_1.height) {
+                    method65(i2 + class9_1.width, class9_1.height, k, i1, class9_1, j2, true, class9_1.scrollMax, 0);
                 }
             } else {
-                if (class9_1.anInt217 == 1 && k >= i2 && i1 >= j2 && k < i2 + class9_1.anInt220 && i1 < j2 + class9_1.anInt267) {
+                if (class9_1.atActionType == 1 && k >= i2 && i1 >= j2 && k < i2 + class9_1.width && i1 < j2 + class9_1.height) {
                     boolean flag = false;
                     if (class9_1.anInt214 != 0) {
                         flag = buildFriendsListMenu(class9_1);
                     }
                     if (!flag) {
-                        menuActionName[menuActionRow] = class9_1.aString221;
+                        menuActionName[menuActionRow] = class9_1.tooltip;
                         menuActionID[menuActionRow] = 315;
-                        menuActionCmd3[menuActionRow] = class9_1.anInt250;
+                        menuActionCmd3[menuActionRow] = class9_1.id;
                         menuActionRow++;
                     }
                 }
-                if (class9_1.anInt217 == 2 && anInt1136 == 0 && k >= i2 && i1 >= j2 && k < i2 + class9_1.anInt220 && i1 < j2 + class9_1.anInt267) {
-                    String s = class9_1.aString222;
+                if (class9_1.atActionType == 2 && anInt1136 == 0 && k >= i2 && i1 >= j2 && k < i2 + class9_1.width && i1 < j2 + class9_1.height) {
+                    String s = class9_1.selectedActionName;
                     if (s.indexOf(" ") != -1) {
                         s = s.substring(0, s.indexOf(" "));
                     }
 
 
                     menuActionName[menuActionRow] = "Autocast" + "@gre@ "
-                            + class9_1.aString218;
+                            + class9_1.spellName;
                     menuActionID[menuActionRow] = 104;// autocast
-                    menuActionCmd3[menuActionRow] = class9_1.anInt250;
+                    menuActionCmd3[menuActionRow] = class9_1.id;
                     menuActionRow++;
 
 
-                    menuActionName[menuActionRow] = s + " @gre@" + class9_1.aString218;
+                    menuActionName[menuActionRow] = s + " @gre@" + class9_1.spellName;
                     menuActionID[menuActionRow] = 626;
-                    menuActionCmd3[menuActionRow] = class9_1.anInt250;
+                    menuActionCmd3[menuActionRow] = class9_1.id;
                     menuActionRow++;
                 }
-                if (class9_1.anInt217 == 3 && k >= i2 && i1 >= j2 && k < i2 + class9_1.anInt220 && i1 < j2 + class9_1.anInt267) {
+                if (class9_1.atActionType == 3 && k >= i2 && i1 >= j2 && k < i2 + class9_1.width && i1 < j2 + class9_1.height) {
                     menuActionName[menuActionRow] = "Close";
                     menuActionID[menuActionRow] = 200;
-                    menuActionCmd3[menuActionRow] = class9_1.anInt250;
+                    menuActionCmd3[menuActionRow] = class9_1.id;
                     menuActionRow++;
                 }
-                if (class9_1.anInt217 == 4 && k >= i2 && i1 >= j2 && k < i2 + class9_1.anInt220 && i1 < j2 + class9_1.anInt267) {
-                    menuActionName[menuActionRow] = class9_1.aString221;
+                if (class9_1.atActionType == 4 && k >= i2 && i1 >= j2 && k < i2 + class9_1.width && i1 < j2 + class9_1.height) {
+                    menuActionName[menuActionRow] = class9_1.tooltip;
                     menuActionID[menuActionRow] = 169;
-                    menuActionCmd3[menuActionRow] = class9_1.anInt250;
+                    menuActionCmd3[menuActionRow] = class9_1.id;
                     menuActionRow++;
                 }
-                if (class9_1.anInt217 == 5 && k >= i2 && i1 >= j2 && k < i2 + class9_1.anInt220 && i1 < j2 + class9_1.anInt267) {
-                    menuActionName[menuActionRow] = class9_1.aString221;
+                if (class9_1.atActionType == 5 && k >= i2 && i1 >= j2 && k < i2 + class9_1.width && i1 < j2 + class9_1.height) {
+                    menuActionName[menuActionRow] = class9_1.tooltip;
                     menuActionID[menuActionRow] = 646;
-                    menuActionCmd3[menuActionRow] = class9_1.anInt250;
+                    menuActionCmd3[menuActionRow] = class9_1.id;
                     menuActionRow++;
                 }
-                if (class9_1.anInt217 == 6 && !isInterfaceOpen && k >= i2 && i1 >= j2 && k < i2 + class9_1.anInt220 && i1 < j2 + class9_1.anInt267) {
-                    menuActionName[menuActionRow] = class9_1.aString221;
+                if (class9_1.atActionType == 6 && !isInterfaceOpen && k >= i2 && i1 >= j2 && k < i2 + class9_1.width && i1 < j2 + class9_1.height) {
+                    menuActionName[menuActionRow] = class9_1.tooltip;
                     menuActionID[menuActionRow] = 679;
-                    menuActionCmd3[menuActionRow] = class9_1.anInt250;
+                    menuActionCmd3[menuActionRow] = class9_1.id;
                     menuActionRow++;
                 }
-                if (class9_1.anInt262 == 2) {
+                if (class9_1.type == 2) {
                     int k2 = 0;
-                    for (int l2 = 0; l2 < class9_1.anInt267; l2++) {
-                        for (int i3 = 0; i3 < class9_1.anInt220; i3++) {
-                            int j3 = i2 + i3 * (32 + class9_1.anInt231);
-                            int k3 = j2 + l2 * (32 + class9_1.anInt244);
+                    for (int l2 = 0; l2 < class9_1.height; l2++) {
+                        for (int i3 = 0; i3 < class9_1.width; i3++) {
+                            int j3 = i2 + i3 * (32 + class9_1.invSpritePadX);
+                            int k3 = j2 + l2 * (32 + class9_1.invSpritePadY);
                             if (k2 < 20) {
-                                j3 += class9_1.anIntArray215[k2];
-                                k3 += class9_1.anIntArray247[k2];
+                                j3 += class9_1.spritesX[k2];
+                                k3 += class9_1.spritesY[k2];
                             }
                             if (k >= j3 && i1 >= k3 && k < j3 + 32 && i1 < k3 + 32) {
                                 mouseInvInterfaceIndex = k2;
-                                lastActiveInvInterface = class9_1.anInt250;
-                                if (class9_1.anIntArray253[k2] > 0) {
-                                    Class8 class8 = Class8.method198(class9_1.anIntArray253[k2] - 1);
-                                    if (anInt1282 == 1 && class9_1.aBoolean249) {
-                                        if (class9_1.anInt250 != anInt1284 || k2 != anInt1283) {
-                                            menuActionName[menuActionRow] = "Use " + aString1286 + " with @lre@" + class8.aString170;
+                                lastActiveInvInterface = class9_1.id;
+                                if (class9_1.inv[k2] > 0) {
+                                    ItemDef class8 = ItemDef.forID(class9_1.inv[k2] - 1);
+                                    if (anInt1282 == 1 && class9_1.isInventoryInterface) {
+                                        if (class9_1.id != anInt1284 || k2 != anInt1283) {
+                                            menuActionName[menuActionRow] = "Use " + aString1286 + " with @lre@" + class8.name;
                                             menuActionID[menuActionRow] = 870;
-                                            menuActionCmd1[menuActionRow] = class8.anInt157;
+                                            menuActionCmd1[menuActionRow] = class8.id;
                                             menuActionCmd2[menuActionRow] = k2;
-                                            menuActionCmd3[menuActionRow] = class9_1.anInt250;
+                                            menuActionCmd3[menuActionRow] = class9_1.id;
                                             menuActionRow++;
                                         }
-                                    } else if (anInt1136 == 1 && class9_1.aBoolean249) {
+                                    } else if (anInt1136 == 1 && class9_1.isInventoryInterface) {
                                         if ((anInt1138 & 0x10) == 16) {
-                                            menuActionName[menuActionRow] = aString1139 + " @lre@" + class8.aString170;
+                                            menuActionName[menuActionRow] = aString1139 + " @lre@" + class8.name;
                                             menuActionID[menuActionRow] = 543;
-                                            menuActionCmd1[menuActionRow] = class8.anInt157;
+                                            menuActionCmd1[menuActionRow] = class8.id;
                                             menuActionCmd2[menuActionRow] = k2;
-                                            menuActionCmd3[menuActionRow] = class9_1.anInt250;
+                                            menuActionCmd3[menuActionRow] = class9_1.id;
                                             menuActionRow++;
                                         }
                                     } else {
-                                        if (class9_1.aBoolean249) {
+                                        if (class9_1.isInventoryInterface) {
                                             for (int l3 = 4; l3 >= 3; l3--) {
-                                                if (class8.aStringArray189 != null && class8.aStringArray189[l3] != null) {
-                                                    menuActionName[menuActionRow] = class8.aStringArray189[l3] + " @lre@" + class8.aString170;
+                                                if (class8.actions != null && class8.actions[l3] != null) {
+                                                    menuActionName[menuActionRow] = class8.actions[l3] + " @lre@" + class8.name;
                                                     if (l3 == 3) {
                                                         menuActionID[menuActionRow] = 493;
                                                     }
                                                     if (l3 == 4) {
                                                         menuActionID[menuActionRow] = 847;
                                                     }
-                                                    menuActionCmd1[menuActionRow] = class8.anInt157;
+                                                    menuActionCmd1[menuActionRow] = class8.id;
                                                     menuActionCmd2[menuActionRow] = k2;
-                                                    menuActionCmd3[menuActionRow] = class9_1.anInt250;
+                                                    menuActionCmd3[menuActionRow] = class9_1.id;
                                                     menuActionRow++;
                                                 } else if (l3 == 4) {
-                                                    menuActionName[menuActionRow] = "Drop @lre@" + class8.aString170;
+                                                    menuActionName[menuActionRow] = "Drop @lre@" + class8.name;
                                                     menuActionID[menuActionRow] = 847;
-                                                    menuActionCmd1[menuActionRow] = class8.anInt157;
+                                                    menuActionCmd1[menuActionRow] = class8.id;
                                                     menuActionCmd2[menuActionRow] = k2;
-                                                    menuActionCmd3[menuActionRow] = class9_1.anInt250;
+                                                    menuActionCmd3[menuActionRow] = class9_1.id;
                                                     menuActionRow++;
                                                 }
                                             }
 
                                         }
-                                        if (class9_1.aBoolean242) {
-                                            menuActionName[menuActionRow] = "Use @lre@" + class8.aString170;
+                                        if (class9_1.usableItemInterface) {
+                                            menuActionName[menuActionRow] = "Use @lre@" + class8.name;
                                             menuActionID[menuActionRow] = 447;
-                                            menuActionCmd1[menuActionRow] = class8.anInt157;
+                                            menuActionCmd1[menuActionRow] = class8.id;
                                             menuActionCmd2[menuActionRow] = k2;
-                                            menuActionCmd3[menuActionRow] = class9_1.anInt250;
+                                            menuActionCmd3[menuActionRow] = class9_1.id;
                                             menuActionRow++;
                                         }
-                                        if (class9_1.aBoolean249 && class8.aStringArray189 != null) {
+                                        if (class9_1.isInventoryInterface && class8.actions != null) {
                                             for (int i4 = 2; i4 >= 0; i4--) {
-                                                if (class8.aStringArray189[i4] != null) {
-                                                    menuActionName[menuActionRow] = class8.aStringArray189[i4] + " @lre@" + class8.aString170;
+                                                if (class8.actions[i4] != null) {
+                                                    menuActionName[menuActionRow] = class8.actions[i4] + " @lre@" + class8.name;
                                                     if (i4 == 0) {
                                                         menuActionID[menuActionRow] = 74;
                                                     }
@@ -1743,18 +1743,18 @@ public class client extends Applet_Sub1 {
                                                     if (i4 == 2) {
                                                         menuActionID[menuActionRow] = 539;
                                                     }
-                                                    menuActionCmd1[menuActionRow] = class8.anInt157;
+                                                    menuActionCmd1[menuActionRow] = class8.id;
                                                     menuActionCmd2[menuActionRow] = k2;
-                                                    menuActionCmd3[menuActionRow] = class9_1.anInt250;
+                                                    menuActionCmd3[menuActionRow] = class9_1.id;
                                                     menuActionRow++;
                                                 }
                                             }
 
                                         }
-                                        if (class9_1.aStringArray225 != null) {
+                                        if (class9_1.actions != null) {
                                             for (int j4 = 4; j4 >= 0; j4--) {
-                                                if (class9_1.aStringArray225[j4] != null) {
-                                                    menuActionName[menuActionRow] = class9_1.aStringArray225[j4] + " @lre@" + class8.aString170;
+                                                if (class9_1.actions[j4] != null) {
+                                                    menuActionName[menuActionRow] = class9_1.actions[j4] + " @lre@" + class8.name;
                                                     if (j4 == 0) {
                                                         menuActionID[menuActionRow] = 632;
                                                     }
@@ -1770,9 +1770,9 @@ public class client extends Applet_Sub1 {
                                                     if (j4 == 4) {
                                                         menuActionID[menuActionRow] = 53;
                                                     }
-                                                    menuActionCmd1[menuActionRow] = class8.anInt157;
+                                                    menuActionCmd1[menuActionRow] = class8.id;
                                                     menuActionCmd2[menuActionRow] = k2;
-                                                    menuActionCmd3[menuActionRow] = class9_1.anInt250;
+                                                    menuActionCmd3[menuActionRow] = class9_1.id;
                                                     menuActionRow++;
                                                 }
                                             }
@@ -1780,15 +1780,15 @@ public class client extends Applet_Sub1 {
                                         }
 
                                         if (anInt863 >= 2) { //admin
-                                            menuActionName[menuActionRow] = "Examine (ITE) @lre@" + class8.aString170 + "@gre@(" + "@whi@" + class8.anInt157 + "@gre@)";
+                                            menuActionName[menuActionRow] = "Examine (ITE) @lre@" + class8.name + "@gre@(" + "@whi@" + class8.id + "@gre@)";
                                         } else {
-                                            menuActionName[menuActionRow] = "Examine @lre@" + class8.aString170;
+                                            menuActionName[menuActionRow] = "Examine @lre@" + class8.name;
                                         }
 
                                         menuActionID[menuActionRow] = 1125;
-                                        menuActionCmd1[menuActionRow] = class8.anInt157;
+                                        menuActionCmd1[menuActionRow] = class8.id;
                                         menuActionCmd2[menuActionRow] = k2;
-                                        menuActionCmd3[menuActionRow] = class9_1.anInt250;
+                                        menuActionCmd3[menuActionRow] = class9_1.id;
                                         menuActionRow++;
                                     }
                                 }
@@ -2001,7 +2001,7 @@ public class client extends Applet_Sub1 {
             if (k == 4) {
                 Texture.method372(0.59999999999999998D);
             }
-            Class8.aClass12_158.unlinkAll();
+            ItemDef.mruNodes1.unlinkAll();
             welcomeScreenRaised = true;
         }
         if (j == 3) {
@@ -2087,8 +2087,8 @@ public class client extends Applet_Sub1 {
                 continue;
             }
             if (obj instanceof NPC) {
-                Class5 class5 = ((NPC) obj).desc;
-                if (class5.anIntArray88 != null) {
+                EntityDef class5 = ((NPC) obj).desc;
+                if (class5.childrenIDs != null) {
                     class5 = class5.method161(anInt877);
                 }
                 if (class5 == null) {
@@ -2123,7 +2123,7 @@ public class client extends Applet_Sub1 {
                 }
 
             } else {
-                Class5 class5_1 = ((NPC) obj).desc;
+                EntityDef class5_1 = ((NPC) obj).desc;
                 if (class5_1.anInt75 >= 0 && class5_1.anInt75 < headIcons.length) {
                     method127(true, ((Entity) (obj)), ((Entity) (obj)).height + 15);
                     if (spriteDrawX > -1) {
@@ -2372,9 +2372,9 @@ public class client extends Applet_Sub1 {
         aClass30_Sub2_Sub1_Sub1_1196.method348(0, 0);
         if (invOverlayInterfaceID != -1) //invOverlayInterfaceID
         {
-            method105(0, 0, Class9.aClass9Array210[invOverlayInterfaceID], 0);
+            method105(0, 0, RSInterface.interfaceCache[invOverlayInterfaceID], 0);
         } else if (tabInterfaceIDs[tabID] != -1) {
-            method105(0, 0, Class9.aClass9Array210[tabInterfaceIDs[tabID]], 0); //drawInterface
+            method105(0, 0, RSInterface.interfaceCache[tabInterfaceIDs[tabID]], 0); //drawInterface
         }
         if (menuOpen) {
             drawMenu();
@@ -2704,7 +2704,7 @@ public class client extends Applet_Sub1 {
                 pushMessage("Your friendlist is full. Max of 100 for free users, and 200 for members", 0, "", aBoolean991);
                 return;
             }
-            String s = Class50.method587(-45804, Class50.method584(l, (byte) -99));
+            String s = TextClass.fixName(TextClass.longForName(l));
             for (int i = 0; i < friendsCount; i++) {
                 if (friendsListAsLongs[i] == l) {
                     pushMessage(s + " is already on your friend list", 0, "", aBoolean991);
@@ -2833,7 +2833,7 @@ public class client extends Applet_Sub1 {
                 i1 -= 32;
             }
             int j1 = class30_sub2_sub2.readBits(1);
-            class30_sub2_sub4_sub1_sub1.desc = Class5.method159(class30_sub2_sub2.readBits(12));
+            class30_sub2_sub4_sub1_sub1.desc = EntityDef.forID(class30_sub2_sub2.readBits(12));
             int k1 = class30_sub2_sub2.readBits(1);
             if (k1 == 1) {
                 anIntArray894[anInt893++] = k;
@@ -2911,7 +2911,7 @@ public class client extends Applet_Sub1 {
 
     }
 
-    public final boolean method48(int i, Class9 class9) {
+    public final boolean method48(int i, RSInterface class9) {
         if (i <= 0) {
             pktType = -1;
         }
@@ -3012,7 +3012,7 @@ public class client extends Applet_Sub1 {
             clearTopInterfaces();
             if (reportAbuseInput.length() > 0) {
                 aClass30_Sub2_Sub2_1192.createFrame(218);
-                aClass30_Sub2_Sub2_1192.writeQWord(Class50.method583(reportAbuseInput));
+                aClass30_Sub2_Sub2_1192.writeQWord(TextClass.method583(reportAbuseInput));
                 aClass30_Sub2_Sub2_1192.writeWordBigEndian(j - 601);
                 aClass30_Sub2_Sub2_1192.writeWordBigEndian(canMute ? 1 : 0);
             }
@@ -3054,13 +3054,13 @@ public class client extends Applet_Sub1 {
             int ai[] = aClass30_Sub2_Sub1_Sub1_1263.myPixels;
             int k4 = 24624 + l * 4 + (103 - i) * 512 * 4;
             int i5 = k1 >> 14 & 0x7fff;
-            Class46 class46_2 = Class46.method572(i5);
+            ObjectDef class46_2 = ObjectDef.forID(i5);
             if (class46_2.anInt758 != -1) {
                 Background class30_sub2_sub1_sub2_2 = mapScenes[class46_2.anInt758];
                 if (class30_sub2_sub1_sub2_2 != null) {
-                    int i6 = (class46_2.anInt744 * 4 - class30_sub2_sub1_sub2_2.myWidth) / 2;
-                    int j6 = (class46_2.anInt761 * 4 - class30_sub2_sub1_sub2_2.myHeight) / 2;
-                    class30_sub2_sub1_sub2_2.method361(48 + l * 4 + i6, 48 + (104 - i - class46_2.anInt761) * 4 + j6);
+                    int i6 = (class46_2.objectWidth * 4 - class30_sub2_sub1_sub2_2.myWidth) / 2;
+                    int j6 = (class46_2.objectHeight * 4 - class30_sub2_sub1_sub2_2.myHeight) / 2;
+                    class30_sub2_sub1_sub2_2.method361(48 + l * 4 + i6, 48 + (104 - i - class46_2.objectHeight) * 4 + j6);
                 }
             } else {
                 if (i3 == 0 || i3 == 2) {
@@ -3128,13 +3128,13 @@ public class client extends Applet_Sub1 {
             int l2 = i2 >> 6 & 3;
             int j3 = i2 & 0x1f;
             int l3 = k1 >> 14 & 0x7fff;
-            Class46 class46_1 = Class46.method572(l3);
+            ObjectDef class46_1 = ObjectDef.forID(l3);
             if (class46_1.anInt758 != -1) {
                 Background class30_sub2_sub1_sub2_1 = mapScenes[class46_1.anInt758];
                 if (class30_sub2_sub1_sub2_1 != null) {
-                    int j5 = (class46_1.anInt744 * 4 - class30_sub2_sub1_sub2_1.myWidth) / 2;
-                    int k5 = (class46_1.anInt761 * 4 - class30_sub2_sub1_sub2_1.myHeight) / 2;
-                    class30_sub2_sub1_sub2_1.method361(48 + l * 4 + j5, 48 + (104 - i - class46_1.anInt761) * 4 + k5);
+                    int j5 = (class46_1.objectWidth * 4 - class30_sub2_sub1_sub2_1.myWidth) / 2;
+                    int k5 = (class46_1.objectHeight * 4 - class30_sub2_sub1_sub2_1.myHeight) / 2;
+                    class30_sub2_sub1_sub2_1.method361(48 + l * 4 + j5, 48 + (104 - i - class46_1.objectHeight) * 4 + k5);
                 }
             } else if (j3 == 9) {
                 int l4 = 0xeeeeee;
@@ -3159,13 +3159,13 @@ public class client extends Applet_Sub1 {
         k1 = aClass25_946.method303(j1, l, i);
         if (k1 != 0) {
             int j2 = k1 >> 14 & 0x7fff;
-            Class46 class46 = Class46.method572(j2);
+            ObjectDef class46 = ObjectDef.forID(j2);
             if (class46.anInt758 != -1) {
                 Background class30_sub2_sub1_sub2 = mapScenes[class46.anInt758];
                 if (class30_sub2_sub1_sub2 != null) {
-                    int i4 = (class46.anInt744 * 4 - class30_sub2_sub1_sub2.myWidth) / 2;
-                    int j4 = (class46.anInt761 * 4 - class30_sub2_sub1_sub2.myHeight) / 2;
-                    class30_sub2_sub1_sub2.method361(48 + l * 4 + i4, 48 + (104 - i - class46.anInt761) * 4 + j4);
+                    int i4 = (class46.objectWidth * 4 - class30_sub2_sub1_sub2.myWidth) / 2;
+                    int j4 = (class46.objectHeight * 4 - class30_sub2_sub1_sub2.myHeight) / 2;
+                    class30_sub2_sub1_sub2.method361(48 + l * 4 + i4, 48 + (104 - i - class46.objectHeight) * 4 + j4);
                 }
             }
         }
@@ -3238,11 +3238,11 @@ public class client extends Applet_Sub1 {
         WorldController.lowMem = false;
         Texture.lowMem = false;
         lowMem = false;
-        Class7.aBoolean151 = false;
+        ObjectManager.lowMem = false;
         if (flag) {
             aBoolean919 = !aBoolean919;
         }
-        Class46.aBoolean752 = false;
+        ObjectDef.lowMem = false;
     }
 
     public static void main(String args[]) {
@@ -3266,7 +3266,7 @@ public class client extends Applet_Sub1 {
     }
 
     public final void loadingStages() {
-        if (lowMem && loadingStage == 2 && Class7.anInt131 != plane) {
+        if (lowMem && loadingStage == 2 && ObjectManager.anInt131 != plane) {
             aClass15_1165.method237(0);
             DrawingArea.fillPixels(1, 130, 23, 0xffffff, 2);
             DrawingArea.method336(21, 3, 2, 0, 128);
@@ -3310,7 +3310,7 @@ public class client extends Applet_Sub1 {
                     k = 10;
                     l = 10;
                 }
-                flag &= Class7.method189(k, abyte0, l, 6);
+                flag &= ObjectManager.method189(k, abyte0, l, 6);
             }
         }
 
@@ -3321,7 +3321,7 @@ public class client extends Applet_Sub1 {
             return -4;
         } else {
             loadingStage = 2;
-            Class7.anInt131 = plane;
+            ObjectManager.anInt131 = plane;
             method22(true);
             aClass30_Sub2_Sub2_1192.createFrame(121);
             return 0;
@@ -3367,7 +3367,7 @@ public class client extends Applet_Sub1 {
     }
 
     public final void drawLogo() {
-        byte abyte0[] = aClass44_1053.method571("title.dat", null);
+        byte abyte0[] = aClass44_1053.getDataForName("title.dat");
         Sprite class30_sub2_sub1_sub1 = new Sprite(this);
         aClass15_1110.method237(0);
         aClass15_1111.method237(0);
@@ -3439,7 +3439,7 @@ public class client extends Applet_Sub1 {
                     }
                 }
             } while (class30_sub2_sub3.dataType != 93 || !aClass42_Sub1_1068.method564(class30_sub2_sub3.ID, -520));
-            Class7.method173((byte) -107, new Stream(class30_sub2_sub3.buffer), aClass42_Sub1_1068);
+            ObjectManager.method173((byte) -107, new Stream(class30_sub2_sub3.buffer), aClass42_Sub1_1068);
         } while (true);
     }
 
@@ -3457,14 +3457,14 @@ public class client extends Applet_Sub1 {
     }
 
     public final void method60(int i) {
-        Class9 class9 = Class9.aClass9Array210[i];
-        for (int j = 0; j < class9.anIntArray240.length; j++) {
-            if (class9.anIntArray240[j] == -1) {
+        RSInterface class9 = RSInterface.interfaceCache[i];
+        for (int j = 0; j < class9.children.length; j++) {
+            if (class9.children[j] == -1) {
                 break;
             }
-            Class9 class9_1 = Class9.aClass9Array210[class9.anIntArray240[j]];
-            if (class9_1.anInt262 == 1) {
-                method60(class9_1.anInt250);
+            RSInterface class9_1 = RSInterface.interfaceCache[class9.children[j]];
+            if (class9_1.type == 1) {
+                method60(class9_1.id);
             }
             class9_1.anInt246 = 0;
             class9_1.anInt208 = 0;
@@ -3497,7 +3497,7 @@ public class client extends Applet_Sub1 {
         if (!loggedIn) {
             return;
         }
-        synchronized (mouseDetection.anObject806) {
+        synchronized (mouseDetection.object) {
             if (flagged) {
                 if (super.anInt26 != 0 || mouseDetection.anInt810 >= 40) {
                     aClass30_Sub2_Sub2_1192.createFrame(45);
@@ -3662,34 +3662,34 @@ public class client extends Applet_Sub1 {
                     lastActiveInvInterface = -1;
                     processRightClick();
                     if (lastActiveInvInterface == anInt1084 && mouseInvInterfaceIndex != anInt1085) {
-                        Class9 class9 = Class9.aClass9Array210[anInt1084];
+                        RSInterface class9 = RSInterface.interfaceCache[anInt1084];
                         int j1 = 0;
                         if (anInt913 == 1 && class9.anInt214 == 206) {
                             j1 = 1;
                         }
-                        if (class9.anIntArray253[mouseInvInterfaceIndex] <= 0) {
+                        if (class9.inv[mouseInvInterfaceIndex] <= 0) {
                             j1 = 0;
                         }
                         if (class9.aBoolean235) {
                             int l2 = anInt1085;
                             int l3 = mouseInvInterfaceIndex;
-                            class9.anIntArray253[l3] = class9.anIntArray253[l2];
-                            class9.anIntArray252[l3] = class9.anIntArray252[l2];
-                            class9.anIntArray253[l2] = -1;
-                            class9.anIntArray252[l2] = 0;
+                            class9.inv[l3] = class9.inv[l2];
+                            class9.invStackSized[l3] = class9.invStackSized[l2];
+                            class9.inv[l2] = -1;
+                            class9.invStackSized[l2] = 0;
                         } else if (j1 == 1) {
                             int i3 = anInt1085;
                             for (int i4 = mouseInvInterfaceIndex; i3 != i4;) {
                                 if (i3 > i4) {
-                                    class9.method204(i3, (byte) 9, i3 - 1);
+                                    class9.swapInventoryItems(i3, (byte) 9, i3 - 1);
                                     i3--;
                                 } else if (i3 < i4) {
-                                    class9.method204(i3, (byte) 9, i3 + 1);
+                                    class9.swapInventoryItems(i3, (byte) 9, i3 + 1);
                                     i3++;
                                 }
                             }
                         } else {
-                            class9.method204(anInt1085, (byte) 9, mouseInvInterfaceIndex);
+                            class9.swapInventoryItems(anInt1085, (byte) 9, mouseInvInterfaceIndex);
                         }
                         aClass30_Sub2_Sub2_1192.createFrame(214);
                         aClass30_Sub2_Sub2_1192.method433(anInt1084);
@@ -3950,7 +3950,7 @@ public class client extends Applet_Sub1 {
         loginArea.drawGraphics(0, 23680, super.aGraphics12, 0);
     }
 
-    public final void method65(int i, int j, int k, int l, Class9 class9, int i1, boolean flag,
+    public final void method65(int i, int j, int k, int l, RSInterface class9, int i1, boolean flag,
             int j1, int k1) {
         if (aBoolean972) {
             anInt992 = 32;
@@ -3960,13 +3960,13 @@ public class client extends Applet_Sub1 {
         aBoolean972 = false;
         pktSize += k1;
         if (k >= i && k < i + 16 && l >= i1 && l < i1 + 16) {
-            class9.anInt224 -= anInt1213 * 4;
+            class9.scrollPosition -= anInt1213 * 4;
             if (flag) {
                 needDrawTabArea = true;
                 return;
             }
         } else if (k >= i && k < i + 16 && l >= (i1 + j) - 16 && l < i1 + j) {
-            class9.anInt224 += anInt1213 * 4;
+            class9.scrollPosition += anInt1213 * 4;
             if (flag) {
                 needDrawTabArea = true;
                 return;
@@ -3978,7 +3978,7 @@ public class client extends Applet_Sub1 {
             }
             int i2 = l - i1 - 16 - l1 / 2;
             int j2 = j - 32 - l1;
-            class9.anInt224 = ((j1 - j) * i2) / j2;
+            class9.scrollPosition = ((j1 - j) * i2) / j2;
             if (flag) {
                 needDrawTabArea = true;
             }
@@ -3998,15 +3998,15 @@ public class client extends Applet_Sub1 {
         int k1 = j1 & 0x1f;
         int l1 = j1 >> 6 & 3;
         if (k1 == 10 || k1 == 11 || k1 == 22) {
-            Class46 class46 = Class46.method572(i1);
+            ObjectDef class46 = ObjectDef.forID(i1);
             int i2;
             int j2;
             if (l1 == 0 || l1 == 2) {
-                i2 = class46.anInt744;
-                j2 = class46.anInt761;
+                i2 = class46.objectWidth;
+                j2 = class46.objectHeight;
             } else {
-                i2 = class46.anInt761;
-                j2 = class46.anInt744;
+                i2 = class46.objectHeight;
+                j2 = class46.objectWidth;
             }
             int k2 = class46.anInt768;
             if (l1 != 0) {
@@ -4023,7 +4023,7 @@ public class client extends Applet_Sub1 {
         return true;
     }
 
-    private Class44 method67(int i, String s, String s1, int j, byte byte0, int k) { //streamLoaderForName
+    private StreamLoader streamLoaderForName(int i, String s, String s1, int j, byte byte0, int k) {
         byte abyte0[] = null;
         int l = 5;
         try {
@@ -4037,7 +4037,7 @@ public class client extends Applet_Sub1 {
         }
         if (abyte0 != null);
         if (abyte0 != null) {
-            Class44 class44 = new Class44(44820, abyte0);
+            StreamLoader class44 = new StreamLoader(abyte0);
             return class44;
         }
         int i1 = 0;
@@ -4131,7 +4131,7 @@ public class client extends Applet_Sub1 {
                 aBoolean872 = !aBoolean872;
             }
         } while (true);
-        Class44 class44_1 = new Class44(44820, abyte0);
+        StreamLoader class44_1 = new StreamLoader(abyte0);
         if (byte0 != -41) {
             throw new NullPointerException();
         } else {
@@ -4773,16 +4773,16 @@ public class client extends Applet_Sub1 {
             anInt1244 = k;
             anInt1245 = j;
             atInventoryInterfaceType = 2;
-            if (Class9.aClass9Array210[k].anInt236 == openInterfaceID) {
+            if (RSInterface.interfaceCache[k].parentID == openInterfaceID) {
                 atInventoryInterfaceType = 1;
             }
-            if (Class9.aClass9Array210[k].anInt236 == backDialogID) {
+            if (RSInterface.interfaceCache[k].parentID == backDialogID) {
                 atInventoryInterfaceType = 3;
             }
         }
 
         if (l == 315) {
-            Class9 class9 = Class9.aClass9Array210[k];
+            RSInterface class9 = RSInterface.interfaceCache[k];
             boolean flag8 = true;
             if (class9.anInt214 > 0) {
                 flag8 = method48(505, class9);
@@ -4864,10 +4864,10 @@ public class client extends Applet_Sub1 {
             anInt1244 = k;
             anInt1245 = j;
             atInventoryInterfaceType = 2;
-            if (Class9.aClass9Array210[k].anInt236 == openInterfaceID) {
+            if (RSInterface.interfaceCache[k].parentID == openInterfaceID) {
                 atInventoryInterfaceType = 1;
             }
-            if (Class9.aClass9Array210[k].anInt236 == backDialogID) {
+            if (RSInterface.interfaceCache[k].parentID == backDialogID) {
                 atInventoryInterfaceType = 3;
             }
         }
@@ -4876,7 +4876,7 @@ public class client extends Applet_Sub1 {
             String s = menuActionName[i];
             int k1 = s.indexOf("@lre@");
             if (k1 != -1) {
-                long l3 = Class50.method583(s.substring(k1 + 5).trim());
+                long l3 = TextClass.method583(s.substring(k1 + 5).trim());
                 if (l == 337) {
                     method41((byte) 68, l3);
                 }
@@ -4901,10 +4901,10 @@ public class client extends Applet_Sub1 {
             anInt1244 = k;
             anInt1245 = j;
             atInventoryInterfaceType = 2;
-            if (Class9.aClass9Array210[k].anInt236 == openInterfaceID) {
+            if (RSInterface.interfaceCache[k].parentID == openInterfaceID) {
                 atInventoryInterfaceType = 1;
             }
-            if (Class9.aClass9Array210[k].anInt236 == backDialogID) {
+            if (RSInterface.interfaceCache[k].parentID == backDialogID) {
                 atInventoryInterfaceType = 3;
             }
         }
@@ -4918,10 +4918,10 @@ public class client extends Applet_Sub1 {
             anInt1244 = k;
             anInt1245 = j;
             atInventoryInterfaceType = 2;
-            if (Class9.aClass9Array210[k].anInt236 == openInterfaceID) {
+            if (RSInterface.interfaceCache[k].parentID == openInterfaceID) {
                 atInventoryInterfaceType = 1;
             }
-            if (Class9.aClass9Array210[k].anInt236 == backDialogID) {
+            if (RSInterface.interfaceCache[k].parentID == backDialogID) {
                 atInventoryInterfaceType = 3;
             }
         }
@@ -4931,7 +4931,7 @@ public class client extends Applet_Sub1 {
             int l1 = s1.indexOf("@whi@");
             if (l1 != -1) {
                 s1 = s1.substring(l1 + 5).trim();
-                String s7 = Class50.method587(-45804, Class50.method584(Class50.method583(s1), (byte) -99));
+                String s7 = TextClass.fixName(TextClass.longForName(TextClass.method583(s1)));
                 boolean flag9 = false;
                 for (int j3 = 0; j3 < anInt891; j3++) {
                     Player class30_sub2_sub4_sub1_sub2_7 = playerArray[anIntArray892[j3]];
@@ -4973,10 +4973,10 @@ public class client extends Applet_Sub1 {
             anInt1244 = k;
             anInt1245 = j;
             atInventoryInterfaceType = 2;
-            if (Class9.aClass9Array210[k].anInt236 == openInterfaceID) {
+            if (RSInterface.interfaceCache[k].parentID == openInterfaceID) {
                 atInventoryInterfaceType = 1;
             }
-            if (Class9.aClass9Array210[k].anInt236 == backDialogID) {
+            if (RSInterface.interfaceCache[k].parentID == backDialogID) {
                 atInventoryInterfaceType = 3;
             }
         }
@@ -4990,31 +4990,31 @@ public class client extends Applet_Sub1 {
             anInt1244 = k;
             anInt1245 = j;
             atInventoryInterfaceType = 2;
-            if (Class9.aClass9Array210[k].anInt236 == openInterfaceID) {
+            if (RSInterface.interfaceCache[k].parentID == openInterfaceID) {
                 atInventoryInterfaceType = 1;
             }
-            if (Class9.aClass9Array210[k].anInt236 == backDialogID) {
+            if (RSInterface.interfaceCache[k].parentID == backDialogID) {
                 atInventoryInterfaceType = 3;
             }
         }
 
         if (l == 626) {
-            Class9 class9_1 = Class9.aClass9Array210[k];
+            RSInterface class9_1 = RSInterface.interfaceCache[k];
             anInt1136 = 1;
-            spellID = class9_1.anInt250;
+            spellID = class9_1.id;
             anInt1137 = k;
-            anInt1138 = class9_1.anInt237;
+            anInt1138 = class9_1.spellUsableOn;
             anInt1282 = 0;
             needDrawTabArea = true;
-            String s4 = class9_1.aString222;
+            String s4 = class9_1.selectedActionName;
             if (s4.indexOf(" ") != -1) {
                 s4 = s4.substring(0, s4.indexOf(" "));
             }
-            String s8 = class9_1.aString222;
+            String s8 = class9_1.selectedActionName;
             if (s8.indexOf(" ") != -1) {
                 s8 = s8.substring(s8.indexOf(" ") + 1);
             }
-            aString1139 = s4 + " " + class9_1.aString218 + " " + s8;
+            aString1139 = s4 + " " + class9_1.spellName + " " + s8;
             if (anInt1138 == 16) {
                 needDrawTabArea = true;
                 tabID = 3;
@@ -5032,10 +5032,10 @@ public class client extends Applet_Sub1 {
             anInt1244 = k;
             anInt1245 = j;
             atInventoryInterfaceType = 2;
-            if (Class9.aClass9Array210[k].anInt236 == openInterfaceID) {
+            if (RSInterface.interfaceCache[k].parentID == openInterfaceID) {
                 atInventoryInterfaceType = 1;
             }
-            if (Class9.aClass9Array210[k].anInt236 == backDialogID) {
+            if (RSInterface.interfaceCache[k].parentID == backDialogID) {
                 atInventoryInterfaceType = 3;
             }
         }
@@ -5063,10 +5063,10 @@ public class client extends Applet_Sub1 {
             anInt1244 = k;
             anInt1245 = j;
             atInventoryInterfaceType = 2;
-            if (Class9.aClass9Array210[k].anInt236 == openInterfaceID) {
+            if (RSInterface.interfaceCache[k].parentID == openInterfaceID) {
                 atInventoryInterfaceType = 1;
             }
-            if (Class9.aClass9Array210[k].anInt236 == backDialogID) {
+            if (RSInterface.interfaceCache[k].parentID == backDialogID) {
                 atInventoryInterfaceType = 3;
             }
         }
@@ -5079,10 +5079,10 @@ public class client extends Applet_Sub1 {
             anInt1244 = k;
             anInt1245 = j;
             atInventoryInterfaceType = 2;
-            if (Class9.aClass9Array210[k].anInt236 == openInterfaceID) {
+            if (RSInterface.interfaceCache[k].parentID == openInterfaceID) {
                 atInventoryInterfaceType = 1;
             }
-            if (Class9.aClass9Array210[k].anInt236 == backDialogID) {
+            if (RSInterface.interfaceCache[k].parentID == backDialogID) {
                 atInventoryInterfaceType = 3;
             }
         }
@@ -5118,9 +5118,9 @@ public class client extends Applet_Sub1 {
         if (l == 646) {
             aClass30_Sub2_Sub2_1192.createFrame(185);
             aClass30_Sub2_Sub2_1192.writeWord(k);
-            Class9 class9_2 = Class9.aClass9Array210[k];
-            if (class9_2.anIntArrayArray226 != null && class9_2.anIntArrayArray226[0][0] == 5) {
-                int i2 = class9_2.anIntArrayArray226[0][1];
+            RSInterface class9_2 = RSInterface.interfaceCache[k];
+            if (class9_2.valueIndexArray != null && class9_2.valueIndexArray[0][0] == 5) {
+                int i2 = class9_2.valueIndexArray[0][1];
                 if (variousSettings[i2] != class9_2.anIntArray212[0]) {
                     variousSettings[i2] = class9_2.anIntArray212[0];
                     method33(i2);
@@ -5184,16 +5184,16 @@ public class client extends Applet_Sub1 {
         if (l == 1025) { //examine?
             NPC class30_sub2_sub4_sub1_sub1_5 = npcArray[i1];
             if (class30_sub2_sub4_sub1_sub1_5 != null) {
-                Class5 class5 = class30_sub2_sub4_sub1_sub1_5.desc;
-                if (class5.anIntArray88 != null) {
+                EntityDef class5 = class30_sub2_sub4_sub1_sub1_5.desc;
+                if (class5.childrenIDs != null) {
                     class5 = class5.method161(anInt877);
                 }
                 if (class5 != null) {
                     String s9;
-                    if (class5.aByteArray89 != null) {
-                        s9 = new String(class5.aByteArray89);
+                    if (class5.description != null) {
+                        s9 = new String(class5.description);
                     } else {
-                        s9 = "It's a " + class5.aString65 + ".";
+                        s9 = "It's a " + class5.name + ".";
                     }
                     pushMessage(s9, 0, "", aBoolean991);
                 }
@@ -5293,10 +5293,10 @@ public class client extends Applet_Sub1 {
             anInt1244 = k;
             anInt1245 = j;
             atInventoryInterfaceType = 2;
-            if (Class9.aClass9Array210[k].anInt236 == openInterfaceID) {
+            if (RSInterface.interfaceCache[k].parentID == openInterfaceID) {
                 atInventoryInterfaceType = 1;
             }
-            if (Class9.aClass9Array210[k].anInt236 == backDialogID) {
+            if (RSInterface.interfaceCache[k].parentID == backDialogID) {
                 atInventoryInterfaceType = 3;
             }
         }
@@ -5310,10 +5310,10 @@ public class client extends Applet_Sub1 {
             anInt1244 = k;
             anInt1245 = j;
             atInventoryInterfaceType = 2;
-            if (Class9.aClass9Array210[k].anInt236 == openInterfaceID) {
+            if (RSInterface.interfaceCache[k].parentID == openInterfaceID) {
                 atInventoryInterfaceType = 1;
             }
-            if (Class9.aClass9Array210[k].anInt236 == backDialogID) {
+            if (RSInterface.interfaceCache[k].parentID == backDialogID) {
                 atInventoryInterfaceType = 3;
             }
         }
@@ -5329,11 +5329,11 @@ public class client extends Applet_Sub1 {
                     reportAbuseInput = "";
                 }
                 canMute = false;
-                for (int i3 = 0; i3 < Class9.aClass9Array210.length; i3++) {
-                    if (Class9.aClass9Array210[i3] == null || Class9.aClass9Array210[i3].anInt214 != 600) {
+                for (int i3 = 0; i3 < RSInterface.interfaceCache.length; i3++) {
+                    if (RSInterface.interfaceCache[i3] == null || RSInterface.interfaceCache[i3].anInt214 != 600) {
                         continue;
                     }
-                    anInt1178 = openInterfaceID = Class9.aClass9Array210[i3].anInt236;
+                    anInt1178 = openInterfaceID = RSInterface.interfaceCache[i3].parentID;
                     break;
                 }
             } else {
@@ -5360,7 +5360,7 @@ public class client extends Applet_Sub1 {
             String s3 = menuActionName[i];
             int k2 = s3.indexOf("@lre@");
             if (k2 != -1) {
-                long l4 = Class50.method583(s3.substring(k2 + 5).trim());
+                long l4 = TextClass.method583(s3.substring(k2 + 5).trim());
                 int k3 = -1;
                 for (int i4 = 0; i4 < friendsCount; i4++) {
                     if (friendsListAsLongs[i4] != l4) {
@@ -5390,10 +5390,10 @@ public class client extends Applet_Sub1 {
             anInt1244 = k;
             anInt1245 = j;
             atInventoryInterfaceType = 2;
-            if (Class9.aClass9Array210[k].anInt236 == openInterfaceID) {
+            if (RSInterface.interfaceCache[k].parentID == openInterfaceID) {
                 atInventoryInterfaceType = 1;
             }
-            if (Class9.aClass9Array210[k].anInt236 == backDialogID) {
+            if (RSInterface.interfaceCache[k].parentID == backDialogID) {
                 atInventoryInterfaceType = 3;
             }
         }
@@ -5443,16 +5443,16 @@ public class client extends Applet_Sub1 {
             anInt1244 = k;
             anInt1245 = j;
             atInventoryInterfaceType = 2;
-            Class8 class8 = Class8.method198(i1);
-            Class9 class9_4 = Class9.aClass9Array210[k];
+            ItemDef class8 = ItemDef.forID(i1);
+            RSInterface class9_4 = RSInterface.interfaceCache[k];
             String s5;
-            if (class9_4 != null && class9_4.anIntArray252[j] >= 0x186a0) {
-                s5 = class9_4.anIntArray252[j] + " x " + class8.aString170;
+            if (class9_4 != null && class9_4.invStackSized[j] >= 0x186a0) {
+                s5 = class9_4.invStackSized[j] + " x " + class8.name;
             } else {
-                if (class8.aByteArray178 != null) {
-                    s5 = new String(class8.aByteArray178);
+                if (class8.description != null) {
+                    s5 = new String(class8.description);
                 } else {
-                    s5 = "It's a " + class8.aString170 + ".";
+                    s5 = "It's a " + class8.name + ".";
                 }
             }
             pushMessage(s5, 0, "", aBoolean991);
@@ -5461,9 +5461,9 @@ public class client extends Applet_Sub1 {
         if (l == 169) {
             aClass30_Sub2_Sub2_1192.createFrame(185);
             aClass30_Sub2_Sub2_1192.writeWord(k);
-            Class9 class9_3 = Class9.aClass9Array210[k];
-            if (class9_3.anIntArrayArray226 != null && class9_3.anIntArrayArray226[0][0] == 5) {
-                int l2 = class9_3.anIntArrayArray226[0][1];
+            RSInterface class9_3 = RSInterface.interfaceCache[k];
+            if (class9_3.valueIndexArray != null && class9_3.valueIndexArray[0][0] == 5) {
+                int l2 = class9_3.valueIndexArray[0][1];
                 variousSettings[l2] = 1 - variousSettings[l2];
                 method33(l2);
                 needDrawTabArea = true;
@@ -5475,7 +5475,7 @@ public class client extends Applet_Sub1 {
             anInt1283 = j;
             anInt1284 = k;
             anInt1285 = i1;
-            aString1286 = Class8.method198(i1).aString170;
+            aString1286 = ItemDef.forID(i1).name;
             anInt1136 = 0;
             needDrawTabArea = true;
             return;
@@ -5483,12 +5483,12 @@ public class client extends Applet_Sub1 {
 
         if (l == 1226) { //examine object
             int j1 = i1 >> 14 & 0x7fff;
-            Class46 class46 = Class46.method572(j1);
+            ObjectDef class46 = ObjectDef.forID(j1);
             String s10;
-            if (class46.aByteArray777 != null) {
-                s10 = new String(class46.aByteArray777);
+            if (class46.description != null) {
+                s10 = new String(class46.description);
             } else {
-                s10 = "It's a " + class46.aString739 + ".";
+                s10 = "It's a " + class46.name + ".";
             }
             pushMessage(s10, 0, "", aBoolean991);
         }
@@ -5509,12 +5509,12 @@ public class client extends Applet_Sub1 {
         }
 
         if (l == 1448) { //examine item
-            Class8 class8_1 = Class8.method198(i1);
+            ItemDef class8_1 = ItemDef.forID(i1);
             String s6;
-            if (class8_1.aByteArray178 != null) {
-                s6 = new String(class8_1.aByteArray178);
+            if (class8_1.description != null) {
+                s6 = new String(class8_1.description);
             } else {
-                s6 = "It's a " + class8_1.aString170 + ".";
+                s6 = "It's a " + class8_1.name + ".";
             }
             pushMessage(s6, 0, "", aBoolean991);
         }
@@ -5567,15 +5567,15 @@ public class client extends Applet_Sub1 {
             }
             j = l;
             if (k1 == 2 && aClass25_946.method304(plane, i1, j1, l) >= 0) {
-                Class46 class46 = Class46.method572(l1);
-                if (class46.anIntArray759 != null) {
+                ObjectDef class46 = ObjectDef.forID(l1);
+                if (class46.childrenIDs != null) {
                     class46 = class46.method580(true);
                 }
                 if (class46 == null) {
                     continue;
                 }
                 if (anInt1282 == 1) {
-                    menuActionName[menuActionRow] = "Use " + aString1286 + " with @cya@" + class46.aString739;
+                    menuActionName[menuActionRow] = "Use " + aString1286 + " with @cya@" + class46.name;
                     menuActionID[menuActionRow] = 62;
                     menuActionCmd1[menuActionRow] = l;
                     menuActionCmd2[menuActionRow] = i1;
@@ -5583,7 +5583,7 @@ public class client extends Applet_Sub1 {
                     menuActionRow++;
                 } else if (anInt1136 == 1) {
                     if ((anInt1138 & 4) == 4) {
-                        menuActionName[menuActionRow] = aString1139 + " @cya@" + class46.aString739;
+                        menuActionName[menuActionRow] = aString1139 + " @cya@" + class46.name;
                         menuActionID[menuActionRow] = 956;
                         menuActionCmd1[menuActionRow] = l;
                         menuActionCmd2[menuActionRow] = i1;
@@ -5591,10 +5591,10 @@ public class client extends Applet_Sub1 {
                         menuActionRow++;
                     }
                 } else {
-                    if (class46.aStringArray786 != null) {
+                    if (class46.actions != null) {
                         for (int i2 = 4; i2 >= 0; i2--) {
-                            if (class46.aStringArray786[i2] != null) {
-                                menuActionName[menuActionRow] = class46.aStringArray786[i2] + " @cya@" + class46.aString739;
+                            if (class46.actions[i2] != null) {
+                                menuActionName[menuActionRow] = class46.actions[i2] + " @cya@" + class46.name;
                                 if (i2 == 0) {
                                     menuActionID[menuActionRow] = 502;
                                 }
@@ -5618,12 +5618,12 @@ public class client extends Applet_Sub1 {
                         }
                     }
                     if (anInt863 >= 2) {
-                        menuActionName[menuActionRow] = "Examine (OBJ) @cya@" + class46.aString739 + "@gre@(" + "@whi@" + class46.anInt754 + "@gre@)";
+                        menuActionName[menuActionRow] = "Examine (OBJ) @cya@" + class46.name + "@gre@(" + "@whi@" + class46.type + "@gre@)";
                     } else {
-                        menuActionName[menuActionRow] = "Examine @cya@" + class46.aString739;
+                        menuActionName[menuActionRow] = "Examine @cya@" + class46.name;
                     }
                     menuActionID[menuActionRow] = 1226;
-                    menuActionCmd1[menuActionRow] = class46.anInt754 << 14;
+                    menuActionCmd1[menuActionRow] = class46.type << 14;
                     menuActionCmd2[menuActionRow] = i1;
                     menuActionCmd3[menuActionRow] = j1;
                     menuActionRow++;
@@ -5669,9 +5669,9 @@ public class client extends Applet_Sub1 {
                 NodeList class19 = groundArray[plane][i1][j1];
                 if (class19 != null) {
                     for (Item class30_sub2_sub4_sub2 = (Item) class19.getFirst(); class30_sub2_sub4_sub2 != null; class30_sub2_sub4_sub2 = (Item) class19.getNext()) {
-                        Class8 class8 = Class8.method198(class30_sub2_sub4_sub2.ID);
+                        ItemDef class8 = ItemDef.forID(class30_sub2_sub4_sub2.ID);
                         if (anInt1282 == 1) {
-                            menuActionName[menuActionRow] = "Use " + aString1286 + " with @lre@" + class8.aString170;
+                            menuActionName[menuActionRow] = "Use " + aString1286 + " with @lre@" + class8.name;
                             menuActionID[menuActionRow] = 511;
                             menuActionCmd1[menuActionRow] = class30_sub2_sub4_sub2.ID;
                             menuActionCmd2[menuActionRow] = i1;
@@ -5679,7 +5679,7 @@ public class client extends Applet_Sub1 {
                             menuActionRow++;
                         } else if (anInt1136 == 1) {
                             if ((anInt1138 & 1) == 1) {
-                                menuActionName[menuActionRow] = aString1139 + " @lre@" + class8.aString170;
+                                menuActionName[menuActionRow] = aString1139 + " @lre@" + class8.name;
                                 menuActionID[menuActionRow] = 94;
                                 menuActionCmd1[menuActionRow] = class30_sub2_sub4_sub2.ID;
                                 menuActionCmd2[menuActionRow] = i1;
@@ -5689,7 +5689,7 @@ public class client extends Applet_Sub1 {
                         } else {
                             for (int j3 = 4; j3 >= 0; j3--) {
                                 if (j3 == 2) {
-                                    menuActionName[menuActionRow] = "Take @lre@" + class8.aString170;
+                                    menuActionName[menuActionRow] = "Take @lre@" + class8.name;
                                     menuActionID[menuActionRow] = 234;
                                     menuActionCmd1[menuActionRow] = class30_sub2_sub4_sub2.ID;
                                     menuActionCmd2[menuActionRow] = i1;
@@ -5698,9 +5698,9 @@ public class client extends Applet_Sub1 {
                                 }
                             }
                             if (anInt863 >= 2) {
-                                menuActionName[menuActionRow] = "Examine (ITE) @lre@" + class8.aString170 + " @gre@(" + "@whi@" + class8.anInt157 + "@gre@)";
+                                menuActionName[menuActionRow] = "Examine (ITE) @lre@" + class8.name + " @gre@(" + "@whi@" + class8.id + "@gre@)";
                             } else {
-                                menuActionName[menuActionRow] = "Examine @lre@" + class8.aString170;
+                                menuActionName[menuActionRow] = "Examine @lre@" + class8.name;
                             }
                             menuActionID[menuActionRow] = 1448;
                             menuActionCmd1[menuActionRow] = class30_sub2_sub4_sub2.ID;
@@ -5907,12 +5907,12 @@ public class client extends Applet_Sub1 {
         aClass15_1114 = null;
         aClass15_1115 = null;
         nullLoader(3);
-        Class46.method575(-501);
-        Class5.method163(-501);
-        Class8.method191(-501);
+        ObjectDef.nullLoader(-501);
+        EntityDef.nullLoader();
+        ItemDef.nullLoader();
         Flo.floorCache = null;
         IDK.cache = null;
-        Class9.aClass9Array210 = null;
+        RSInterface.interfaceCache = null;
         DummyClass.cache = null;
         Animation.anims = null;
         SpotAnim.cache = null;
@@ -5985,11 +5985,11 @@ public class client extends Applet_Sub1 {
                         messagePromptRaised = false;
                         inputTaken = true;
                         if (anInt1064 == 1) {
-                            long l = Class50.method583(aString1212);
+                            long l = TextClass.method583(aString1212);
                             method41((byte) 68, l);
                         }
                         if (anInt1064 == 2 && friendsCount > 0) {
-                            long l1 = Class50.method583(aString1212);
+                            long l1 = TextClass.method583(aString1212);
                             delFriend(l1);
                         }
                         if (anInt1064 == 3 && aString1212.length() > 0) {
@@ -6001,7 +6001,7 @@ public class client extends Applet_Sub1 {
                             aClass30_Sub2_Sub2_1192.writeBytes(aClass30_Sub2_Sub2_1192.currentOffset - k);
                             aString1212 = TextInput.processText(aString1212);
                             aString1212 = Censor.doCensor(aString1212);
-                            pushMessage(aString1212, 6, Class50.method587(-45804, Class50.method584(aLong953, (byte) -99)), aBoolean991);
+                            pushMessage(aString1212, 6, TextClass.fixName(TextClass.longForName(aLong953)), aBoolean991);
                             if (privateChatMode == 2) {
                                 privateChatMode = 1;
                                 needChatAreaRedraw = true;
@@ -6012,11 +6012,11 @@ public class client extends Applet_Sub1 {
                             }
                         }
                         if (anInt1064 == 4 && ignoreCount < 100) {
-                            long l2 = Class50.method583(aString1212);
+                            long l2 = TextClass.method583(aString1212);
                             method113(l2, 4);
                         }
                         if (anInt1064 == 5 && ignoreCount > 0) {
-                            long l3 = Class50.method583(aString1212);
+                            long l3 = TextClass.method583(aString1212);
                             delIgnore(l3);
                         }
                     }
@@ -6054,7 +6054,7 @@ public class client extends Applet_Sub1 {
                     if (j == 13 || j == 10) {
                         if (amountOrNameInput.length() > 0) {
                             aClass30_Sub2_Sub2_1192.createFrame(60);
-                            aClass30_Sub2_Sub2_1192.writeQWord(Class50.method583(amountOrNameInput));
+                            aClass30_Sub2_Sub2_1192.writeQWord(TextClass.method583(amountOrNameInput));
                         }
                         inputDialogState = 0;
                         inputTaken = true;
@@ -6090,13 +6090,13 @@ public class client extends Applet_Sub1 {
                                 }
                             }
                             if (inputString.equals("::dumpitems")) {
-                                Class8.dumpItems();
+                                ItemDef.dumpItems();
                             }
                             if (inputString.equals("::dumpitemlist")) {
-                                Class8.dumpItemsList();
+                                ItemDef.dumpItemsList();
                             }
                             if (inputString.equals("::dumpitemcfg")) {
-                                Class8.dumpCfg();
+                                ItemDef.dumpCfg();
                             }
                         }
                         if (inputString.startsWith("/")) { //clan chat - changed to command too so its easier
@@ -6360,25 +6360,25 @@ public class client extends Applet_Sub1 {
 
     }
 
-    public final void method75(int i, Class9 class9) {
+    public final void method75(int i, RSInterface class9) {
         int j = class9.anInt214;
         if (i <= 0) {
             aClass30_Sub2_Sub2_1192.writeWordBigEndian(49);
         }
         if (j >= 1 && j <= 100 || j >= 701 && j <= 800) {
             if (j == 1 && anInt900 == 0) {
-                class9.aString248 = "Loading friend list";
-                class9.anInt217 = 0;
+                class9.message = "Loading friend list";
+                class9.atActionType = 0;
                 return;
             }
             if (j == 1 && anInt900 == 1) {
-                class9.aString248 = "Connecting to friendserver";
-                class9.anInt217 = 0;
+                class9.message = "Connecting to friendserver";
+                class9.atActionType = 0;
                 return;
             }
             if (j == 2 && anInt900 != 2) {
-                class9.aString248 = "Please wait...";
-                class9.anInt217 = 0;
+                class9.message = "Please wait...";
+                class9.atActionType = 0;
                 return;
             }
             int k = friendsCount;
@@ -6391,12 +6391,12 @@ public class client extends Applet_Sub1 {
                 j--;
             }
             if (j >= k) {
-                class9.aString248 = "";
-                class9.anInt217 = 0;
+                class9.message = "";
+                class9.atActionType = 0;
                 return;
             } else {
-                class9.aString248 = friendsList[j];
-                class9.anInt217 = 1;
+                class9.message = friendsList[j];
+                class9.atActionType = 1;
                 return;
             }
         }
@@ -6411,18 +6411,18 @@ public class client extends Applet_Sub1 {
                 j -= 101;
             }
             if (j >= l) {
-                class9.aString248 = "";
-                class9.anInt217 = 0;
+                class9.message = "";
+                class9.atActionType = 0;
                 return;
             }
             if (friendNodeIDs[j] == 10) {
-                class9.aString248 = "@gre@Online";
+                class9.message = "@gre@Online";
             } else if (/*friendNodeIDs[j] == nodeID*/friendNodeIDs[j] == 1) {
-                class9.aString248 = "@red@Offline";
+                class9.message = "@red@Offline";
             } else {
-                class9.aString248 = "@red@Offline";
+                class9.message = "@red@Offline";
             }
-            class9.anInt217 = 1;
+            class9.atActionType = 1;
             return;
         }
         if (j == 203) {
@@ -6430,21 +6430,21 @@ public class client extends Applet_Sub1 {
             if (anInt900 != 2) {
                 i1 = 0;
             }
-            class9.anInt261 = i1 * 15 + 20;
-            if (class9.anInt261 <= class9.anInt267) {
-                class9.anInt261 = class9.anInt267 + 1;
+            class9.scrollMax = i1 * 15 + 20;
+            if (class9.scrollMax <= class9.height) {
+                class9.scrollMax = class9.height + 1;
             }
             return;
         }
         if (j >= 401 && j <= 500) {
             if ((j -= 401) == 0 && anInt900 == 0) {
-                class9.aString248 = "Loading ignore list";
-                class9.anInt217 = 0;
+                class9.message = "Loading ignore list";
+                class9.atActionType = 0;
                 return;
             }
             if (j == 1 && anInt900 == 0) {
-                class9.aString248 = "Please wait...";
-                class9.anInt217 = 0;
+                class9.message = "Please wait...";
+                class9.atActionType = 0;
                 return;
             }
             int j1 = ignoreCount;
@@ -6452,19 +6452,19 @@ public class client extends Applet_Sub1 {
                 j1 = 0;
             }
             if (j >= j1) {
-                class9.aString248 = "";
-                class9.anInt217 = 0;
+                class9.message = "";
+                class9.atActionType = 0;
                 return;
             } else {
-                class9.aString248 = Class50.method587(-45804, Class50.method584(ignoreListAsLongs[j], (byte) -99));
-                class9.anInt217 = 1;
+                class9.message = TextClass.fixName(TextClass.longForName(ignoreListAsLongs[j]));
+                class9.atActionType = 1;
                 return;
             }
         }
         if (j == 503) {
-            class9.anInt261 = ignoreCount * 15 + 20;
-            if (class9.anInt261 <= class9.anInt267) {
-                class9.anInt261 = class9.anInt267 + 1;
+            class9.scrollMax = ignoreCount * 15 + 20;
+            if (class9.scrollMax <= class9.height) {
+                class9.scrollMax = class9.height + 1;
             }
             return;
         }
@@ -6503,58 +6503,58 @@ public class client extends Applet_Sub1 {
                 class30_sub2_sub4_sub6.method470(Animation.anims[((Entity) (aClass30_Sub2_Sub4_Sub1_Sub2_1126)).anInt1511].anIntArray353[0], 40542);
                 class30_sub2_sub4_sub6.method479(64, 850, -30, -50, -30, true);
                 class9.anInt233 = 5;
-                class9.anInt234 = 0;
-                Class9.method208(0, aBoolean994, 5, class30_sub2_sub4_sub6);
+                class9.mediaID = 0;
+                RSInterface.method208(0, aBoolean994, 5, class30_sub2_sub4_sub6);
             }
             return;
         }
         if (j == 324) {
             if (aClass30_Sub2_Sub1_Sub1_931 == null) {
-                aClass30_Sub2_Sub1_Sub1_931 = class9.aClass30_Sub2_Sub1_Sub1_207;
-                aClass30_Sub2_Sub1_Sub1_932 = class9.aClass30_Sub2_Sub1_Sub1_260;
+                aClass30_Sub2_Sub1_Sub1_931 = class9.sprite1;
+                aClass30_Sub2_Sub1_Sub1_932 = class9.sprite2;
             }
             if (aBoolean1047) {
-                class9.aClass30_Sub2_Sub1_Sub1_207 = aClass30_Sub2_Sub1_Sub1_932;
+                class9.sprite1 = aClass30_Sub2_Sub1_Sub1_932;
                 return;
             } else {
-                class9.aClass30_Sub2_Sub1_Sub1_207 = aClass30_Sub2_Sub1_Sub1_931;
+                class9.sprite1 = aClass30_Sub2_Sub1_Sub1_931;
                 return;
             }
         }
         if (j == 325) {
             if (aClass30_Sub2_Sub1_Sub1_931 == null) {
-                aClass30_Sub2_Sub1_Sub1_931 = class9.aClass30_Sub2_Sub1_Sub1_207;
-                aClass30_Sub2_Sub1_Sub1_932 = class9.aClass30_Sub2_Sub1_Sub1_260;
+                aClass30_Sub2_Sub1_Sub1_931 = class9.sprite1;
+                aClass30_Sub2_Sub1_Sub1_932 = class9.sprite2;
             }
             if (aBoolean1047) {
-                class9.aClass30_Sub2_Sub1_Sub1_207 = aClass30_Sub2_Sub1_Sub1_931;
+                class9.sprite1 = aClass30_Sub2_Sub1_Sub1_931;
                 return;
             } else {
-                class9.aClass30_Sub2_Sub1_Sub1_207 = aClass30_Sub2_Sub1_Sub1_932;
+                class9.sprite1 = aClass30_Sub2_Sub1_Sub1_932;
                 return;
             }
         }
         if (j == 600) {
-            class9.aString248 = reportAbuseInput;
+            class9.message = reportAbuseInput;
             if (loopCycle % 20 < 10) {
-                class9.aString248 += "|";
+                class9.message += "|";
                 return;
             } else {
-                class9.aString248 += " ";
+                class9.message += " ";
                 return;
             }
         }
         if (j == 620) {
             if (anInt863 >= 1) {
                 if (canMute) {
-                    class9.anInt232 = 0xff0000;
-                    class9.aString248 = "Moderator option: Mute player for 48 hours: <ON>";
+                    class9.textColor = 0xff0000;
+                    class9.message = "Moderator option: Mute player for 48 hours: <ON>";
                 } else {
-                    class9.anInt232 = 0xffffff;
-                    class9.aString248 = "Moderator option: Mute player for 48 hours: <OFF>";
+                    class9.textColor = 0xffffff;
+                    class9.message = "Moderator option: Mute player for 48 hours: <OFF>";
                 }
             } else {
-                class9.aString248 = "";
+                class9.message = "";
             }
         }
         if (j == 650 || j == 655) {
@@ -6567,34 +6567,34 @@ public class client extends Applet_Sub1 {
                 } else {
                     s = daysSinceLastLogin + " days ago";
                 }
-                class9.aString248 = "You last logged in " + s + " from: " + signlink.dns;
+                class9.message = "You last logged in " + s + " from: " + signlink.dns;
             } else {
-                class9.aString248 = "";
+                class9.message = "";
             }
         }
         if (j == 651) {
             if (unreadMessages == 0) {
-                class9.aString248 = "0 unread messages";
-                class9.anInt232 = 0xffff00;
+                class9.message = "0 unread messages";
+                class9.textColor = 0xffff00;
             }
             if (unreadMessages == 1) {
-                class9.aString248 = "1 unread message";
-                class9.anInt232 = 65280;
+                class9.message = "1 unread message";
+                class9.textColor = 65280;
             }
             if (unreadMessages > 1) {
-                class9.aString248 = unreadMessages + " unread messages";
-                class9.anInt232 = 65280;
+                class9.message = unreadMessages + " unread messages";
+                class9.textColor = 65280;
             }
         }
         if (j == 652) {
             if (daysSinceRecovChange == 201) {
                 if (membersInt == 1) {
-                    class9.aString248 = "@yel@This is a non-members world: @whi@Since you are a member we";
+                    class9.message = "@yel@This is a non-members world: @whi@Since you are a member we";
                 } else {
-                    class9.aString248 = "";
+                    class9.message = "";
                 }
             } else if (daysSinceRecovChange == 200) {
-                class9.aString248 = "You have not yet set any password recovery questions.";
+                class9.message = "You have not yet set any password recovery questions.";
             } else {
                 String s1;
                 if (daysSinceRecovChange == 0) {
@@ -6604,37 +6604,37 @@ public class client extends Applet_Sub1 {
                 } else {
                     s1 = daysSinceRecovChange + " days ago";
                 }
-                class9.aString248 = s1 + " you changed your recovery questions";
+                class9.message = s1 + " you changed your recovery questions";
             }
         }
         if (j == 653) {
             if (daysSinceRecovChange == 201) {
                 if (membersInt == 1) {
-                    class9.aString248 = "@whi@recommend you use a members world instead. You may use";
+                    class9.message = "@whi@recommend you use a members world instead. You may use";
                 } else {
-                    class9.aString248 = "";
+                    class9.message = "";
                 }
             } else if (daysSinceRecovChange == 200) {
-                class9.aString248 = "We strongly recommend you do so now to secure your account.";
+                class9.message = "We strongly recommend you do so now to secure your account.";
             } else {
-                class9.aString248 = "If you do not remember making this change then cancel it immediately";
+                class9.message = "If you do not remember making this change then cancel it immediately";
             }
         }
         if (j == 654) {
             if (daysSinceRecovChange == 201) {
                 if (membersInt == 1) {
-                    class9.aString248 = "@whi@this world but member benefits are unavailable whilst here.";
+                    class9.message = "@whi@this world but member benefits are unavailable whilst here.";
                     return;
                 } else {
-                    class9.aString248 = "";
+                    class9.message = "";
                     return;
                 }
             }
             if (daysSinceRecovChange == 200) {
-                class9.aString248 = "Do this from the 'account management' area on our front webpage";
+                class9.message = "Do this from the 'account management' area on our front webpage";
                 return;
             }
-            class9.aString248 = "Do this from the 'account management' area on our front webpage";
+            class9.message = "Do this from the 'account management' area on our front webpage";
         }
     }
 
@@ -6919,7 +6919,7 @@ public class client extends Applet_Sub1 {
         hoverSpriteid = 0;
         if (super.anInt20 > 4 && super.anInt21 > 4 && super.anInt20 < 515 && super.anInt21 < 339) {
             if (openInterfaceID != -1) {
-                buildInterfaceMenu(4, 13037, Class9.aClass9Array210[openInterfaceID], super.anInt20, 4, super.anInt21, 0);
+                buildInterfaceMenu(4, 13037, RSInterface.interfaceCache[openInterfaceID], super.anInt20, 4, super.anInt21, 0);
             } else {
                 build3dScreenMenu();
             }
@@ -6933,10 +6933,10 @@ public class client extends Applet_Sub1 {
 
         if (super.anInt20 > 553 && super.anInt21 > 205 && super.anInt20 < 743 && super.anInt21 < 466) { //inventory
             if (invOverlayInterfaceID != -1) { //there is an interface over the incventory = invOverlayInterfaceID
-                buildInterfaceMenu(553, 13037, Class9.aClass9Array210[invOverlayInterfaceID], super.anInt20, 205, super.anInt21, 0);
+                buildInterfaceMenu(553, 13037, RSInterface.interfaceCache[invOverlayInterfaceID], super.anInt20, 205, super.anInt21, 0);
             } else {
                 if (tabInterfaceIDs[tabID] != -1) {
-                    buildInterfaceMenu(553, 13037, Class9.aClass9Array210[tabInterfaceIDs[tabID]], super.anInt20, 205, super.anInt21, 0);
+                    buildInterfaceMenu(553, 13037, RSInterface.interfaceCache[tabInterfaceIDs[tabID]], super.anInt20, 205, super.anInt21, 0);
                 }
             }
         }
@@ -6950,7 +6950,7 @@ public class client extends Applet_Sub1 {
 
         if (super.anInt20 > 6 && super.anInt21 > 344 && super.anInt20 < 496 && super.anInt21 < 503) { //chatbox
             if (backDialogID != -1) { //there is an interface in the chatbox open = backDialogID
-                buildInterfaceMenu(6, 13037, Class9.aClass9Array210[backDialogID], super.anInt20, 344, super.anInt21, 0);
+                buildInterfaceMenu(6, 13037, RSInterface.interfaceCache[backDialogID], super.anInt20, 344, super.anInt21, 0);
             } else {
                 if (super.anInt21 < 463 && super.anInt20 < 503) {
                     method74(super.anInt20 - 6, super.anInt21 - 344, 9);
@@ -6966,7 +6966,7 @@ public class client extends Applet_Sub1 {
 
         if (super.anInt20 >= 515 && super.anInt21 >= 0 && super.anInt20 <= 765 && super.anInt21 <= 167) {
             if (openInterfaceID != -1) {
-                buildInterfaceMenu(0, 13037, Class9.aClass9Array210[openInterfaceID], super.anInt20, 0, super.anInt21, 0);
+                buildInterfaceMenu(0, 13037, RSInterface.interfaceCache[openInterfaceID], super.anInt20, 0, super.anInt21, 0);
             }
         }
         if (hoverSpriteid != anInt1026) {
@@ -7019,7 +7019,7 @@ public class client extends Applet_Sub1 {
             } catch (NumberFormatException NFE) {
             }
             aClass24_1168 = new RSSocket(this, openSocket(aPort));
-            long l = Class50.method583(s); //TextClass.longForName(s);
+            long l = TextClass.method583(s); //TextClass.longForName(s);
             int i = (int) (l >> 16 & 31L);
 
 
@@ -7603,7 +7603,7 @@ public class client extends Applet_Sub1 {
                 class30_sub2_sub4_sub1_sub1.maxHealth = class30_sub2_sub2.method427();
             }
             if ((l & 2) != 0) {
-                class30_sub2_sub4_sub1_sub1.desc = Class5.method159(class30_sub2_sub2.method436());
+                class30_sub2_sub4_sub1_sub1.desc = EntityDef.forID(class30_sub2_sub2.method436());
                 class30_sub2_sub4_sub1_sub1.anInt1540 = class30_sub2_sub4_sub1_sub1.desc.aByte68;
                 class30_sub2_sub4_sub1_sub1.anInt1504 = class30_sub2_sub4_sub1_sub1.desc.anInt79;
                 class30_sub2_sub4_sub1_sub1.anInt1554 = class30_sub2_sub4_sub1_sub1.desc.anInt67;
@@ -7619,11 +7619,11 @@ public class client extends Applet_Sub1 {
         }
     }
 
-    public final void method87(Class5 class5, int i, boolean flag, int j, int k) {
+    public final void method87(EntityDef class5, int i, boolean flag, int j, int k) {
         if (menuActionRow >= 400) {
             return;
         }
-        if (class5.anIntArray88 != null) {
+        if (class5.childrenIDs != null) {
             class5 = class5.method161(anInt877);
         }
         if (class5 == null) {
@@ -7632,12 +7632,12 @@ public class client extends Applet_Sub1 {
         if (!class5.aBoolean84) {
             return;
         }
-        String s = class5.aString65;
+        String s = class5.name;
         if (flag) {
             aBoolean919 = !aBoolean919;
         }
-        if (class5.anInt61 != 0) {
-            s = s + method110(aClass30_Sub2_Sub4_Sub1_Sub2_1126.combatLevel, class5.anInt61, true) + " (level-" + class5.anInt61 + ")";
+        if (class5.combatLevel != 0) {
+            s = s + method110(aClass30_Sub2_Sub4_Sub1_Sub2_1126.combatLevel, class5.combatLevel, true) + " (level-" + class5.combatLevel + ")";
         }
         if (anInt1282 == 1) {
             menuActionName[menuActionRow] = "Use " + aString1286 + " with @yel@" + s;
@@ -7659,10 +7659,10 @@ public class client extends Applet_Sub1 {
                 return;
             }
         } else {
-            if (class5.aStringArray66 != null) {
+            if (class5.actions != null) {
                 for (int l = 4; l >= 0; l--) {
-                    if (class5.aStringArray66[l] != null && !class5.aStringArray66[l].equalsIgnoreCase("attack")) {
-                        menuActionName[menuActionRow] = class5.aStringArray66[l] + " @yel@" + s;
+                    if (class5.actions[l] != null && !class5.actions[l].equalsIgnoreCase("attack")) {
+                        menuActionName[menuActionRow] = class5.actions[l] + " @yel@" + s;
                         if (l == 0) {
                             menuActionID[menuActionRow] = 20;
                         }
@@ -7685,14 +7685,14 @@ public class client extends Applet_Sub1 {
                     }
                 }
             }
-            if (class5.aStringArray66 != null) {
+            if (class5.actions != null) {
                 for (int i1 = 4; i1 >= 0; i1--) {
-                    if (class5.aStringArray66[i1] != null && class5.aStringArray66[i1].equalsIgnoreCase("attack")) {
+                    if (class5.actions[i1] != null && class5.actions[i1].equalsIgnoreCase("attack")) {
                         char c = '\0';
-                        if (class5.anInt61 > aClass30_Sub2_Sub4_Sub1_Sub2_1126.combatLevel) {
+                        if (class5.combatLevel > aClass30_Sub2_Sub4_Sub1_Sub2_1126.combatLevel) {
                             c = '\u07D0';
                         }
-                        menuActionName[menuActionRow] = class5.aStringArray66[i1] + " @yel@" + s;
+                        menuActionName[menuActionRow] = class5.actions[i1] + " @yel@" + s;
                         if (i1 == 0) {
                             menuActionID[menuActionRow] = 20 + c;
                         }
@@ -7716,7 +7716,7 @@ public class client extends Applet_Sub1 {
                 }
             }
             if (anInt863 >= 2) {
-                menuActionName[menuActionRow] = "Examine (NPC) @yel@" + s + " @gre@(" + "@whi@" + class5.aLong78 + "@gre@)";
+                menuActionName[menuActionRow] = "Examine (NPC) @yel@" + s + " @gre@(" + "@whi@" + class5.type + "@gre@)";
             } else {
                 menuActionName[menuActionRow] = "Examine @yel@" + s;
             }
@@ -7896,8 +7896,10 @@ public class client extends Applet_Sub1 {
         }
     }
 
+    @Override
     public final void startUp() {
         drawLoadingText(9, "Starting up Client");
+        
         getCache();
 
 
@@ -7916,8 +7918,8 @@ public class client extends Applet_Sub1 {
             super.minDelay = 5;
         }
 
-        aBoolean993 = true;
-        String s = getDocumentBaseHost();
+        //aBoolean993 = true;
+        //String s = getDocumentBaseHost();
 
         if (signlink.cache_dat != null) {
             for (int i = 0; i < 5; i++) {
@@ -7926,10 +7928,8 @@ public class client extends Applet_Sub1 {
         }
 
         try {
-
             //load title screen
-            aClass44_1053 = method67(1, "title screen", "title", anIntArray1090[1], (byte) -41, 25);
-
+            aClass44_1053 = streamLoaderForName(1, "title screen", "title", anIntArray1090[1], (byte) -41, 25);
             //load fonts
             smallFont = new TextDrawingClass(false, "p11_full", aClass44_1053);
             regularFont = new TextDrawingClass(false, "p12_full", aClass44_1053);
@@ -7937,15 +7937,13 @@ public class client extends Applet_Sub1 {
             fancyFont = new TextDrawingClass(true, "q8_full", aClass44_1053);
             drawLogo();
             loadtitlescreen();
-
             //load some more stoff :P
-            Class44 class44 = method67(2, "config", "config", anIntArray1090[2], (byte) -41, 30);
-            Class44 class44_1 = method67(3, "interface", "interface", anIntArray1090[3], (byte) -41, 35);
-            Class44 class44_2 = method67(4, "2d graphics", "media", anIntArray1090[4], (byte) -41, 40);
-            Class44 class44_3 = method67(6, "textures", "textures", anIntArray1090[6], (byte) -41, 45);
-            Class44 class44_4 = method67(7, "chat system", "wordenc", anIntArray1090[7], (byte) -41, 50);
-            Class44 class44_5 = method67(8, "sound effects", "sounds", anIntArray1090[8], (byte) -41, 55);
-
+            StreamLoader class44 = streamLoaderForName(2, "config", "config", anIntArray1090[2], (byte) -41, 30);
+            StreamLoader class44_1 = streamLoaderForName(3, "interface", "interface", anIntArray1090[3], (byte) -41, 35);
+            StreamLoader class44_2 = streamLoaderForName(4, "2d graphics", "media", anIntArray1090[4], (byte) -41, 40);
+            StreamLoader class44_3 = streamLoaderForName(6, "textures", "textures", anIntArray1090[6], (byte) -41, 45);
+            StreamLoader class44_4 = streamLoaderForName(7, "chat system", "wordenc", anIntArray1090[7], (byte) -41, 50);
+            StreamLoader class44_5 = streamLoaderForName(8, "sound effects", "sounds", anIntArray1090[8], (byte) -41, 55);
             byteGroundArray = new byte[4][104][104];
             intGroundArray = new int[4][105][105];
 
@@ -7956,7 +7954,7 @@ public class client extends Applet_Sub1 {
                 aClass11Array1230[j] = new Class11(104, 104, true);
             }
             aClass30_Sub2_Sub1_Sub1_1263 = new Sprite(512, 512);
-            Class44 class44_6 = method67(5, "update list", "versionlist", anIntArray1090[5], (byte) -41, 60);
+            StreamLoader class44_6 = streamLoaderForName(5, "update list", "versionlist", anIntArray1090[5], (byte) -41, 60);
 
             drawLoadingText(18, "Connecting to update server");
             loadinfo();
@@ -8408,18 +8406,18 @@ public class client extends Applet_Sub1 {
 
             drawLoadingText(73, "Unpacking config");
             Animation.unpackConfig(class44);
-            Class46.method576(class44);
+            ObjectDef.unpackConfig(class44);
             Flo.unpackConfig(class44);
-            Class8.method193(class44);
-            Class5.method162(class44);
+            ItemDef.unpackConfig(class44);
+            EntityDef.unpackConfig(class44);
             IDK.unpackConfig(class44);
             SpotAnim.unpackConfig(class44);
             Varp.unpackConfig(0, class44);
             VarBit.unpackConfig(class44);
-            Class8.aBoolean182 = isMembers;
+            ItemDef.isMembers = isMembers;
             if (!lowMem) {
                 drawLoadingText(82, "Unpacking sounds");
-                byte abyte0[] = class44_5.method571("sounds.dat", null);
+                byte abyte0[] = class44_5.getDataForName("sounds.dat");
                 Stream class30_sub2_sub2 = new Stream(abyte0);
                 Sounds.unpack(0, class30_sub2_sub2);
             }
@@ -8429,7 +8427,7 @@ public class client extends Applet_Sub1 {
             TextDrawingClass aclass30_sub2_sub1_sub4[] = {
                 smallFont, regularFont, boldFont, fancyFont
             };
-            Class9.method205(class44_1, aclass30_sub2_sub1_sub4, (byte) -84, class44_2);
+            RSInterface.unpack(class44_1, aclass30_sub2_sub1_sub4, (byte) -84, class44_2);
 
 
             drawLoadingText(100, "Preparing game engine");
@@ -8494,8 +8492,8 @@ public class client extends Applet_Sub1 {
             mouseDetection = new Class48(this, anInt1096);
             startRunnable(mouseDetection, 10);
             Animable_Sub5.clientInstance = this;
-            Class46.aClient765 = this;
-            Class5.aClient82 = this;
+            ObjectDef.clientInstance = this;
+            EntityDef.clientInstance = this;
             // sendQuest("", 13097); // sendQuest's go here.
 
 
@@ -9067,11 +9065,11 @@ public class client extends Applet_Sub1 {
 
 
         if (backDialogID == -1) {
-            chatBoxScrollbar.anInt224 = scrollPos - scrollableChatArea - 112;
+            chatBoxScrollbar.scrollPosition = scrollPos - scrollableChatArea - 112;
             if (super.anInt20 > 448 && super.anInt20 < 560 && super.anInt21 > 332) { //mousex and mousey?? (in chat scroll??)
                 method65(482, 112, super.anInt20 - 17, super.anInt21 - 357, chatBoxScrollbar, 0, false, scrollPos, 0);
             }
-            int i = scrollPos - 112 - chatBoxScrollbar.anInt224;
+            int i = scrollPos - 112 - chatBoxScrollbar.scrollPosition;
             if (i < 0) {
                 i = 0;
             }
@@ -9627,7 +9625,7 @@ public class client extends Applet_Sub1 {
         anInt945 = 0;
     }
 
-    public final boolean buildFriendsListMenu(Class9 class9) {
+    public final boolean buildFriendsListMenu(RSInterface class9) {
         int i = class9.anInt214;
         if (i >= 1 && i <= 200 || i >= 701 && i <= 900) { //friends list
             if (i >= 801) {
@@ -9651,7 +9649,7 @@ public class client extends Applet_Sub1 {
             return true;
         }
         if (i >= 401 && i <= 500) { //ignore list
-            menuActionName[menuActionRow] = "Remove @lre@" + class9.aString248;
+            menuActionName[menuActionRow] = "Remove @lre@" + class9.message;
             menuActionID[menuActionRow] = 322;
             menuActionRow++;
             return true;
@@ -9676,62 +9674,62 @@ public class client extends Applet_Sub1 {
         }
     }
 
-    public final void method105(int j, int k, Class9 class9, int l) {
-        if (class9.anInt262 != 0 || class9.anIntArray240 == null) {
+    public final void method105(int j, int k, RSInterface class9, int l) {
+        if (class9.type != 0 || class9.children == null) {
             return;
         }
-        if (class9.aBoolean266 && anInt1026 != class9.anInt250 && anInt1048 != class9.anInt250 && anInt1039 != class9.anInt250) {
+        if (class9.aBoolean266 && anInt1026 != class9.id && anInt1048 != class9.id && anInt1039 != class9.id) {
             return;
         }
         int i1 = DrawingArea.topX;
         int j1 = DrawingArea.topY;
         int k1 = DrawingArea.bottomX;
         int l1 = DrawingArea.bottomY;
-        DrawingArea.setDrawingArea(l + class9.anInt267, k, k + class9.anInt220, l);
-        int i2 = class9.anIntArray240.length;
+        DrawingArea.setDrawingArea(l + class9.height, k, k + class9.width, l);
+        int i2 = class9.children.length;
         for (int j2 = 0; j2 < i2; j2++) {
-            int k2 = class9.anIntArray241[j2] + k;
-            int l2 = (class9.anIntArray272[j2] + l) - j;
-            Class9 class9_1 = Class9.aClass9Array210[class9.anIntArray240[j2]];
+            int k2 = class9.childX[j2] + k;
+            int l2 = (class9.childY[j2] + l) - j;
+            RSInterface class9_1 = RSInterface.interfaceCache[class9.children[j2]];
             k2 += class9_1.anInt263;
             l2 += class9_1.anInt265;
             if (class9_1.anInt214 > 0) {
                 method75(950, class9_1);
             }
-            if (class9_1.anInt262 == 0) {
-                if (class9_1.anInt224 > class9_1.anInt261 - class9_1.anInt267) {
-                    class9_1.anInt224 = class9_1.anInt261 - class9_1.anInt267;
+            if (class9_1.type == 0) {
+                if (class9_1.scrollPosition > class9_1.scrollMax - class9_1.height) {
+                    class9_1.scrollPosition = class9_1.scrollMax - class9_1.height;
                 }
-                if (class9_1.anInt224 < 0) {
-                    class9_1.anInt224 = 0;
+                if (class9_1.scrollPosition < 0) {
+                    class9_1.scrollPosition = 0;
                 }
-                method105(class9_1.anInt224, k2, class9_1, l2);
-                if (class9_1.anInt261 > class9_1.anInt267) {
-                    drawScrollbar(class9_1.anInt267, class9_1.anInt224, l2, k2 + class9_1.anInt220, class9_1.anInt261);
+                method105(class9_1.scrollPosition, k2, class9_1, l2);
+                if (class9_1.scrollMax > class9_1.height) {
+                    drawScrollbar(class9_1.height, class9_1.scrollPosition, l2, k2 + class9_1.width, class9_1.scrollMax);
                 }
-            } else if (class9_1.anInt262 != 1) {
-                if (class9_1.anInt262 == 2) {
+            } else if (class9_1.type != 1) {
+                if (class9_1.type == 2) {
                     int i3 = 0;
-                    for (int l3 = 0; l3 < class9_1.anInt267; l3++) {
-                        for (int l4 = 0; l4 < class9_1.anInt220; l4++) {
-                            int k5 = k2 + l4 * (32 + class9_1.anInt231);
-                            int j6 = l2 + l3 * (32 + class9_1.anInt244);
+                    for (int l3 = 0; l3 < class9_1.height; l3++) {
+                        for (int l4 = 0; l4 < class9_1.width; l4++) {
+                            int k5 = k2 + l4 * (32 + class9_1.invSpritePadX);
+                            int j6 = l2 + l3 * (32 + class9_1.invSpritePadY);
                             if (i3 < 20) {
-                                k5 += class9_1.anIntArray215[i3];
-                                j6 += class9_1.anIntArray247[i3];
+                                k5 += class9_1.spritesX[i3];
+                                j6 += class9_1.spritesY[i3];
                             }
-                            if (class9_1.anIntArray253[i3] > 0) {
+                            if (class9_1.inv[i3] > 0) {
                                 int k6 = 0;
                                 int j7 = 0;
-                                int j9 = class9_1.anIntArray253[i3] - 1;
+                                int j9 = class9_1.inv[i3] - 1;
                                 if (k5 > DrawingArea.topX - 32 && k5 < DrawingArea.bottomX && j6 > DrawingArea.topY - 32 && j6 < DrawingArea.bottomY || activeInterfaceType != 0 && anInt1085 == i3) {
                                     int l9 = 0;
-                                    if (anInt1282 == 1 && anInt1283 == i3 && anInt1284 == class9_1.anInt250) {
+                                    if (anInt1282 == 1 && anInt1283 == i3 && anInt1284 == class9_1.id) {
                                         l9 = 0xffffff;
                                     }
-                                    Sprite class30_sub2_sub1_sub1_2 = Class8.method200(j9, class9_1.anIntArray252[i3], l9, 9);
+                                    Sprite class30_sub2_sub1_sub1_2 = ItemDef.getSprite(j9, class9_1.invStackSized[i3], l9, 9);
                                     if (class30_sub2_sub1_sub1_2 != null) {
-                                        if (activeInterfaceType != 0 && anInt1085 == i3 && anInt1084 == class9_1.anInt250) {
+                                        if (activeInterfaceType != 0 && anInt1085 == i3 && anInt1084 == class9_1.id) {
                                             k6 = super.anInt20 - anInt1087;
                                             j7 = super.anInt21 - anInt1088;
                                             if (k6 < 5 && k6 > -5) {
@@ -9745,36 +9743,36 @@ public class client extends Applet_Sub1 {
                                                 j7 = 0;
                                             }
                                             class30_sub2_sub1_sub1_2.method350(k5 + k6, j6 + j7, 128);
-                                            if (j6 + j7 < DrawingArea.topY && class9.anInt224 > 0) {
+                                            if (j6 + j7 < DrawingArea.topY && class9.scrollPosition > 0) {
                                                 int i10 = (anInt945 * (DrawingArea.topY - j6 - j7)) / 3;
                                                 if (i10 > anInt945 * 10) {
                                                     i10 = anInt945 * 10;
                                                 }
-                                                if (i10 > class9.anInt224) {
-                                                    i10 = class9.anInt224;
+                                                if (i10 > class9.scrollPosition) {
+                                                    i10 = class9.scrollPosition;
                                                 }
-                                                class9.anInt224 -= i10;
+                                                class9.scrollPosition -= i10;
                                                 anInt1088 += i10;
                                             }
-                                            if (j6 + j7 + 32 > DrawingArea.bottomY && class9.anInt224 < class9.anInt261 - class9.anInt267) {
+                                            if (j6 + j7 + 32 > DrawingArea.bottomY && class9.scrollPosition < class9.scrollMax - class9.height) {
                                                 int j10 = (anInt945 * ((j6 + j7 + 32) - DrawingArea.bottomY)) / 3;
                                                 if (j10 > anInt945 * 10) {
                                                     j10 = anInt945 * 10;
                                                 }
-                                                if (j10 > class9.anInt261 - class9.anInt267 - class9.anInt224) {
-                                                    j10 = class9.anInt261 - class9.anInt267 - class9.anInt224;
+                                                if (j10 > class9.scrollMax - class9.height - class9.scrollPosition) {
+                                                    j10 = class9.scrollMax - class9.height - class9.scrollPosition;
                                                 }
-                                                class9.anInt224 += j10;
+                                                class9.scrollPosition += j10;
                                                 anInt1088 -= j10;
                                             }
-                                        } else if (atInventoryInterfaceType != 0 && anInt1245 == i3 && anInt1244 == class9_1.anInt250) {
+                                        } else if (atInventoryInterfaceType != 0 && anInt1245 == i3 && anInt1244 == class9_1.id) {
                                             class30_sub2_sub1_sub1_2.method350(k5, j6, 128);
                                         } else {
                                             class30_sub2_sub1_sub1_2.method348(k5, j6);
                                         }
-                                        if (class30_sub2_sub1_sub1_2.maxWidth == 33 || class9_1.anIntArray252[i3] != 1) {
+                                        if (class30_sub2_sub1_sub1_2.maxWidth == 33 || class9_1.invStackSized[i3] != 1) {
 
-                                            int amount = class9_1.anIntArray252[i3];
+                                            int amount = class9_1.invStackSized[i3];
                                             smallFont.method385(0, intToKOrMil(amount), j6 + 10 + j7, 822, k5 + 1 + k6);
                                             if (amount >= 1000000000)//1b
                                             {
@@ -9798,8 +9796,8 @@ public class client extends Applet_Sub1 {
                                         }
                                     }
                                 }
-                            } else if (class9_1.aClass30_Sub2_Sub1_Sub1Array209 != null && i3 < 20) {
-                                Sprite class30_sub2_sub1_sub1_1 = class9_1.aClass30_Sub2_Sub1_Sub1Array209[i3];
+                            } else if (class9_1.sprites != null && i3 < 20) {
+                                Sprite class30_sub2_sub1_sub1_1 = class9_1.sprites[i3];
                                 if (class30_sub2_sub1_sub1_1 != null) {
                                     class30_sub2_sub1_sub1_1.method348(k5, j6);
                                 }
@@ -9807,9 +9805,9 @@ public class client extends Applet_Sub1 {
                             i3++;
                         }
                     }
-                } else if (class9_1.anInt262 == 3) {
+                } else if (class9_1.type == 3) {
                     boolean flag = false;
-                    if (anInt1039 == class9_1.anInt250 || anInt1048 == class9_1.anInt250 || anInt1026 == class9_1.anInt250) {
+                    if (anInt1039 == class9_1.id || anInt1048 == class9_1.id || anInt1026 == class9_1.id) {
                         flag = true;
                     }
                     int j3;
@@ -9819,27 +9817,27 @@ public class client extends Applet_Sub1 {
                             j3 = class9_1.anInt239;
                         }
                     } else {
-                        j3 = class9_1.anInt232;
+                        j3 = class9_1.textColor;
                         if (flag && class9_1.anInt216 != 0) {
                             j3 = class9_1.anInt216;
                         }
                     }
                     if (class9_1.aByte254 == 0) {
                         if (class9_1.aBoolean227) {
-                            DrawingArea.method336(class9_1.anInt267, l2, k2, j3, class9_1.anInt220);
+                            DrawingArea.method336(class9_1.height, l2, k2, j3, class9_1.width);
                         } else {
-                            DrawingArea.fillPixels(k2, class9_1.anInt220, class9_1.anInt267, j3, l2);
+                            DrawingArea.fillPixels(k2, class9_1.width, class9_1.height, j3, l2);
                         }
                     } else if (class9_1.aBoolean227) {
-                        DrawingArea.method335(j3, l2, class9_1.anInt220, class9_1.anInt267, 256 - (class9_1.aByte254 & 0xff), k2);
+                        DrawingArea.method335(j3, l2, class9_1.width, class9_1.height, 256 - (class9_1.aByte254 & 0xff), k2);
                     } else {
-                        DrawingArea.method338(l2, class9_1.anInt267, 256 - (class9_1.aByte254 & 0xff), j3, class9_1.anInt220, k2);
+                        DrawingArea.method338(l2, class9_1.height, 256 - (class9_1.aByte254 & 0xff), j3, class9_1.width, k2);
                     }
-                } else if (class9_1.anInt262 == 4) {
-                    TextDrawingClass class30_sub2_sub1_sub4 = class9_1.aClass30_Sub2_Sub1_Sub4_243;
-                    String s = class9_1.aString248;
+                } else if (class9_1.type == 4) {
+                    TextDrawingClass class30_sub2_sub1_sub4 = class9_1.textDrawingAreas;
+                    String s = class9_1.message;
                     boolean flag1 = false;
-                    if (anInt1039 == class9_1.anInt250 || anInt1048 == class9_1.anInt250 || anInt1026 == class9_1.anInt250) {
+                    if (anInt1039 == class9_1.id || anInt1048 == class9_1.id || anInt1026 == class9_1.id) {
                         flag1 = true;
                     }
                     int i4;
@@ -9852,14 +9850,14 @@ public class client extends Applet_Sub1 {
                             s = class9_1.aString228;
                         }
                     } else {
-                        i4 = class9_1.anInt232;
+                        i4 = class9_1.textColor;
                         if (flag1 && class9_1.anInt216 != 0) {
                             i4 = class9_1.anInt216;
                         }
                     }
-                    if (class9_1.anInt217 == 6 && isInterfaceOpen) {
+                    if (class9_1.atActionType == 6 && isInterfaceOpen) {
                         s = "Please wait...";
-                        i4 = class9_1.anInt232;
+                        i4 = class9_1.textColor;
                     }
                     if (DrawingArea.width == 506) {
                         if (i4 == 0xffff00) {
@@ -9876,7 +9874,7 @@ public class client extends Applet_Sub1 {
                                 if (k7 == -1) {
                                     break;
                                 }
-                                if (class9_1.anInt250 < 4000 || class9_1.anInt250 > 5000 && class9_1.anInt250 != 13921 && class9_1.anInt250 != 13922 && class9_1.anInt250 != 12171 && class9_1.anInt250 != 12172) {
+                                if (class9_1.id < 4000 || class9_1.id > 5000 && class9_1.id != 13921 && class9_1.id != 13922 && class9_1.id != 12171 && class9_1.id != 12172) {
                                     s = s.substring(0, k7) + methodR(369, extractInterfaceValues(class9_1, 0)) + s.substring(k7 + 2);
                                 } else {
                                     s = s.substring(0, k7) + method93(369, extractInterfaceValues(class9_1, 0)) + s.substring(k7 + 2);
@@ -9921,19 +9919,19 @@ public class client extends Applet_Sub1 {
                             s = "";
                         }
                         if (class9_1.aBoolean223) {
-                            class30_sub2_sub1_sub4.drawCenteredText(i4, k2 + class9_1.anInt220 / 2, s1, l6, class9_1.aBoolean268);
+                            class30_sub2_sub1_sub4.drawCenteredText(i4, k2 + class9_1.width / 2, s1, l6, class9_1.aBoolean268);
                         } else {
                             class30_sub2_sub1_sub4.drawShadowedText(class9_1.aBoolean268, k2, i4, s1, l6);
                         }
                     }
-                } else if (class9_1.anInt262 == 5) {
+                } else if (class9_1.type == 5) {
                     Sprite class30_sub2_sub1_sub1;
                     if (method131(class9_1, false)) {
-                        class30_sub2_sub1_sub1 = class9_1.aClass30_Sub2_Sub1_Sub1_260;
+                        class30_sub2_sub1_sub1 = class9_1.sprite2;
                     } else {
-                        class30_sub2_sub1_sub1 = class9_1.aClass30_Sub2_Sub1_Sub1_207;
+                        class30_sub2_sub1_sub1 = class9_1.sprite1;
                     }
-                    if (anInt1136 == 1 && class9_1.anInt250 == spellID && spellID != 0) {
+                    if (anInt1136 == 1 && class9_1.id == spellID && spellID != 0) {
                         class30_sub2_sub1_sub1.drawSprite(k2, l2, 0xffffff);
                     } else {
                         //class30_sub2_sub1_sub1.method348(k2, l2);
@@ -9941,11 +9939,11 @@ public class client extends Applet_Sub1 {
                     if (class30_sub2_sub1_sub1 != null) {
                         class30_sub2_sub1_sub1.method348(k2, l2);
                     }
-                } else if (class9_1.anInt262 == 6) {
+                } else if (class9_1.type == 6) {
                     int k3 = Texture.textureInt1;
                     int j4 = Texture.textureInt2;
-                    Texture.textureInt1 = k2 + class9_1.anInt220 / 2;
-                    Texture.textureInt2 = l2 + class9_1.anInt267 / 2;
+                    Texture.textureInt1 = k2 + class9_1.width / 2;
+                    Texture.textureInt2 = l2 + class9_1.height / 2;
                     int i5 = Texture.anIntArray1470[class9_1.anInt270] * class9_1.anInt269 >> 16;
                     int l5 = Texture.anIntArray1471[class9_1.anInt270] * class9_1.anInt269 >> 16;
                     boolean flag2 = method131(class9_1, false);
@@ -9967,23 +9965,23 @@ public class client extends Applet_Sub1 {
                     }
                     Texture.textureInt1 = k3;
                     Texture.textureInt2 = j4;
-                } else if (class9_1.anInt262 == 7) {
-                    TextDrawingClass class30_sub2_sub1_sub4_1 = class9_1.aClass30_Sub2_Sub1_Sub4_243;
+                } else if (class9_1.type == 7) {
+                    TextDrawingClass class30_sub2_sub1_sub4_1 = class9_1.textDrawingAreas;
                     int k4 = 0;
-                    for (int j5 = 0; j5 < class9_1.anInt267; j5++) {
-                        for (int i6 = 0; i6 < class9_1.anInt220; i6++) {
-                            if (class9_1.anIntArray253[k4] > 0) {
-                                Class8 class8 = Class8.method198(class9_1.anIntArray253[k4] - 1);
-                                String s2 = class8.aString170;
-                                if (class8.aBoolean176 || class9_1.anIntArray252[k4] != 1) {
-                                    s2 = s2 + " x" + intToKOrMilLongName(class9_1.anIntArray252[k4]);
+                    for (int j5 = 0; j5 < class9_1.height; j5++) {
+                        for (int i6 = 0; i6 < class9_1.width; i6++) {
+                            if (class9_1.inv[k4] > 0) {
+                                ItemDef class8 = ItemDef.forID(class9_1.inv[k4] - 1);
+                                String s2 = class8.name;
+                                if (class8.stackable || class9_1.invStackSized[k4] != 1) {
+                                    s2 = s2 + " x" + intToKOrMilLongName(class9_1.invStackSized[k4]);
                                 }
-                                int i9 = k2 + i6 * (115 + class9_1.anInt231);
-                                int k9 = l2 + j5 * (12 + class9_1.anInt244);
+                                int i9 = k2 + i6 * (115 + class9_1.invSpritePadX);
+                                int k9 = l2 + j5 * (12 + class9_1.invSpritePadY);
                                 if (class9_1.aBoolean223) {
-                                    class30_sub2_sub1_sub4_1.drawCenteredText(class9_1.anInt232, i9 + class9_1.anInt220 / 2, s2, k9, class9_1.aBoolean268);
+                                    class30_sub2_sub1_sub4_1.drawCenteredText(class9_1.textColor, i9 + class9_1.width / 2, s2, k9, class9_1.aBoolean268);
                                 } else {
-                                    class30_sub2_sub1_sub4_1.drawShadowedText(class9_1.aBoolean268, i9, class9_1.anInt232, s2, k9);
+                                    class30_sub2_sub1_sub4_1.drawShadowedText(class9_1.aBoolean268, i9, class9_1.textColor, s2, k9);
                                 }
                             }
                             k4++;
@@ -10112,7 +10110,7 @@ public class client extends Applet_Sub1 {
             int j3 = class30_sub2_sub2.method427();
             int k3 = class30_sub2_sub2.currentOffset;
             if (class30_sub2_sub4_sub1_sub2.name != null && class30_sub2_sub4_sub1_sub2.visible) {
-                long l3 = Class50.method583(class30_sub2_sub4_sub1_sub2.name);
+                long l3 = TextClass.method583(class30_sub2_sub4_sub1_sub2.name);
                 boolean flag = false;
                 if (j2 <= 1) {
                     for (int i4 = 0; i4 < ignoreCount; i4++) {
@@ -10373,11 +10371,11 @@ public class client extends Applet_Sub1 {
         }
         if (wildernessSkullId != -1) {
             method119(anInt945, false, wildernessSkullId);
-            method105(0, 0, Class9.aClass9Array210[wildernessSkullId], 0);
+            method105(0, 0, RSInterface.interfaceCache[wildernessSkullId], 0);
         }
         if (openInterfaceID != -1) {
             method119(anInt945, false, openInterfaceID);
-            method105(0, 0, Class9.aClass9Array210[openInterfaceID], 0);
+            method105(0, 0, RSInterface.interfaceCache[openInterfaceID], 0);
         }
         method70();
         if (super.anInt20 >= 3 && super.anInt20 <= 59 && super.anInt21 >= 481 && super.anInt21 <= 503) {
@@ -10514,7 +10512,7 @@ public class client extends Applet_Sub1 {
                 pushMessage("Your ignore list is full. Max of 100 hit", 0, "", aBoolean991);
                 return;
             }
-            String s = Class50.method587(-45804, Class50.method584(l, (byte) -99));
+            String s = TextClass.fixName(TextClass.longForName(l));
             for (int j = 0; j < ignoreCount; j++) {
                 if (ignoreListAsLongs[j] == l) {
                     pushMessage(s + " is already on your ignore list", 0, "", aBoolean991);
@@ -10574,7 +10572,7 @@ public class client extends Applet_Sub1 {
                     class30_sub1.anInt1294--;
                 }
                 if (class30_sub1.anInt1294 == 0) {
-                    if (class30_sub1.anInt1299 < 0 || Class7.method178(class30_sub1.anInt1299, class30_sub1.anInt1301, 8)) {
+                    if (class30_sub1.anInt1299 < 0 || ObjectManager.method178(class30_sub1.anInt1299, class30_sub1.anInt1301, 8)) {
                         method142(class30_sub1.anInt1298, class30_sub1.anInt1295, class30_sub1.anInt1300, class30_sub1.anInt1301, class30_sub1.anInt1297, class30_sub1.anInt1296, class30_sub1.anInt1299, 4);
                         class30_sub1.unlink();
                     }
@@ -10582,7 +10580,7 @@ public class client extends Applet_Sub1 {
                     if (class30_sub1.anInt1302 > 0) {
                         class30_sub1.anInt1302--;
                     }
-                    if (class30_sub1.anInt1302 == 0 && class30_sub1.anInt1297 >= 1 && class30_sub1.anInt1298 >= 1 && class30_sub1.anInt1297 <= 102 && class30_sub1.anInt1298 <= 102 && (class30_sub1.anInt1291 < 0 || Class7.method178(class30_sub1.anInt1291, class30_sub1.anInt1293, 8))) {
+                    if (class30_sub1.anInt1302 == 0 && class30_sub1.anInt1297 >= 1 && class30_sub1.anInt1298 >= 1 && class30_sub1.anInt1297 <= 102 && class30_sub1.anInt1298 <= 102 && (class30_sub1.anInt1291 < 0 || ObjectManager.method178(class30_sub1.anInt1291, class30_sub1.anInt1293, 8))) {
                         method142(class30_sub1.anInt1298, class30_sub1.anInt1295, class30_sub1.anInt1292, class30_sub1.anInt1293, class30_sub1.anInt1297, class30_sub1.anInt1296, class30_sub1.anInt1291, 4);
                         class30_sub1.anInt1302 = -1;
                         if (class30_sub1.anInt1291 == class30_sub1.anInt1299 && class30_sub1.anInt1299 == -1) {
@@ -10865,16 +10863,16 @@ public class client extends Applet_Sub1 {
         if (flag) {
             throw new NullPointerException();
         }
-        Class9 class9 = Class9.aClass9Array210[j];
-        for (int k = 0; k < class9.anIntArray240.length; k++) {
-            if (class9.anIntArray240[k] == -1) {
+        RSInterface class9 = RSInterface.interfaceCache[j];
+        for (int k = 0; k < class9.children.length; k++) {
+            if (class9.children[k] == -1) {
                 break;
             }
-            Class9 class9_1 = Class9.aClass9Array210[class9.anIntArray240[k]];
-            if (class9_1.anInt262 == 1) {
-                flag1 |= method119(i, false, class9_1.anInt250);
+            RSInterface class9_1 = RSInterface.interfaceCache[class9.children[k]];
+            if (class9_1.type == 1) {
+                flag1 |= method119(i, false, class9_1.id);
             }
-            if (class9_1.anInt262 == 6 && (class9_1.anInt257 != -1 || class9_1.anInt258 != -1)) {
+            if (class9_1.type == 6 && (class9_1.anInt257 != -1 || class9_1.anInt258 != -1)) {
                 boolean flag2 = method131(class9_1, false);
                 int l;
                 if (flag2) {
@@ -11037,12 +11035,12 @@ public class client extends Applet_Sub1 {
         }
     }
 
-    public final int extractInterfaceValues(Class9 class9, int j) {
-        if (class9.anIntArrayArray226 == null || j >= class9.anIntArrayArray226.length) {
+    public final int extractInterfaceValues(RSInterface class9, int j) {
+        if (class9.valueIndexArray == null || j >= class9.valueIndexArray.length) {
             return -2;
         }
         try {
-            int ai[] = class9.anIntArrayArray226[j];
+            int ai[] = class9.valueIndexArray[j];
             int k = 0;
             int l = 0;
             int i1 = 0;
@@ -11063,12 +11061,12 @@ public class client extends Applet_Sub1 {
                     k1 = currentExp[ai[l++]];
                 }
                 if (j1 == 4) {
-                    Class9 class9_1 = Class9.aClass9Array210[ai[l++]];
+                    RSInterface class9_1 = RSInterface.interfaceCache[ai[l++]];
                     int k2 = ai[l++];
-                    if (k2 >= 0 && k2 < Class8.anInt203 && (!Class8.method198(k2).aBoolean161 || isMembers)) {
-                        for (int j3 = 0; j3 < class9_1.anIntArray253.length; j3++) {
-                            if (class9_1.anIntArray253[j3] == k2 + 1) {
-                                k1 += class9_1.anIntArray252[j3];
+                    if (k2 >= 0 && k2 < ItemDef.totalItems && (!ItemDef.forID(k2).membersObject || isMembers)) {
+                        for (int j3 = 0; j3 < class9_1.inv.length; j3++) {
+                            if (class9_1.inv[j3] == k2 + 1) {
+                                k1 += class9_1.invStackSized[j3];
                             }
                         }
                     }
@@ -11086,18 +11084,18 @@ public class client extends Applet_Sub1 {
                     k1 = aClass30_Sub2_Sub4_Sub1_Sub2_1126.combatLevel;
                 }
                 if (j1 == 9) {
-                    for (int l1 = 0; l1 < Class45.anInt733; l1++) {
-                        if (Class45.aBooleanArray735[l1]) {
+                    for (int l1 = 0; l1 < Skills.skillsCount; l1++) {
+                        if (Skills.skillEnabled[l1]) {
                             k1 += maxStats[l1];
                         }
                     }
                 }
                 if (j1 == 10) {
-                    Class9 class9_2 = Class9.aClass9Array210[ai[l++]];
+                    RSInterface class9_2 = RSInterface.interfaceCache[ai[l++]];
                     int l2 = ai[l++] + 1;
-                    if (l2 >= 0 && l2 < Class8.anInt203 && (!Class8.method198(l2).aBoolean161 || isMembers)) {
-                        for (int k3 = 0; k3 < class9_2.anIntArray253.length; k3++) {
-                            if (class9_2.anIntArray253[k3] != l2) {
+                    if (l2 >= 0 && l2 < ItemDef.totalItems && (!ItemDef.forID(l2).membersObject || isMembers)) {
+                        for (int k3 = 0; k3 < class9_2.inv.length; k3++) {
+                            if (class9_2.inv[k3] != l2) {
                                 continue;
                             }
                             k1 = 0x3b9ac9ff;
@@ -11332,8 +11330,8 @@ public class client extends Applet_Sub1 {
         for (int i6 = 0; i6 < npcCount; i6++) { //NPC's
             NPC class30_sub2_sub4_sub1_sub1 = npcArray[anIntArray837[i6]];
             if (class30_sub2_sub4_sub1_sub1 != null && class30_sub2_sub4_sub1_sub1.isVisible()) {
-                Class5 class5 = class30_sub2_sub4_sub1_sub1.desc;
-                if (class5.anIntArray88 != null) {
+                EntityDef class5 = class30_sub2_sub4_sub1_sub1.desc;
+                if (class5.childrenIDs != null) {
                     class5 = class5.method161(anInt877);
                 }
                 if (class5 != null && class5.aBoolean87 && class5.aBoolean84) {
@@ -11349,7 +11347,7 @@ public class client extends Applet_Sub1 {
                 int j1 = ((Entity) (class30_sub2_sub4_sub1_sub2)).x / 32 - ((Entity) (aClass30_Sub2_Sub4_Sub1_Sub2_1126)).x / 32;
                 int l3 = ((Entity) (class30_sub2_sub4_sub1_sub2)).y / 32 - ((Entity) (aClass30_Sub2_Sub4_Sub1_Sub2_1126)).y / 32;
                 boolean flag1 = false;
-                long l6 = Class50.method583(class30_sub2_sub4_sub1_sub2.name);
+                long l6 = TextClass.method583(class30_sub2_sub4_sub1_sub2.name);
                 for (int k6 = 0; k6 < friendsCount; k6++) {
                     if (l6 != friendsListAsLongs[k6] || friendNodeIDs[k6] == 0) {
                         continue;
@@ -11538,7 +11536,7 @@ public class client extends Applet_Sub1 {
         if (i > 0);
     }
 
-    public final boolean method131(Class9 class9, boolean flag) {
+    public final boolean method131(RSInterface class9, boolean flag) {
         if (flag) {
             anInt883 = -211;
         }
@@ -11865,7 +11863,7 @@ public class client extends Applet_Sub1 {
 
             fancyFont.drawCenteredText(0xb6a689, 543, "Password", 86, false);
             loginTextBox.method348(600, 67);
-            smallFont.drawShadowedText(false, 620, 0xffffff, "" + Class50.method588(myPassword) + ((anInt1216 == 1) & (loopCycle % 40 < 20) ? "@bla@|" : ""), 85);
+            smallFont.drawShadowedText(false, 620, 0xffffff, "" + TextClass.passwordAsterisks(myPassword) + ((anInt1216 == 1) & (loopCycle % 40 < 20) ? "@bla@|" : ""), 85);
 
 
             //user saving
@@ -12187,9 +12185,9 @@ public class client extends Applet_Sub1 {
                     }
                 }
                 if (j16 == 3) {
-                    Class49 class49 = aClass25_946.method299(i7, j4, plane, 0);
+                    Object3 class49 = aClass25_946.method299(i7, j4, plane, 0);
                     if (class49 != null) {
-                        class49.aClass30_Sub2_Sub4_814 = new Animable_Sub5(class49.anInt815 >> 14 & 0x7fff, k14, 22, i19, (byte) 7, l19, j18, k20, j17, false);
+                        class49.animable = new Animable_Sub5(class49.uid >> 14 & 0x7fff, k14, 22, i19, (byte) 7, l19, j18, k20, j17, false);
                     }
                 }
             }
@@ -12218,7 +12216,7 @@ public class client extends Applet_Sub1 {
                 class30_sub2_sub4_sub1_sub2 = playerArray[i10];
             }
             if (class30_sub2_sub4_sub1_sub2 != null) {
-                Class46 class46 = Class46.method572(l21);
+                ObjectDef class46 = ObjectDef.forID(l21);
                 int i22 = intGroundArray[plane][k4][j7];
                 int j22 = intGroundArray[plane][k4 + 1][j7];
                 int k22 = intGroundArray[plane][k4 + 1][j7 + 1];
@@ -12229,11 +12227,11 @@ public class client extends Applet_Sub1 {
                     class30_sub2_sub4_sub1_sub2.anInt1707 = l14 + loopCycle;
                     class30_sub2_sub4_sub1_sub2.anInt1708 = k17 + loopCycle;
                     class30_sub2_sub4_sub1_sub2.aModel_1714 = class30_sub2_sub4_sub6;
-                    int i23 = class46.anInt744;
-                    int j23 = class46.anInt761;
+                    int i23 = class46.objectWidth;
+                    int j23 = class46.objectHeight;
                     if (i20 == 1 || i20 == 3) {
-                        i23 = class46.anInt761;
-                        j23 = class46.anInt744;
+                        i23 = class46.objectHeight;
+                        j23 = class46.objectWidth;
                     }
                     class30_sub2_sub4_sub1_sub2.anInt1711 = k4 * 128 + i23 * 64;
                     class30_sub2_sub4_sub1_sub2.anInt1713 = j7 * 128 + j23 * 64;
@@ -12348,8 +12346,8 @@ public class client extends Applet_Sub1 {
         }
         Texture.lowMem = true;
         lowMem = true;
-        Class7.aBoolean151 = true;
-        Class46.aBoolean752 = true;
+        ObjectManager.lowMem = true;
+        ObjectDef.lowMem = true;
     }
 
     private final void method139(Stream class30_sub2_sub2) {
@@ -12453,7 +12451,7 @@ public class client extends Applet_Sub1 {
                 int l2 = i3 >> 6;
                 if (j1 == 0) {
                     aClass25_946.method291(i1, j, i, (byte) -119);
-                    Class46 class46 = Class46.method572(j2);
+                    ObjectDef class46 = ObjectDef.forID(j2);
                     if (class46.aBoolean767) {
                         aClass11Array1230[j].method215(l2, k2, class46.aBoolean757, true, i1, i);
                     }
@@ -12463,18 +12461,18 @@ public class client extends Applet_Sub1 {
                 }
                 if (j1 == 2) {
                     aClass25_946.method293(j, -978, i1, i);
-                    Class46 class46_1 = Class46.method572(j2);
-                    if (i1 + class46_1.anInt744 > 103 || i + class46_1.anInt744 > 103 || i1 + class46_1.anInt761 > 103 || i + class46_1.anInt761 > 103) {
+                    ObjectDef class46_1 = ObjectDef.forID(j2);
+                    if (i1 + class46_1.objectWidth > 103 || i + class46_1.objectWidth > 103 || i1 + class46_1.objectHeight > 103 || i + class46_1.objectHeight > 103) {
                         return;
                     }
                     if (class46_1.aBoolean767) {
-                        aClass11Array1230[j].method216(l2, class46_1.anInt744, i1, i, (byte) 6, class46_1.anInt761, class46_1.aBoolean757);
+                        aClass11Array1230[j].method216(l2, class46_1.objectWidth, i1, i, (byte) 6, class46_1.objectHeight, class46_1.aBoolean757);
                     }
                 }
                 if (j1 == 3) {
                     aClass25_946.method294((byte) 9, j, i, i1);
-                    Class46 class46_2 = Class46.method572(j2);
-                    if (class46_2.aBoolean767 && class46_2.aBoolean778) {
+                    ObjectDef class46_2 = ObjectDef.forID(j2);
+                    if (class46_2.aBoolean767 && class46_2.hasActions) {
                         aClass11Array1230[j].method218(360, i, i1);
                     }
                 }
@@ -12484,7 +12482,7 @@ public class client extends Applet_Sub1 {
                 if (j3 < 3 && (byteGroundArray[1][i1][i] & 2) == 2) {
                     j3++;
                 }
-                Class7.method188(aClass25_946, k, i, l, j3, aClass11Array1230[j], intGroundArray, i1, k1, j, (byte) 93);
+                ObjectManager.method188(aClass25_946, k, i, l, j3, aClass11Array1230[j], intGroundArray, i1, k1, j);
             }
         }
     }
@@ -12615,7 +12613,7 @@ public class client extends Applet_Sub1 {
                 anInt1193 = aClass30_Sub2_Sub2_1083.method440();
                 daysSinceLastLogin = aClass30_Sub2_Sub2_1083.readUnsignedWord();
                 if (anInt1193 != 0 && openInterfaceID == -1) {
-                    signlink.dnslookup(Class50.method586(anInt1193, true));
+                    signlink.dnslookup(TextClass.method586(anInt1193));
                     clearTopInterfaces();
                     char c = '\u028A';
                     if (daysSinceRecovChange != 201 || membersInt == 1) {
@@ -12623,11 +12621,11 @@ public class client extends Applet_Sub1 {
                     }
                     reportAbuseInput = "";
                     canMute = false;
-                    for (int k9 = 0; k9 < Class9.aClass9Array210.length; k9++) {
-                        if (Class9.aClass9Array210[k9] == null || Class9.aClass9Array210[k9].anInt214 != c) {
+                    for (int k9 = 0; k9 < RSInterface.interfaceCache.length; k9++) {
+                        if (RSInterface.interfaceCache[k9] == null || RSInterface.interfaceCache[k9].anInt214 != c) {
                             continue;
                         }
-                        openInterfaceID = Class9.aClass9Array210[k9].anInt236;
+                        openInterfaceID = RSInterface.interfaceCache[k9].parentID;
                         break;
                     }
                 }
@@ -12657,11 +12655,11 @@ public class client extends Applet_Sub1 {
 
             if (pktType == 185) { //Sends players head with equiped helmet in chatbox?
                 int k = aClass30_Sub2_Sub2_1083.method436();
-                Class9.aClass9Array210[k].anInt233 = 3;
+                RSInterface.interfaceCache[k].anInt233 = 3;
                 if (aClass30_Sub2_Sub4_Sub1_Sub2_1126.desc == null) {
-                    Class9.aClass9Array210[k].anInt234 = (aClass30_Sub2_Sub4_Sub1_Sub2_1126.anIntArray1700[0] << 25) + (aClass30_Sub2_Sub4_Sub1_Sub2_1126.anIntArray1700[4] << 20) + (aClass30_Sub2_Sub4_Sub1_Sub2_1126.equipment[0] << 15) + (aClass30_Sub2_Sub4_Sub1_Sub2_1126.equipment[8] << 10) + (aClass30_Sub2_Sub4_Sub1_Sub2_1126.equipment[11] << 5) + aClass30_Sub2_Sub4_Sub1_Sub2_1126.equipment[1];
+                    RSInterface.interfaceCache[k].mediaID = (aClass30_Sub2_Sub4_Sub1_Sub2_1126.anIntArray1700[0] << 25) + (aClass30_Sub2_Sub4_Sub1_Sub2_1126.anIntArray1700[4] << 20) + (aClass30_Sub2_Sub4_Sub1_Sub2_1126.equipment[0] << 15) + (aClass30_Sub2_Sub4_Sub1_Sub2_1126.equipment[8] << 10) + (aClass30_Sub2_Sub4_Sub1_Sub2_1126.equipment[11] << 5) + aClass30_Sub2_Sub4_Sub1_Sub2_1126.equipment[1];
                 } else {
-                    Class9.aClass9Array210[k].anInt234 = (int) (0x12345678L + aClass30_Sub2_Sub4_Sub1_Sub2_1126.desc.aLong78);
+                    RSInterface.interfaceCache[k].mediaID = (int) (0x12345678L + aClass30_Sub2_Sub4_Sub1_Sub2_1126.desc.type);
                 }
                 pktType = -1;
                 return true;
@@ -12678,10 +12676,10 @@ public class client extends Applet_Sub1 {
 
             if (pktType == 72) { //Something wtih inventory items again
                 int i1 = aClass30_Sub2_Sub2_1083.method434((byte) 108);
-                Class9 class9 = Class9.aClass9Array210[i1];
-                for (int k15 = 0; k15 < class9.anIntArray253.length; k15++) {
-                    class9.anIntArray253[k15] = -1;
-                    class9.anIntArray253[k15] = 0;
+                RSInterface class9 = RSInterface.interfaceCache[i1];
+                for (int k15 = 0; k15 < class9.inv.length; k15++) {
+                    class9.inv[k15] = -1;
+                    class9.inv[k15] = 0;
                 }
                 pktType = -1;
                 return true;
@@ -12805,7 +12803,7 @@ public class client extends Applet_Sub1 {
                 int Xoffset = aClass30_Sub2_Sub2_1083.readSignedWord();
                 int Yoffset = aClass30_Sub2_Sub2_1083.method437();
                 int id = aClass30_Sub2_Sub2_1083.method434((byte) 108);
-                Class9 class9_5 = Class9.aClass9Array210[id];
+                RSInterface class9_5 = RSInterface.interfaceCache[id];
                 class9_5.anInt263 = Xoffset;
                 class9_5.anInt265 = Yoffset;
                 pktType = -1;
@@ -13035,8 +13033,8 @@ public class client extends Applet_Sub1 {
             if (pktType == 75) { //Chatbox head and Animation
                 int modelID = aClass30_Sub2_Sub2_1083.method436();
                 int id = aClass30_Sub2_Sub2_1083.method436();
-                Class9.aClass9Array210[id].anInt233 = 2;
-                Class9.aClass9Array210[id].anInt234 = modelID;
+                RSInterface.interfaceCache[id].anInt233 = 2;
+                RSInterface.interfaceCache[id].mediaID = modelID;
                 pktType = -1;
                 return true;
             }
@@ -13111,7 +13109,7 @@ public class client extends Applet_Sub1 {
                 String playerMessage = aClass30_Sub2_Sub2_1083.readString();
                 if (playerMessage.endsWith(":clan")) {
                     String s3 = playerMessage.substring(0, playerMessage.indexOf(":"));
-                    long l17 = Class50.method583(s3);
+                    long l17 = TextClass.method583(s3);
                     boolean flag9 = false;
                     for (int j27 = 0; j27 < ignoreCount; j27++) {
                         if (ignoreListAsLongs[j27] != l17) {
@@ -13125,7 +13123,7 @@ public class client extends Applet_Sub1 {
                     }
                 } else if (playerMessage.endsWith(":tradereq:")) {
                     String s3 = playerMessage.substring(0, playerMessage.indexOf(":"));
-                    long l17 = Class50.method583(s3);
+                    long l17 = TextClass.method583(s3);
                     boolean flag2 = false;
                     for (int j27 = 0; j27 < ignoreCount; j27++) {
                         if (ignoreListAsLongs[j27] != l17) {
@@ -13139,7 +13137,7 @@ public class client extends Applet_Sub1 {
                     }
                 } else if (playerMessage.endsWith(":duelreq:")) {
                     String s4 = playerMessage.substring(0, playerMessage.indexOf(":"));
-                    long l18 = Class50.method583(s4);
+                    long l18 = TextClass.method583(s4);
                     boolean flag3 = false;
                     for (int k27 = 0; k27 < ignoreCount; k27++) {
                         if (ignoreListAsLongs[k27] != l18) {
@@ -13158,7 +13156,7 @@ public class client extends Applet_Sub1 {
                     }
                 } else if (playerMessage.endsWith(":chalreq:")) {
                     String s5 = playerMessage.substring(0, playerMessage.indexOf(":"));
-                    long l19 = Class50.method583(s5);
+                    long l19 = TextClass.method583(s5);
                     boolean flag4 = false;
                     for (int l27 = 0; l27 < ignoreCount; l27++) {
                         if (ignoreListAsLongs[l27] != l19) {
@@ -13196,7 +13194,7 @@ public class client extends Applet_Sub1 {
             if (pktType == 50) { //Loads login and logout messages. Really unneeded
                 long l4 = aClass30_Sub2_Sub2_1083.readQWord();
                 int i18 = aClass30_Sub2_Sub2_1083.readUnsignedByte();
-                String s7 = Class50.method587(-45804, Class50.method584(l4, (byte) -99));
+                String s7 = TextClass.fixName(TextClass.longForName(l4));
                 for (int k24 = 0; k24 < friendsCount; k24++) {
                     if (l4 != friendsListAsLongs[k24]) {
                         continue;
@@ -13314,15 +13312,15 @@ public class client extends Applet_Sub1 {
             if (pktType == 79) { //Seems to set the main interface ID when using interface menus?
                 int j5 = aClass30_Sub2_Sub2_1083.method434((byte) 108);
                 int l12 = aClass30_Sub2_Sub2_1083.method435();
-                Class9 class9_3 = Class9.aClass9Array210[j5];
-                if (class9_3 != null && class9_3.anInt262 == 0) {
+                RSInterface class9_3 = RSInterface.interfaceCache[j5];
+                if (class9_3 != null && class9_3.type == 0) {
                     if (l12 < 0) {
                         l12 = 0;
                     }
-                    if (l12 > class9_3.anInt261 - class9_3.anInt267) {
-                        l12 = class9_3.anInt261 - class9_3.anInt267;
+                    if (l12 > class9_3.scrollMax - class9_3.height) {
+                        l12 = class9_3.scrollMax - class9_3.height;
                     }
-                    class9_3.anInt224 = l12;
+                    class9_3.scrollPosition = l12;
                 }
                 pktType = -1;
                 return true;
@@ -13370,11 +13368,11 @@ public class client extends Applet_Sub1 {
                             s9 = Censor.doCensor(s9);
                         }
                         if (l21 == 2 || l21 == 3) {
-                            pushMessage(s9, 7, "@cr2@" + Class50.method587(-45804, Class50.method584(l5, (byte) -99)), aBoolean991);
+                            pushMessage(s9, 7, "@cr2@" + TextClass.fixName(TextClass.longForName(l5)), aBoolean991);
                         } else if (l21 == 1) {
-                            pushMessage(s9, 7, "@cr1@" + Class50.method587(-45804, Class50.method584(l5, (byte) -99)), aBoolean991);
+                            pushMessage(s9, 7, "@cr1@" + TextClass.fixName(TextClass.longForName(l5)), aBoolean991);
                         } else {
-                            pushMessage(s9, 3, Class50.method587(-45804, Class50.method584(l5, (byte) -99)), aBoolean991);
+                            pushMessage(s9, 3, TextClass.fixName(TextClass.longForName(l5)), aBoolean991);
                         }
                     } catch (Exception exception1) {
                         signlink.reporterror("cde1");
@@ -13410,16 +13408,16 @@ public class client extends Applet_Sub1 {
                 int i13 = aClass30_Sub2_Sub2_1083.readUnsignedWord();
                 int modelId = aClass30_Sub2_Sub2_1083.readUnsignedWord();
                 if (modelId == 65535) {
-                    Class9.aClass9Array210[i6].anInt233 = 0;
+                    RSInterface.interfaceCache[i6].anInt233 = 0;
                     pktType = -1;
                     return true;
                 } else {
-                    Class8 class8 = Class8.method198(modelId);
-                    Class9.aClass9Array210[i6].anInt233 = 4;
-                    Class9.aClass9Array210[i6].anInt234 = modelId;
-                    Class9.aClass9Array210[i6].anInt270 = class8.anInt190;
-                    Class9.aClass9Array210[i6].anInt271 = class8.anInt198;
-                    Class9.aClass9Array210[i6].anInt269 = (class8.anInt181 * 100) / i13;
+                    ItemDef class8 = ItemDef.forID(modelId);
+                    RSInterface.interfaceCache[i6].anInt233 = 4;
+                    RSInterface.interfaceCache[i6].mediaID = modelId;
+                    RSInterface.interfaceCache[i6].anInt270 = class8.modelRotation1;
+                    RSInterface.interfaceCache[i6].anInt271 = class8.modelRotation2;
+                    RSInterface.interfaceCache[i6].anInt269 = (class8.modelZoom * 100) / i13;
                     pktType = -1;
                     return true;
                 }
@@ -13428,7 +13426,7 @@ public class client extends Applet_Sub1 {
             if (pktType == 171) { //Is wrong server side so usage unknown
                 boolean hoverEnabled = aClass30_Sub2_Sub2_1083.readUnsignedByte() == 1;
                 int j13 = aClass30_Sub2_Sub2_1083.readUnsignedWord();
-                Class9.aClass9Array210[j13].aBoolean266 = hoverEnabled;
+                RSInterface.interfaceCache[j13].aBoolean266 = hoverEnabled;
                 pktType = -1;
                 return true;
             }
@@ -13456,8 +13454,8 @@ public class client extends Applet_Sub1 {
             if (pktType == 126) { //Controls clientside interface strings serverside.
                 String text = aClass30_Sub2_Sub2_1083.readString();
                 int id = aClass30_Sub2_Sub2_1083.method435();
-                Class9.aClass9Array210[id].aString248 = text;
-                if (Class9.aClass9Array210[id].anInt236 == tabInterfaceIDs[tabID]) {
+                RSInterface.interfaceCache[id].message = text;
+                if (RSInterface.interfaceCache[id].parentID == tabInterfaceIDs[tabID]) {
                     needDrawTabArea = true;
                 }
                 pktType = -1;
@@ -13486,8 +13484,8 @@ public class client extends Applet_Sub1 {
             if (pktType == 8) { //wtf?
                 int k6 = aClass30_Sub2_Sub2_1083.method436();
                 int l13 = aClass30_Sub2_Sub2_1083.readUnsignedWord();
-                Class9.aClass9Array210[k6].anInt233 = 1;
-                Class9.aClass9Array210[k6].anInt234 = l13;
+                RSInterface.interfaceCache[k6].anInt233 = 1;
+                RSInterface.interfaceCache[k6].mediaID = l13;
                 pktType = -1;
                 return true;
             }
@@ -13498,7 +13496,7 @@ public class client extends Applet_Sub1 {
                 int i19 = i14 >> 10 & 0x1f;
                 int i22 = i14 >> 5 & 0x1f;
                 int l24 = i14 & 0x1f;
-                Class9.aClass9Array210[textId].anInt232 = (i19 << 19) + (i22 << 11) + (l24 << 3);
+                RSInterface.interfaceCache[textId].textColor = (i19 << 19) + (i22 << 11) + (l24 << 3);
                 pktType = -1;
                 return true;
             }
@@ -13506,19 +13504,19 @@ public class client extends Applet_Sub1 {
             if (pktType == 53) { //Something with bank items?
                 needDrawTabArea = true;
                 int i7 = aClass30_Sub2_Sub2_1083.readUnsignedWord();
-                Class9 class9_1 = Class9.aClass9Array210[i7];
+                RSInterface class9_1 = RSInterface.interfaceCache[i7];
                 int j19 = aClass30_Sub2_Sub2_1083.readUnsignedWord();
                 for (int j22 = 0; j22 < j19; j22++) {
                     int i25 = aClass30_Sub2_Sub2_1083.readUnsignedByte();
                     if (i25 == 255) {
                         i25 = aClass30_Sub2_Sub2_1083.method440();
                     }
-                    class9_1.anIntArray253[j22] = aClass30_Sub2_Sub2_1083.method436();
-                    class9_1.anIntArray252[j22] = i25;
+                    class9_1.inv[j22] = aClass30_Sub2_Sub2_1083.method436();
+                    class9_1.invStackSized[j22] = i25;
                 }
-                for (int j25 = j19; j25 < class9_1.anIntArray253.length; j25++) {
-                    class9_1.anIntArray253[j25] = 0;
-                    class9_1.anIntArray252[j25] = 0;
+                for (int j25 = j19; j25 < class9_1.inv.length; j25++) {
+                    class9_1.inv[j25] = 0;
+                    class9_1.invStackSized[j25] = 0;
                 }
                 pktType = -1;
                 return true;
@@ -13529,9 +13527,9 @@ public class client extends Applet_Sub1 {
                 int j14 = aClass30_Sub2_Sub2_1083.readUnsignedWord();
                 int k19 = aClass30_Sub2_Sub2_1083.readUnsignedWord();
                 int k22 = aClass30_Sub2_Sub2_1083.method436();
-                Class9.aClass9Array210[j14].anInt270 = k19;
-                Class9.aClass9Array210[j14].anInt271 = k22;
-                Class9.aClass9Array210[j14].anInt269 = j7;
+                RSInterface.interfaceCache[j14].anInt270 = k19;
+                RSInterface.interfaceCache[j14].anInt271 = k22;
+                RSInterface.interfaceCache[j14].anInt269 = j7;
                 pktType = -1;
                 return true;
             }
@@ -13672,7 +13670,7 @@ public class client extends Applet_Sub1 {
             if (pktType == 200) { //Animates the chatbox head
                 int l8 = aClass30_Sub2_Sub2_1083.readUnsignedWord();
                 int i15 = aClass30_Sub2_Sub2_1083.readSignedWord();
-                Class9 class9_4 = Class9.aClass9Array210[l8];
+                RSInterface class9_4 = RSInterface.interfaceCache[l8];
                 class9_4.anInt257 = i15;
                 if (i15 == -1) {
                     class9_4.anInt246 = 0;
@@ -13705,7 +13703,7 @@ public class client extends Applet_Sub1 {
             if (pktType == 34) { //displays items for equipment
                 needDrawTabArea = true;
                 int equipmentId = aClass30_Sub2_Sub2_1083.readUnsignedWord();
-                Class9 class9_2 = Class9.aClass9Array210[equipmentId];
+                RSInterface class9_2 = RSInterface.interfaceCache[equipmentId];
                 while (aClass30_Sub2_Sub2_1083.currentOffset < pktSize) {
                     int j20 = aClass30_Sub2_Sub2_1083.method422();
                     int i23 = aClass30_Sub2_Sub2_1083.readUnsignedWord();
@@ -13713,9 +13711,9 @@ public class client extends Applet_Sub1 {
                     if (l25 == 255) {
                         l25 = aClass30_Sub2_Sub2_1083.readDWord();
                     }
-                    if (j20 >= 0 && j20 < class9_2.anIntArray253.length) {
-                        class9_2.anIntArray253[j20] = i23;
-                        class9_2.anIntArray252[j20] = l25;
+                    if (j20 >= 0 && j20 < class9_2.inv.length) {
+                        class9_2.inv[j20] = i23;
+                        class9_2.invStackSized[j20] = l25;
                     }
                 }
                 pktType = -1;
@@ -13890,7 +13888,7 @@ public class client extends Applet_Sub1 {
         aClass30_Sub2_Sub2_847 = Stream.create(1, 9);
         aBoolean848 = true;
         openInterfaceID = -1;
-        currentExp = new int[Class45.anInt733];
+        currentExp = new int[Skills.skillsCount];
         aBoolean872 = false;
         anIntArray873 = new int[5];
         anInt874 = -1;
@@ -13916,7 +13914,7 @@ public class client extends Applet_Sub1 {
         aByteArray912 = new byte[16384];
         aByte920 = 14;
         anInt921 = 732;
-        currentStats = new int[Class45.anInt733];
+        currentStats = new int[Skills.skillsCount];
         aByte923 = 25;
         ignoreListAsLongs = new long[100];
         loadingError = false;
@@ -13967,7 +13965,7 @@ public class client extends Applet_Sub1 {
         scrollBar = new Sprite[2];
         dialogID = -1;
         aBoolean1043 = false;
-        maxStats = new int[Class45.anInt733];
+        maxStats = new int[Skills.skillsCount];
         anIntArray1045 = new int[2000];
         aBoolean1047 = true;
         anInt1050 = 111;
@@ -13976,7 +13974,7 @@ public class client extends Applet_Sub1 {
         aClass19_1056 = new NodeList();
         anIntArray1057 = new int[33];
         anInt1058 = 24869;
-        chatBoxScrollbar = new Class9();
+        chatBoxScrollbar = new RSInterface();
         mapScenes = new Background[100];
         anInt1063 = 0x594d3a;
         anIntArray1065 = new int[7];
@@ -14422,13 +14420,13 @@ public class client extends Applet_Sub1 {
     private int anInt1050;
     private static int anInt1051;
     private int anIntArray1052[];
-    private Class44 aClass44_1053;
+    private StreamLoader aClass44_1053;
     private int flashingSidebarId;
     private int multiOverlayIconID;
     private NodeList aClass19_1056;
     private int anIntArray1057[];
     private int anInt1058;
-    public static Class9 chatBoxScrollbar;
+    public static RSInterface chatBoxScrollbar;
     private Background mapScenes[];
     static int drawCycle;
     private int anInt1062;

@@ -1,18 +1,7 @@
 package client;
 
-/*
-JAVA GOT ME STONED; CLIENT - JGMS.
-CURRENT VERSION; 1.5.2.0
-CREATED BY JAVA GOT ME STONED OF RUNE-SERVER. 
-*/
-
-final class Class47
-{
-
-    Class47()
-    {
-    }
-
+final class Class47 {
+    
     int anInt787;
     int anInt788;
     int anInt789;
@@ -31,4 +20,7 @@ final class Class47
     int anInt802;
     int anInt803;
     int anInt804;
+    
+    Class47() {
+    }
 }

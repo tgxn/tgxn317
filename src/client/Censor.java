@@ -28,11 +28,11 @@ public final class Censor {
     };
     public static boolean aBoolean627;
 
-    public static void loadConfig(Class44 class44) {
-        Stream class30_sub2_sub2 = new Stream(class44.method571("fragmentsenc.txt", null));
-        Stream class30_sub2_sub2_1 = new Stream(class44.method571("badenc.txt", null));
-        Stream class30_sub2_sub2_2 = new Stream(class44.method571("domainenc.txt", null));
-        Stream class30_sub2_sub2_3 = new Stream(class44.method571("tldlist.txt", null));
+    public static void loadConfig(StreamLoader class44) {
+        Stream class30_sub2_sub2 = new Stream(class44.getDataForName("fragmentsenc.txt"));
+        Stream class30_sub2_sub2_1 = new Stream(class44.getDataForName("badenc.txt"));
+        Stream class30_sub2_sub2_2 = new Stream(class44.getDataForName("domainenc.txt"));
+        Stream class30_sub2_sub2_3 = new Stream(class44.getDataForName("tldlist.txt"));
         readValues(class30_sub2_sub2, class30_sub2_sub2_1, class30_sub2_sub2_2, class30_sub2_sub2_3);
     }
 

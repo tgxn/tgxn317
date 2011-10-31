@@ -1,16 +1,16 @@
 package client;
 
-/*
-JAVA GOT ME STONED; CLIENT - JGMS.
-CURRENT VERSION; 1.5.2.0
-CREATED BY JAVA GOT ME STONED OF RUNE-SERVER. 
-*/
+final class Class43 {
 
-final class Class43
-{
+    int anInt716;
+    int anInt717;
+    int anInt718;
+    int anInt719;
+    int anInt720;
+    boolean aBoolean721;
+    int anInt722;
 
-    public Class43(int i, int j, int k, int l, int i1, int j1, boolean flag)
-    {
+    public Class43(int i, int j, int k, int l, int i1, int j1, boolean flag) {
         aBoolean721 = true;
         anInt716 = i;
         anInt717 = j;
@@ -20,12 +20,4 @@ final class Class43
         anInt722 = j1;
         aBoolean721 = flag;
     }
-
-    int anInt716;
-    int anInt717;
-    int anInt718;
-    int anInt719;
-    int anInt720;
-    boolean aBoolean721;
-    int anInt722;
 }

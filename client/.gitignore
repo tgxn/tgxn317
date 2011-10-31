@@ -4,10 +4,7 @@
 /.settings
 
 # netbeans
-/nbproject
-
-# we use maven!
-/build.xml
+*nbproject*
 
 # maven
 /target
@@ -16,7 +13,7 @@
 .*.sw[a-p]
 
 # various other potential build files
-/build
+*/build
 /bin
 /dist
 /manifest.mf

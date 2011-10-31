@@ -1,9 +1,0 @@
-PointerInfo a = MouseInfo.getPointerInfo();
-Point b  = a.getLocation();
-int x = (int)b.getX();
-int y = (int)b.getY();
-
-
-Pirate Pete says:
- x is horizontal (left right)
- y is vertical (up down)

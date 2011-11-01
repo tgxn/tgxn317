@@ -14,7 +14,7 @@ public final class RSImageProducer implements ImageProducer, ImageObserver {
     ImageConsumer anImageConsumer319;
     public Image anImage320;
     
-    public RSImageProducer(int i, int j, Component component, int k) {
+    public RSImageProducer(int i, int j, Component component) {
         aBoolean314 = true;
         anInt316 = i;
         anInt317 = j;
@@ -23,9 +23,6 @@ public final class RSImageProducer implements ImageProducer, ImageObserver {
         anImage320 = component.createImage(this);
         method239();
         component.prepareImage(anImage320, this);
-        if (k != 0) {
-            aBoolean314 = !aBoolean314;
-        }
         method239();
         component.prepareImage(anImage320, this);
         method239();

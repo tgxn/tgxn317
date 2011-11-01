@@ -505,7 +505,7 @@ public class MapMain extends RSApplet {
 
             if (super.saveClickX > 660 && super.saveClickX < 760 && super.saveClickY > 5 && super.saveClickY < 30) {
                 this.rsFrame.setVisible(false);
-                client.Applet_Sub1.aFrame_Sub1_15.setVisible(true);
+                client.RSApplet.gameFrame.setVisible(true);
             }
 
 

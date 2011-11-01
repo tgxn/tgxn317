@@ -38,7 +38,7 @@ public class RSInterface {
     public int children[];
     public int childX[];
     public boolean usableItemInterface;
-    public TextDrawingClass textDrawingAreas;
+    public RSFont textDrawingAreas;
     public int invSpritePadY;
     public int anIntArray245[];
     public int anInt246;
@@ -89,7 +89,7 @@ public class RSInterface {
         return class9;
     }
 
-    public static void addText(int id, String text, TextDrawingClass wid[], int idx, int color) {
+    public static void addText(int id, String text, RSFont wid[], int idx, int color) {
         RSInterface Tab = addTab(id);
         Tab.id = id;
         Tab.parentID = id;
@@ -138,7 +138,7 @@ public class RSInterface {
         Tab.tooltip = s;
     }
 
-    public static void testing(TextDrawingClass[] wid) {
+    public static void testing(RSFont[] wid) {
         RSInterface t = addTab(18000);
         addText(18001, "test", wid, 0, 0xffffff);
         t.children = new int[1];
@@ -223,7 +223,7 @@ public class RSInterface {
         Tab.sprite2 = new Sprite(sign.signlink.findcachedir() + "sprites/interfaces/" + name + " " + i + ".png");
     }
 
-    public static void Sidebar7(TextDrawingClass[] tda) {
+    public static void Sidebar7(RSFont[] tda) {
         RSInterface t = addTab(19000);
         addSprite(17351, 0, "notes/NOTE");
         addHoverButton(17352, "NOTE", 1, 200, 30, "Add note", -1, 17353, 1);
@@ -294,7 +294,7 @@ public class RSInterface {
         }
     }
 
-    public static void LogoutSB(TextDrawingClass[] wid) {
+    public static void LogoutSB(RSFont[] wid) {
         RSInterface class9 = interfaceCache[2449];
 
         //top line
@@ -342,7 +342,7 @@ public class RSInterface {
         class9.message = "click below, to logout safely.";
     }
 
-    public static void Sidebar4(TextDrawingClass[] wid) {
+    public static void Sidebar4(RSFont[] wid) {
         RSInterface t = interfaceCache[1644];
         /*addActionButton(ID, SpriteON, SpriteOFF, SpriteX, SpriteY, "SpriteText");*/
         addActionButton(15101, 15101, 15101, 40, 39, "Show Equipment Screen");
@@ -364,7 +364,7 @@ public class RSInterface {
         t.childY[26] = 212;
     }
 
-    public static void Sidebar8(TextDrawingClass[] wid) {
+    public static void Sidebar8(RSFont[] wid) {
         RSInterface class9 = interfaceCache[5065];
         addText(5070, "Add Friend", wid, 0, 0xff9933);
         addText(5071, "Del Friend", wid, 0, 0xff9933);
@@ -386,7 +386,7 @@ public class RSInterface {
         class9.textColor = 0xff9933;
     }
 
-    public static void Sidebar9(TextDrawingClass[] wid) {
+    public static void Sidebar9(RSFont[] wid) {
         RSInterface class9 = interfaceCache[5715];
         addText(5720, " Add Name", wid, 0, 0xff9933);
         addText(5721, " Del Name", wid, 0, 0xff9933);
@@ -417,7 +417,7 @@ public class RSInterface {
         invStackSized[j] = k;
     }
 
-    public static void unpack(StreamLoader class44, TextDrawingClass aclass30_sub2_sub1_sub4[], byte byte0, StreamLoader class44_1) {
+    public static void unpack(StreamLoader class44, RSFont aclass30_sub2_sub1_sub4[], byte byte0, StreamLoader class44_1) {
         aClass12_238 = new MRUNodes(50000);
         Stream class30_sub2_sub2 = new Stream(class44.getDataForName("data"));
         int i = -1;
@@ -707,34 +707,30 @@ public class RSInterface {
         }
     }
 
-    public Model method209(int i, int j, int k, boolean flag) {
-        Model class30_sub2_sub4_sub6;
+    public Model method209(int j, int k, boolean flag) {
+        Model model;
         if (flag) {
-            class30_sub2_sub4_sub6 = method206(anInt255, anInt256);
+            model = method206(anInt255, anInt256);
         } else {
-            class30_sub2_sub4_sub6 = method206(anInt233, mediaID);
+            model = method206(anInt233, mediaID);
         }
-        if (class30_sub2_sub4_sub6 == null) {
+        if (model == null) {
             return null;
         }
-        if (k == -1 && j == -1 && class30_sub2_sub4_sub6.trianglecolours == null) {
-            return class30_sub2_sub4_sub6;
+        if (k == -1 && j == -1 && model.trianglecolours == null) {
+            return model;
         }
-        Model class30_sub2_sub4_sub6_1 = new Model(9, true, Class36.method532(k) & Class36.method532(j), false, class30_sub2_sub4_sub6);
+        Model model_1 = new Model(9, true, Class36.method532(k) & Class36.method532(j), false, model);
         if (k != -1 || j != -1) {
-            class30_sub2_sub4_sub6_1.method469((byte) -71);
+            model_1.method469((byte) -71);
         }
         if (k != -1) {
-            class30_sub2_sub4_sub6_1.method470(k, 40542);
+            model_1.method470(k, 40542);
         }
         if (j != -1) {
-            class30_sub2_sub4_sub6_1.method470(j, 40542);
+            model_1.method470(j, 40542);
         }
-        class30_sub2_sub4_sub6_1.method479(64, 768, -50, -10, -50, true);
-        if (i != 0) {
-            throw new NullPointerException();
-        } else {
-            return class30_sub2_sub4_sub6_1;
-        }
+        model_1.method479(64, 768, -50, -10, -50, true);
+        return model_1;
     }
 }

@@ -82,7 +82,7 @@ public class OnDemandFetcher extends OnDemandFetcherParent implements Runnable {
             while (running) {
                 onDemandCycle++;
                 int i = 20;
-                if (anInt1332 == 0 && clientInstance.aClass14Array970[0] != null) {
+                if (anInt1332 == 0 && clientInstance.decompressors[0] != null) {
                     i = 50;
                 }
                 try {
@@ -145,7 +145,7 @@ public class OnDemandFetcher extends OnDemandFetcherParent implements Runnable {
                     loopCycle = 0;
                     statusString = "";
                 }
-                if (client.loggedIn && socket != null && outputStream != null && (anInt1332 > 0 || clientInstance.aClass14Array970[0] == null)) {
+                if (client.loggedIn && socket != null && outputStream != null && (anInt1332 > 0 || clientInstance.decompressors[0] == null)) {
                     writeLoopCycle++;
                     if (writeLoopCycle > 500) {
                         writeLoopCycle = 0;
@@ -239,8 +239,8 @@ public class OnDemandFetcher extends OnDemandFetcherParent implements Runnable {
                 }
                 for (int k1 = 0; k1 < expectedSize; k1 += inputStream.read(abyte0, k1 + i1, expectedSize - k1));
                 if (expectedSize + completedSize >= abyte0.length && current != null) {
-                    if (clientInstance.aClass14Array970[0] != null) {
-                        clientInstance.aClass14Array970[current.dataType + 1].method234(abyte0.length, abyte0, (byte) 2, current.ID);
+                    if (clientInstance.decompressors[0] != null) {
+                        clientInstance.decompressors[current.dataType + 1].method234(abyte0.length, abyte0, (byte) 2, current.ID);
                     }
                     if (!current.incomplete && current.dataType == 3) {
                         current.incomplete = true;
@@ -451,7 +451,7 @@ public class OnDemandFetcher extends OnDemandFetcherParent implements Runnable {
     }
 
     public final void method560(int i, int j, boolean flag) {
-        if (clientInstance.aClass14Array970[0] == null) {
+        if (clientInstance.decompressors[0] == null) {
             return;
         }
         if (versions[j][i] == 0) {
@@ -542,13 +542,13 @@ public class OnDemandFetcher extends OnDemandFetcherParent implements Runnable {
         } else {
             anInt1340 = 237;
         }
-        if (clientInstance.aClass14Array970[0] == null) {
+        if (clientInstance.decompressors[0] == null) {
             return;
         }
         if (versions[i][j] == 0) {
             return;
         }
-        byte abyte0[] = clientInstance.aClass14Array970[i + 1].decompress(true, j);
+        byte abyte0[] = clientInstance.decompressors[i + 1].decompress(true, j);
         if (byte0 > anInt1332) {
             anInt1332 = byte0;
         }
@@ -618,8 +618,8 @@ public class OnDemandFetcher extends OnDemandFetcherParent implements Runnable {
         while (class30_sub2_sub3 != null) {
             waiting = true;
             byte abyte0[] = null;
-            if (clientInstance.aClass14Array970[0] != null) {
-                abyte0 = clientInstance.aClass14Array970[class30_sub2_sub3.dataType + 1].decompress(true, class30_sub2_sub3.ID);
+            if (clientInstance.decompressors[0] != null) {
+                abyte0 = clientInstance.decompressors[class30_sub2_sub3.dataType + 1].decompress(true, class30_sub2_sub3.ID);
             }
             //   if(!method549(anIntArrayArray1364[class30_sub2_sub3.dataType][class30_sub2_sub3.ID], (byte)3, anIntArrayArray1365[class30_sub2_sub3.dataType][class30_sub2_sub3.ID], abyte0))
             // abyte0 = null;

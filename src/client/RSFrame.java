@@ -1,6 +1,5 @@
 package client;
 
-
 import java.awt.*;
 import sign.signlink;
 import java.awt.Toolkit;
@@ -10,16 +9,14 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-public final class Frame_Sub1 extends Frame {
-    
+public final class RSFrame extends Frame {
+
     public static TrayIcon trayIcon;
-    private boolean aBoolean35;
-    Applet_Sub1 anApplet_Sub1_36; //rsApplet
-    
-    public Frame_Sub1(Applet_Sub1 applet_sub1, int i, byte byte0, int j) {
-        
-        aBoolean35 = true;
-        anApplet_Sub1_36 = applet_sub1;
+    RSApplet rsApplet;
+
+    public RSFrame(RSApplet rsApplet, int i, int j) {
+
+        this.rsApplet = rsApplet;
 
         // Set frame defaults.
         setTitle("-GaMeR X-'s 317 Client");
@@ -30,15 +27,15 @@ public final class Frame_Sub1 extends Frame {
         setVisible(true);
         toFront();
         setSize(i + 8, j + 28);
-        
+
         // Position window.
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(screenSize.width / 2 - (i + 8) / 2, screenSize.height / 2 - (j + 28) / 2, i + 8, j + 28);
-        
+
         // Check tray support and enable it.
         if (SystemTray.isSupported()) {
 
-            Image icon = Toolkit.getDefaultToolkit().getImage(signlink.findcachedir() + "sprites/misc/icon.png");
+            Image icon = Toolkit.getDefaultToolkit().getImage(signlink.findcachedir() + Csettings.mainIconLocation);
             trayIcon = new TrayIcon(icon, "-GaMeR X-'s Client is Running.");
             trayIcon.setImageAutoSize(true);
 
@@ -64,11 +61,11 @@ public final class Frame_Sub1 extends Frame {
 
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        if (Applet_Sub1.aFrame_Sub1_15.isVisible()) {
-                            Applet_Sub1.aFrame_Sub1_15.setVisible(false);
+                        if (RSApplet.gameFrame.isVisible()) {
+                            RSApplet.gameFrame.setVisible(false);
                             minimiseItem.setLabel("Restore");
                         } else {
-                            Applet_Sub1.aFrame_Sub1_15.setVisible(true);
+                            RSApplet.gameFrame.setVisible(true);
                             minimiseItem.setLabel("Minimise to Tray");
                         }
                     }
@@ -128,12 +125,11 @@ public final class Frame_Sub1 extends Frame {
 
     @Override
     public final void update(Graphics g) {
-        anApplet_Sub1_36.update(g);
+        rsApplet.update(g);
     }
 
     @Override
     public final void paint(Graphics g) {
-        anApplet_Sub1_36.paint(g);
+        rsApplet.paint(g);
     }
-
 }

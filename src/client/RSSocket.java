@@ -11,14 +11,14 @@ public final class RSSocket implements Runnable {
     private OutputStream outputStream;
     private Socket socket;
     private boolean closed;
-    Applet_Sub1 rsApplet;
+    RSApplet rsApplet;
     private byte buffer[];
     private int writeIndex;
     private int buffIndex;
     private boolean isWriter;
     private boolean hasIOError;
     
-    public RSSocket(Applet_Sub1 applet_sub1, Socket socket) throws IOException {
+    public RSSocket(RSApplet applet_sub1, Socket socket) throws IOException {
         aBoolean417 = true;
         closed = false;
         isWriter = false;

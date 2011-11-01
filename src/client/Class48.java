@@ -25,8 +25,8 @@ public class Class48 implements Runnable {
         while (aBoolean808) {
             synchronized (object) {
                 if (anInt810 < 500) {
-                    anIntArray809[anInt810] = ((Applet_Sub1) (clientInstance)).anInt20;
-                    anIntArray807[anInt810] = ((Applet_Sub1) (clientInstance)).anInt21;
+                    anIntArray809[anInt810] = ((RSApplet) (clientInstance)).mouseX;
+                    anIntArray807[anInt810] = ((RSApplet) (clientInstance)).mouseY;
                     anInt810++;
                 }
             }

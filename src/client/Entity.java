@@ -1,25 +1,22 @@
 package client;
 
-
 class Entity extends Animable {
     
-    int smallX[];
-    int smallY[];
+    int[] pathX;
+    int[] pathY;
     int interactingEntity;
     int anInt1503;
     int anInt1504;
     int anInt1505;
-    String aString1506;
+    String textSpoken;
     int height;
-    private boolean aBoolean1508;
-    private int anInt1509;
     int turnDirection;
-    int anInt1511;
-    int anInt1512;
-    int anInt1513;
-    int hitArray[];
-    int hitMarkTypes[];
-    int hitsLoopCycle[];
+    int anInt1511;//idle?
+    int anInt1512;//idleTurn?
+    int anInt1513;//
+    int[] hitArray;
+    int[] hitMarkTypes;
+    int[] hitsLoopCycle;
     int anInt1517;
     int anInt1518;
     int anInt1519;
@@ -28,8 +25,8 @@ class Entity extends Animable {
     int anInt1522;
     int anInt1523;
     int anInt1524;
-    int smallXYIndex;
-    int anim;
+    int pathLength;
+    int animation;
     int anInt1527;
     int anInt1528;
     int anInt1529;
@@ -39,11 +36,10 @@ class Entity extends Animable {
     int currentHealth;
     int maxHealth;
     int textCycle;
-    private int anInt1536;
     int anInt1537;
     int anInt1538;
     int anInt1539;
-    int anInt1540;
+    int boundDim;
     boolean aBoolean1541;
     int anInt1542;
     int anInt1543;
@@ -53,24 +49,22 @@ class Entity extends Animable {
     int anInt1547;
     int anInt1548;
     int anInt1549;
-    int x;
-    int y;
+    int boundExtentX;
+    int boundExtentY;
     int anInt1552;
-    boolean aBooleanArray1553[];
-    int anInt1554;
-    int anInt1555;
-    int anInt1556;
-    int anInt1557;
+    boolean[] pathRun;
+    int anInt1554;//walk?
+    int anInt1555;//turn180?
+    int anInt1556;//turn90clockwise?
+    int anInt1557;//turn90counterclockwise?
     
     Entity() {
-        smallX = new int[10];
-        smallY = new int[10];
+        pathX = new int[10];
+        pathY = new int[10];
         interactingEntity = -1;
         anInt1504 = 32;
         anInt1505 = -1;
         height = 200;
-        aBoolean1508 = false;
-        anInt1509 = -35698;
         anInt1511 = -1;
         anInt1512 = -1;
         hitArray = new int[4];
@@ -78,60 +72,56 @@ class Entity extends Animable {
         hitsLoopCycle = new int[4];
         anInt1517 = -1;
         anInt1520 = -1;
-        anim = -1;
+        animation = -1;
         loopCycleStatus = -1000;
         textCycle = 100;
-        anInt1536 = -895;
-        anInt1540 = 1;
+        boundDim = 1;
         aBoolean1541 = false;
-        aBooleanArray1553 = new boolean[10];
+        pathRun = new boolean[10];
         anInt1554 = -1;
         anInt1555 = -1;
         anInt1556 = -1;
         anInt1557 = -1;
     }
     
-    public final void setPos(int i, int j, boolean flag) {
-        if (anim != -1 && Animation.anims[anim].anInt364 == 1) {
-            anim = -1;
+    public final void setPos(int x, int y, boolean flag) {
+        if (animation != -1 && Animation.animCache[animation].priority == 1) {
+            animation = -1;
         }
         if (!flag) {
-            int k = i - smallX[0];
-            int l = j - smallY[0];
-            if (k >= -8 && k <= 8 && l >= -8 && l <= 8) {
-                if (smallXYIndex < 9) {
-                    smallXYIndex++;
+            int dx = x - pathX[0];
+            int dy = y - pathY[0];
+            if (dx >= -8 && dx <= 8 && dy >= -8 && dy <= 8) {
+                if (pathLength < 9) {
+                    pathLength++;
                 }
-                for (int i1 = smallXYIndex; i1 > 0; i1--) {
-                    smallX[i1] = smallX[i1 - 1];
-                    smallY[i1] = smallY[i1 - 1];
-                    aBooleanArray1553[i1] = aBooleanArray1553[i1 - 1];
+                for (int i1 = pathLength; i1 > 0; i1--) {
+                    pathX[i1] = pathX[i1 - 1];
+                    pathY[i1] = pathY[i1 - 1];
+                    pathRun[i1] = pathRun[i1 - 1];
                 }
 
-                smallX[0] = i;
-                smallY[0] = j;
-                aBooleanArray1553[0] = false;
+                pathX[0] = x;
+                pathY[0] = y;
+                pathRun[0] = false;
                 return;
             }
         }
-        smallXYIndex = 0;
+        pathLength = 0;
         anInt1542 = 0;
         anInt1503 = 0;
-        smallX[0] = i;
-        smallY[0] = j;
-        x = smallX[0] * 128 + anInt1540 * 64;
-        y = smallY[0] * 128 + anInt1540 * 64;
+        pathX[0] = x;
+        pathY[0] = y;
+        this.boundExtentX = pathX[0] * 128 + boundDim * 64;
+        this.boundExtentY = pathY[0] * 128 + boundDim * 64;
     }
 
-    public final void method446(boolean flag) {
-        if (!flag) {
-            for (int i = 1; i > 0; i++);
-        }
-        smallXYIndex = 0;
+    public final void method446() {
+        pathLength = 0;
         anInt1542 = 0;
     }
 
-    public final void updateHitData(int i, int j, int k, int l) {
+    public final void updateHitData(int j, int k, int l) {
         for (int i1 = 0; i1 < 4; i1++) {
             if (hitsLoopCycle[i1] <= l) {
                 hitArray[i1] = k;
@@ -140,63 +130,53 @@ class Entity extends Animable {
                 return;
             }
         }
-
-        if (i != anInt1509) {
-            aBoolean1508 = !aBoolean1508;
-        }
     }
 
-    public final void moveInDir(boolean flag, byte byte0, int i) {
-        int j = smallX[0];
-        int k = smallY[0];
-        if (i == 0) {
-            j--;
-            k++;
+    public final void moveInDir(boolean run, int dir) {
+        int x = pathX[0];
+        int y = pathY[0];
+        if (dir == 0) {
+            x--;
+            y++;
         }
-        if (i == 1) {
-            k++;
+        if (dir == 1) {
+            y++;
         }
-        if (i == 2) {
-            j++;
-            k++;
+        if (dir == 2) {
+            x++;
+            y++;
         }
-        if (i == 3) {
-            j--;
+        if (dir == 3) {
+            x--;
         }
-        if (i == 4) {
-            j++;
+        if (dir == 4) {
+            x++;
         }
-        if (i == 5) {
-            j--;
-            k--;
+        if (dir == 5) {
+            x--;
+            y--;
         }
-        if (i == 6) {
-            k--;
+        if (dir == 6) {
+            y--;
         }
-        if (i == 7) {
-            j++;
-            k--;
+        if (dir == 7) {
+            x++;
+            y--;
         }
-        if (anim != -1 && Animation.anims[anim].anInt364 == 1) {
-            anim = -1;
+        if (animation != -1 && Animation.animCache[animation].priority == 1) {
+            animation = -1;
         }
-        if (smallXYIndex < 9) {
-            smallXYIndex++;
+        if (pathLength < 9) {
+            pathLength++;
         }
-        for (int l = smallXYIndex; l > 0; l--) {
-            smallX[l] = smallX[l - 1];
-            smallY[l] = smallY[l - 1];
-            aBooleanArray1553[l] = aBooleanArray1553[l - 1];
+        for (int l = pathLength; l > 0; l--) {
+            pathX[l] = pathX[l - 1];
+            pathY[l] = pathY[l - 1];
+            pathRun[l] = pathRun[l - 1];
         }
-
-        if (byte0 != 20) {
-            return;
-        } else {
-            smallX[0] = j;
-            smallY[0] = k;
-            aBooleanArray1553[0] = flag;
-            return;
-        }
+        pathX[0] = x;
+        pathY[0] = y;
+        pathRun[0] = run;
     }
 
     public boolean isVisible() {

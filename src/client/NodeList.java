@@ -3,12 +3,10 @@ package client;
 
 public final class NodeList {
     
-    private boolean aBoolean344;
     public Node head;
     private Node current;
     
     public NodeList() {
-        aBoolean344 = false;
         head = new Node();
         head.prev = head;
         head.next = head;

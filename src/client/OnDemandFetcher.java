@@ -1,6 +1,7 @@
 package client;
 
 
+import client.custom.cSettings;
 import java.io.*;
 import java.net.Socket;
 import java.util.zip.CRC32;
@@ -22,7 +23,7 @@ public class OnDemandFetcher extends OnDemandFetcherParent implements Runnable {
     private int anInt1340;
     public int onDemandCycle;
     private byte fileStatus[][];
-    private client clientInstance;
+    private Client clientInstance;
     private NodeList aClass19_1344;
     private static int anInt1345;
     private int completedSize;
@@ -145,7 +146,7 @@ public class OnDemandFetcher extends OnDemandFetcherParent implements Runnable {
                     loopCycle = 0;
                     statusString = "";
                 }
-                if (client.loggedIn && socket != null && outputStream != null && (anInt1332 > 0 || clientInstance.decompressors[0] == null)) {
+                if (Client.loggedIn && socket != null && outputStream != null && (anInt1332 > 0 || clientInstance.decompressors[0] == null)) {
                     writeLoopCycle++;
                     if (writeLoopCycle > 500) {
                         writeLoopCycle = 0;
@@ -163,7 +164,7 @@ public class OnDemandFetcher extends OnDemandFetcherParent implements Runnable {
             }
             return;
         } catch (Exception exception) {
-            signlink.reporterror("od_ex " + exception.getMessage());
+            signlink.reportError("od_ex " + exception.getMessage());
         }
     }
     
@@ -204,7 +205,7 @@ public class OnDemandFetcher extends OnDemandFetcherParent implements Runnable {
                 if (current != null) {
                     loopCycle = 0;
                     if (l1 == 0) {
-                        signlink.reporterror("Rej: " + l + "," + j1);
+                        signlink.reportError("Rej: " + l + "," + j1);
                         current.buffer = null;
                         if (current.incomplete) {
                             synchronized (aClass19_1358) {
@@ -269,7 +270,7 @@ public class OnDemandFetcher extends OnDemandFetcherParent implements Runnable {
         }
     }
 
-    public final void start(StreamLoader class44, client client) {
+    public final void start(JagexArchive class44, Client client) {
         String as[] = {
             "model_version", "anim_version", "midi_version", "map_version"
         };
@@ -380,7 +381,7 @@ public class OnDemandFetcher extends OnDemandFetcherParent implements Runnable {
                     return;
                 }
                 openSocketTime = l;
-                socket = clientInstance.openSocket(Csettings.intPort);
+                socket = clientInstance.openSocket(Integer.parseInt(cSettings.port));
                 inputStream = socket.getInputStream();
                 outputStream = socket.getOutputStream();
                 outputStream.write(15);
@@ -532,7 +533,7 @@ public class OnDemandFetcher extends OnDemandFetcherParent implements Runnable {
     }
 
     @Override
-    public final void method548(int i) {
+    public final void requestData(int i) {
         method558(0, i);
     }
 

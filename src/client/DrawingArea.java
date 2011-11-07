@@ -1,12 +1,9 @@
 package client;
 
+// Fully Renamed.
 
 public class DrawingArea extends NodeSub {
     
-    private static int anInt1374 = 1;
-    private static boolean aBoolean1375 = true;
-    private static int anInt1376 = -12499;
-    private static boolean aBoolean1377;
     public static int pixels[];
     public static int width;
     public static int height;
@@ -16,17 +13,16 @@ public class DrawingArea extends NodeSub {
     public static int bottomX;
     public static int centerX;
     public static int centerY;
-    public static int anInt1387;
-    public static boolean aBoolean1388;
+    public static int center;
     
     public DrawingArea() {
     }
     
-    public static void initDrawingArea(int i, int j, int ai[]) {
-        pixels = ai;
-        width = j;
-        height = i;
-        setDrawingArea(i, 0, j, 0);
+    public static void initDrawingArea(int areaHeight, int areaWidth, int areaPixels[]) {
+        pixels = areaPixels;
+        width = areaWidth;
+        height = areaHeight;
+        setDrawingArea(0, 0, areaWidth, areaHeight);
     }
 
     public static void defaultDrawingAreaSize() {
@@ -36,61 +32,56 @@ public class DrawingArea extends NodeSub {
         bottomY = height;
         centerX = bottomX;
         centerY = bottomX / 2;
-        return;
     }
 
-    public static void setDrawingArea(int i, int j, int k, int l) {
-        if (j < 0) {
-            j = 0;
-        }
-        if (l < 0) {
-            l = 0;
-        }
-        if (k > width) {
-            k = width;
-        }
-        if (i > height) {
-            i = height;
-        }
-        topX = j;
-        topY = l;
-        bottomX = k;
-        bottomY = i;
+    public static void setDrawingArea(int drawX, int drawY, int areaWidth, int areaHeight) {
+        if (drawX < 0)
+            drawX = 0;
+        if (drawY < 0)
+            drawY = 0;
+        if (areaWidth > width)
+            areaWidth = width;
+        if (areaHeight > height)
+            areaHeight = height;
+        topX = drawX;
+        topY = drawY;
+        bottomX = areaWidth;
+        bottomY = areaHeight;
         centerX = bottomX;
         centerY = bottomX / 2;
-        anInt1387 = bottomY / 2;
+        center = bottomY / 2;
     }
 
-    public static void setAllPixelsToZero() {
+    public static void clearDrawingArea() {
         int i = width * height;
         for (int j = 0; j < i; j++) {
             pixels[j] = 0;
         }
     }
 
-    public static void method335(int i, int j, int k, int l, int i1, int k1) {
-        if (k1 < topX) {
-            k -= topX - k1;
-            k1 = topX;
+    public static void fillBoxWithOpacity(int drawX, int drawY, int boxWidth, int boxHeight, int color, int opacity) {
+        if (drawX < topX) {
+            boxWidth -= topX - drawX;
+            drawX = topX;
         }
-        if (j < topY) {
-            l -= topY - j;
-            j = topY;
+        if (drawY < topY) {
+            boxHeight -= topY - drawY;
+            drawY = topY;
         }
-        if (k1 + k > bottomX) {
-            k = bottomX - k1;
+        if (drawX + boxWidth > bottomX) {
+            boxWidth = bottomX - drawX;
         }
-        if (j + l > bottomY) {
-            l = bottomY - j;
+        if (drawY + boxHeight > bottomY) {
+            boxHeight = bottomY - drawY;
         }
-        int l1 = 256 - i1;
-        int i2 = (i >> 16 & 0xff) * i1;
-        int j2 = (i >> 8 & 0xff) * i1;
-        int k2 = (i & 0xff) * i1;
-        int k3 = width - k;
-        int l3 = k1 + j * width;
-        for (int i4 = 0; i4 < l; i4++) {
-            for (int j4 = -k; j4 < 0; j4++) {
+        int l1 = 256 - opacity;
+        int i2 = (color >> 16 & 0xff) * opacity;
+        int j2 = (color >> 8 & 0xff) * opacity;
+        int k2 = (color & 0xff) * opacity;
+        int k3 = width - boxWidth;
+        int l3 = drawX + drawY * width;
+        for (int i4 = 0; i4 < boxHeight; i4++) {
+            for (int j4 = -boxWidth; j4 < 0; j4++) {
                 int l2 = (pixels[l3] >> 16 & 0xff) * l1;
                 int i3 = (pixels[l3] >> 8 & 0xff) * l1;
                 int j3 = (pixels[l3] & 0xff) * l1;
@@ -101,112 +92,82 @@ public class DrawingArea extends NodeSub {
             l3 += k3;
         }
     }
-
-    public static void drawPixelsWithOpacity(int xPos, int yPos, int pixelWidth, int pixelHeight, int color, int opacityLevel) {
-        if (xPos < topX) {
-            pixelWidth -= topX - xPos;
-            xPos = topX;
+    
+    public static void fillBox(int drawX, int drawY, int boxWidth, int boxHeight, int color) {
+        if (drawX < topX) {
+            boxWidth -= topX - drawX;
+            drawX = topX;
         }
-        if (yPos < topY) {
-            pixelHeight -= topY - yPos;
-            yPos = topY;
+        if (drawY < topY) {
+            boxHeight -= topY - drawY;
+            drawY = topY;
         }
-        if (xPos + pixelWidth > bottomX) {
-            pixelWidth = bottomX - xPos;
+        if (drawX + boxWidth > bottomX) {
+            boxWidth = bottomX - drawX;
         }
-        if (yPos + pixelHeight > bottomY) {
-            pixelHeight = bottomY - yPos;
+        if (drawY + boxHeight > bottomY) {
+            boxHeight = bottomY - drawY;
         }
-        color = ((color & 0xff00ff) * opacityLevel >> 8 & 0xff00ff) + ((color & 0xff00) * opacityLevel >> 8 & 0xff00);
-        int k1 = 256 - opacityLevel;
-        int l1 = width - pixelWidth;
-        int i2 = xPos + yPos * width;
-        for (int j2 = 0; j2 < pixelHeight; j2++) {
-            for (int k2 = -pixelWidth; k2 < 0; k2++) {
-                int l2 = pixels[i2];
-                l2 = ((l2 & 0xff00ff) * k1 >> 8 & 0xff00ff) + ((l2 & 0xff00) * k1 >> 8 & 0xff00);
-                pixels[i2++] = color + l2;
+        int k1 = width - boxWidth;
+        int l1 = drawX + drawY * width;
+        for (int i2 = -boxHeight; i2 < 0; i2++) {
+            for (int j2 = -boxWidth; j2 < 0; j2++) {
+                pixels[l1++] = color;
             }
-            i2 += l1;
-        }
-    }
-
-    public static void method336(int i, int j, int k, int l, int i1) {
-        if (k < topX) {
-            i1 -= topX - k;
-            k = topX;
-        }
-        if (j < topY) {
-            i -= topY - j;
-            j = topY;
-        }
-        if (k + i1 > bottomX) {
-            i1 = bottomX - k;
-        }
-        if (j + i > bottomY) {
-            i = bottomY - j;
-        }
-        int k1 = width - i1;
-        int l1 = k + j * width;
-        for (int i2 = -i; i2 < 0; i2++) {
-            for (int j2 = -i1; j2 < 0; j2++) {
-                pixels[l1++] = l;
-            }
-
             l1 += k1;
         }
     }
 
-    public static void fillPixels(int i, int j, int k, int l, int i1) {
-        method339(i1, l, j, i);
-        method339((i1 + k) - 1, l, j, i);
-        method341(i1, l, k, i);
-        method341(i1, l, k, (i + j) - 1);
+    public static void drawBox(int drawX, int drawY, int boxWidth, int boxHeight, int boxColor) {
+        drawHorizontalLine(drawX, drawY, boxWidth, boxColor);
+        drawHorizontalLine(drawX, (drawY + boxHeight) - 1, boxWidth, boxColor);
+        drawVerticalLine(drawX, drawY, boxHeight, boxColor);
+        drawVerticalLine((drawX + boxWidth) - 1, drawY, boxHeight, boxColor);
     }
 
-    public static void method338(int i, int j, int k, int l, int i1, int j1) {
-        method340(l, i1, i, k, j1);
-        method340(l, i1, (i + j) - 1, k, j1);
-        if (j >= 3) {
-            method342(l, j1, k, i + 1, j - 2);
-            method342(l, (j1 + i1) - 1, k, i + 1, j - 2);
+    public static void drawBoxWithOpacity(int drawY, int boxHeight, int boxOpacity, int boxColor, int boxWidth, int drawX) {
+        drawHorizontalLineWithOpacity(drawX, drawY, boxWidth, boxColor, boxOpacity);
+        drawHorizontalLineWithOpacity(drawX, (drawY + boxHeight) - 1, boxWidth, boxColor, boxOpacity);
+        if (boxHeight >= 3) {
+            drawVerticalLineWithOpacity(drawX, drawY + 1, boxHeight - 2, boxColor, boxOpacity);
+            drawVerticalLineWithOpacity((drawX + boxWidth) - 1, drawY + 1, boxHeight - 2, boxColor, boxOpacity);
         }
     }
 
-    public static void method339(int i, int j, int k, int l) {
-        if (i < topY || i >= bottomY) {
+    public static void drawHorizontalLine(int drawX, int drawY, int lineWidth, int color) {
+        if (drawY < topY || drawY >= bottomY) {
             return;
         }
-        if (l < topX) {
-            k -= topX - l;
-            l = topX;
+        if (drawX < topX) {
+            lineWidth -= topX - drawX;
+            drawX = topX;
         }
-        if (l + k > bottomX) {
-            k = bottomX - l;
+        if (drawX + lineWidth > bottomX) {
+            lineWidth = bottomX - drawX;
         }
-        int i1 = l + i * width;
-        for (int j1 = 0; j1 < k; j1++) {
-            pixels[i1 + j1] = j;
+        int i1 = drawX + drawY * width;
+        for (int j1 = 0; j1 < lineWidth; j1++) {
+            pixels[i1 + j1] = color;
         }
     }
 
-    public static void method340(int i, int j, int k, int l, int i1) {
-        if (k < topY || k >= bottomY) {
+    public static void drawHorizontalLineWithOpacity(int drawX, int drawY, int lineWidth, int color, int opacity) {
+        if (drawY < topY || drawY >= bottomY) {
             return;
         }
-        if (i1 < topX) {
-            j -= topX - i1;
-            i1 = topX;
+        if (drawX < topX) {
+            lineWidth -= topX - drawX;
+            drawX = topX;
         }
-        if (i1 + j > bottomX) {
-            j = bottomX - i1;
+        if (drawX + lineWidth > bottomX) {
+            lineWidth = bottomX - drawX;
         }
-        int j1 = 256 - l;
-        int k1 = (i >> 16 & 0xff) * l;
-        int l1 = (i >> 8 & 0xff) * l;
-        int i2 = (i & 0xff) * l;
-        int i3 = i1 + k * width;
-        for (int j3 = 0; j3 < j; j3++) {
+        int j1 = 256 - opacity;
+        int k1 = (color >> 16 & 0xff) * opacity;
+        int l1 = (color >> 8 & 0xff) * opacity;
+        int i2 = (color & 0xff) * opacity;
+        int i3 = drawX + drawY * width;
+        for (int j3 = 0; j3 < lineWidth; j3++) {
             int j2 = (pixels[i3] >> 16 & 0xff) * j1;
             int k2 = (pixels[i3] >> 8 & 0xff) * j1;
             int l2 = (pixels[i3] & 0xff) * j1;
@@ -215,40 +176,40 @@ public class DrawingArea extends NodeSub {
         }
     }
 
-    public static void method341(int i, int j, int k, int l) {
-        if (l < topX || l >= bottomX) {
+    public static void drawVerticalLine(int drawX, int drawY, int lineHeight, int color) {
+        if (drawX < topX || drawX >= bottomX) {
             return;
         }
-        if (i < topY) {
-            k -= topY - i;
-            i = topY;
+        if (drawY < topY) {
+            lineHeight -= topY - drawY;
+            drawY = topY;
         }
-        if (i + k > bottomY) {
-            k = bottomY - i;
+        if (drawY + lineHeight > bottomY) {
+            lineHeight = bottomY - drawY;
         }
-        int j1 = l + i * width;
-        for (int k1 = 0; k1 < k; k1++) {
-            pixels[j1 + k1 * width] = j;
+        int j1 = drawX + drawY * width;
+        for (int k1 = 0; k1 < lineHeight; k1++) {
+            pixels[j1 + k1 * width] = color;
         }
     }
 
-    public static void method342(int i, int j, int k, int l, int i1) {
-        if (j < topX || j >= bottomX) {
+    public static void drawVerticalLineWithOpacity(int drawX, int drawY, int lineHeight, int color, int opacity) {
+        if (drawX < topX || drawX >= bottomX) {
             return;
         }
-        if (l < topY) {
-            i1 -= topY - l;
-            l = topY;
+        if (drawY < topY) {
+            lineHeight -= topY - drawY;
+            drawY = topY;
         }
-        if (l + i1 > bottomY) {
-            i1 = bottomY - l;
+        if (drawY + lineHeight > bottomY) {
+            lineHeight = bottomY - drawY;
         }
-        int j1 = 256 - k;
-        int k1 = (i >> 16 & 0xff) * k;
-        int l1 = (i >> 8 & 0xff) * k;
-        int i2 = (i & 0xff) * k;
-        int i3 = j + l * width;
-        for (int j3 = 0; j3 < i1; j3++) {
+        int j1 = 256 - opacity;
+        int k1 = (color >> 16 & 0xff) * opacity;
+        int l1 = (color >> 8 & 0xff) * opacity;
+        int i2 = (color & 0xff) * opacity;
+        int i3 = drawX + drawY * width;
+        for (int j3 = 0; j3 < lineHeight; j3++) {
             int j2 = (pixels[i3] >> 16 & 0xff) * j1;
             int k2 = (pixels[i3] >> 8 & 0xff) * j1;
             int l2 = (pixels[i3] & 0xff) * j1;

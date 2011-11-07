@@ -81,21 +81,21 @@ final class Animable_Sub4 extends Animable {
             return null;
         }
         int j = -1;
-        if (aSpotAnim_1592.aClass20_407 != null) {
-            j = aSpotAnim_1592.aClass20_407.anIntArray353[anInt1593];
+        if (aSpotAnim_1592.animation != null) {
+            j = aSpotAnim_1592.animation.animationFrameID2[anInt1593];
         }
-        Model class30_sub2_sub4_sub6_1 = new Model(9, true, Class36.method532(j), false, class30_sub2_sub4_sub6);
+        Model class30_sub2_sub4_sub6_1 = new Model(9, true, AnimationFrame.isNullFrame(j), false, class30_sub2_sub4_sub6);
         if (j != -1) {
-            class30_sub2_sub4_sub6_1.method469((byte) -71);
-            class30_sub2_sub4_sub6_1.method470(j, 40542);
-            class30_sub2_sub4_sub6_1.anIntArrayArray1658 = null;
-            class30_sub2_sub4_sub6_1.anIntArrayArray1657 = null;
+            class30_sub2_sub4_sub6_1.createBones((byte) -71);
+            class30_sub2_sub4_sub6_1.applyTransform(j, 40542);
+            class30_sub2_sub4_sub6_1.triangleSkin = null;
+            class30_sub2_sub4_sub6_1.vertexSkin = null;
         }
-        if (aSpotAnim_1592.anInt410 != 128 || aSpotAnim_1592.anInt411 != 128) {
-            class30_sub2_sub4_sub6_1.method478(aSpotAnim_1592.anInt410, aSpotAnim_1592.anInt410, anInt1573, aSpotAnim_1592.anInt411);
+        if (aSpotAnim_1592.resizeXY != 128 || aSpotAnim_1592.resizeZ != 128) {
+            class30_sub2_sub4_sub6_1.scaleT(aSpotAnim_1592.resizeXY, aSpotAnim_1592.resizeXY, aSpotAnim_1592.resizeZ);
         }
-        class30_sub2_sub4_sub6_1.method474(anInt1596, 1);
-        class30_sub2_sub4_sub6_1.method479(64 + aSpotAnim_1592.anInt413, 850 + aSpotAnim_1592.anInt414, -30, -50, -30, true);
+        class30_sub2_sub4_sub6_1.method474(anInt1596);
+        class30_sub2_sub4_sub6_1.light(64 + aSpotAnim_1592.modelBrightness, 850 + aSpotAnim_1592.modelShadow, -30, -50, -30, true);
         return class30_sub2_sub4_sub6_1;
     }
 
@@ -110,11 +110,11 @@ final class Animable_Sub4 extends Animable {
         }
         anInt1595 = (int) (Math.atan2(aDouble1574, aDouble1575) * 325.94900000000001D) + 1024 & 0x7ff;
         anInt1596 = (int) (Math.atan2(aDouble1577, aDouble1576) * 325.94900000000001D) & 0x7ff;
-        if (aSpotAnim_1592.aClass20_407 != null) {
-            for (anInt1594 += i; anInt1594 > aSpotAnim_1592.aClass20_407.method258(anInt1593);) {
-                anInt1594 -= aSpotAnim_1592.aClass20_407.method258(anInt1593) + 1;
+        if (aSpotAnim_1592.animation != null) {
+            for (anInt1594 += i; anInt1594 > aSpotAnim_1592.animation.getFrameLength(anInt1593);) {
+                anInt1594 -= aSpotAnim_1592.animation.getFrameLength(anInt1593) + 1;
                 anInt1593++;
-                if (anInt1593 >= aSpotAnim_1592.aClass20_407.anInt352) {
+                if (anInt1593 >= aSpotAnim_1592.animation.frameCount) {
                     anInt1593 = 0;
                 }
             }

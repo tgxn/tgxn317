@@ -7,9 +7,9 @@ public class VarBit {
     public static int anInt645;
     public static VarBit cache[];
     public String aString647;
-    public int anInt648;
-    public int anInt649;
-    public int anInt650;
+    public int configId;
+    public int leastSignificantBit;
+    public int mostSignificantBit;
     public boolean aBoolean651;
     public int anInt652;
     public int anInt653;
@@ -19,7 +19,7 @@ public class VarBit {
         anInt652 = -1;
     }
         
-    public static void unpackConfig(StreamLoader class44) {
+    public static void unpackConfig(JagexArchive class44) {
         Stream class30_sub2_sub2 = new Stream(class44.getDataForName("varbit.dat"));
         anInt645 = class30_sub2_sub2.readUnsignedWord();
         if (cache == null) {
@@ -31,7 +31,7 @@ public class VarBit {
             }
             cache[j].readValues(class30_sub2_sub2, j);
             if (cache[j].aBoolean651) {
-                Varp.cache[cache[j].anInt648].aBoolean713 = true;
+                Varp.cache[cache[j].configId].aBoolean713 = true;
             }
         }
 
@@ -47,9 +47,9 @@ public class VarBit {
                 return;
             }
             if (j == 1) {
-                anInt648 = stream.readUnsignedWord();
-                anInt649 = stream.readUnsignedByte();
-                anInt650 = stream.readUnsignedByte();
+                configId = stream.readUnsignedWord();
+                leastSignificantBit = stream.readUnsignedByte();
+                mostSignificantBit = stream.readUnsignedByte();
             } else if (j == 10) {
                 aString647 = stream.readString();
             } else if (j == 2) {

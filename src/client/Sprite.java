@@ -25,10 +25,10 @@ public final class Sprite extends DrawingArea {
 
     public Sprite(Component component) {
         try {
-            String s = sign.signlink.findcachedir() + "sprites/titlescreen/background.png";
+            String s = sign.signlink.findCacheDIR() + "sprites/titlescreen/background.png";
             File fcheck = new File(s);
             if (!fcheck.exists()) {
-                s = sign.signlink.findcachedir() + "sprites/misc/error.png";
+                s = sign.signlink.findCacheDIR() + "sprites/misc/error.png";
             }
             Image image = Toolkit.getDefaultToolkit().getImage((s));
             MediaTracker mediatracker = new MediaTracker(component);
@@ -68,7 +68,7 @@ public final class Sprite extends DrawingArea {
         try {
             File fcheck = new File(s);
             if (!fcheck.exists()) {
-                s = sign.signlink.findcachedir() + "sprites/misc/error.png";
+                s = sign.signlink.findCacheDIR() + "sprites/misc/error.png";
             }
             Image image = Toolkit.getDefaultToolkit().createImage(FileOperations.ReadFile(s));
             ImageIcon imageicon = new ImageIcon(s);
@@ -85,7 +85,7 @@ public final class Sprite extends DrawingArea {
         }
     }
 
-    public Sprite(StreamLoader class44, String s, int i) {
+    public Sprite(JagexArchive class44, String s, int i) {
         Stream class30_sub2_sub2 = new Stream(class44.getDataForName((new StringBuilder()).append(s).append(".dat").toString()));
         Stream class30_sub2_sub2_1 = new Stream(class44.getDataForName("index.dat"));
         class30_sub2_sub2_1.currentOffset = class30_sub2_sub2.readUnsignedWord();
@@ -115,7 +115,7 @@ public final class Sprite extends DrawingArea {
 
         if (s.startsWith("backleft2")) {
             try {
-                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/gameframe/borderchatleft.png");
+                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/gameframe/borderchatleft.png");
                 myWidth = 8;
                 myHeight = 134;
                 myPixels = new int[myWidth * myHeight];
@@ -126,7 +126,7 @@ public final class Sprite extends DrawingArea {
             }
         } else if (s.startsWith("backbase1")) {
             try {
-                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/gameframe/bottomopt.png");
+                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/gameframe/bottomopt.png");
                 myPixels = new int[myWidth * myHeight];
                 PixelGrabber pixelgrabber = new PixelGrabber(image, 0, 0, myWidth, myHeight, myPixels, 0, myWidth);
                 pixelgrabber.grabPixels();
@@ -135,7 +135,7 @@ public final class Sprite extends DrawingArea {
             }
         } else if (s.startsWith("backbase2")) {
             try {
-                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/gameframe/bottomtabs.png");
+                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/gameframe/bottomtabs.png");
                 myPixels = new int[myWidth * myHeight];
                 PixelGrabber pixelgrabber = new PixelGrabber(image, 0, 0, myWidth, myHeight, myPixels, 0, myWidth);
                 pixelgrabber.grabPixels();
@@ -144,7 +144,7 @@ public final class Sprite extends DrawingArea {
             }
         } else if (s.startsWith("backhmid1")) {
             try {
-                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/gameframe/toptabs.png");
+                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/gameframe/toptabs.png");
                 myPixels = new int[myWidth * myHeight];
                 PixelGrabber pixelgrabber = new PixelGrabber(image, 0, 0, myWidth, myHeight, myPixels, 0, myWidth);
                 pixelgrabber.grabPixels();
@@ -153,7 +153,7 @@ public final class Sprite extends DrawingArea {
             }
         } else if (s.startsWith("backhmid2")) {
             try {
-                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/gameframe/chattopborder.png");
+                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/gameframe/chattopborder.png");
                 myWidth = 555;
                 myHeight = 6;
                 myPixels = new int[myWidth * myHeight];
@@ -164,7 +164,7 @@ public final class Sprite extends DrawingArea {
             }
         } else if (s.startsWith("backleft1")) {
             try {
-                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/gameframe/borderleft.png");
+                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/gameframe/borderleft.png");
                 myPixels = new int[myWidth * myHeight];
                 PixelGrabber pixelgrabber = new PixelGrabber(image, 0, 0, myWidth, myHeight, myPixels, 0, myWidth);
                 pixelgrabber.grabPixels();
@@ -173,7 +173,7 @@ public final class Sprite extends DrawingArea {
             }
         } else if (s.startsWith("backright2")) {
             try {
-                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/gameframe/pillarright.png");
+                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/gameframe/pillarright.png");
                 myPixels = new int[myWidth * myHeight];
                 PixelGrabber pixelgrabber = new PixelGrabber(image, 0, 0, myWidth, myHeight, myPixels, 0, myWidth);
                 pixelgrabber.grabPixels();
@@ -182,7 +182,7 @@ public final class Sprite extends DrawingArea {
             }
         } else if (s.startsWith("backtop1")) {
             try {
-                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/gameframe/topborder.png");
+                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/gameframe/topborder.png");
                 myPixels = new int[myWidth * myHeight];
                 PixelGrabber pixelgrabber = new PixelGrabber(image, 0, 0, myWidth, myHeight, myPixels, 0, myWidth);
                 pixelgrabber.grabPixels();
@@ -191,7 +191,7 @@ public final class Sprite extends DrawingArea {
             }
         } else if (s.startsWith("backvmid2")) {
             try {
-                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/gameframe/pillarlefttop.png");
+                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/gameframe/pillarlefttop.png");
                 myPixels = new int[myWidth * myHeight];
                 PixelGrabber pixelgrabber = new PixelGrabber(image, 0, 0, myWidth, myHeight, myPixels, 0, myWidth);
                 pixelgrabber.grabPixels();
@@ -200,7 +200,7 @@ public final class Sprite extends DrawingArea {
             }
         } else if (s.startsWith("backvmid3")) {
             try {
-                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/gameframe/pillarleftbottom.png");
+                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/gameframe/pillarleftbottom.png");
                 myWidth = 39;
                 myHeight = 128;
                 myPixels = new int[myWidth * myHeight];
@@ -211,7 +211,7 @@ public final class Sprite extends DrawingArea {
             }
         } else if (s.startsWith("mapback")) {
             try {
-                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/gameframe/map1.png");
+                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/gameframe/map1.png");
                 myPixels = new int[myWidth * myHeight];
                 PixelGrabber pixelgrabber = new PixelGrabber(image, 0, 0, myWidth, myHeight, myPixels, 0, myWidth);
                 pixelgrabber.grabPixels();
@@ -220,7 +220,7 @@ public final class Sprite extends DrawingArea {
             }
         } else if (s.startsWith("sideicon")) {
             try {
-                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/tabicons/icon " + i + ".png");
+                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/tabicons/icon " + i + ".png");
                 myWidth = 100;
                 myHeight = 100;
                 myPixels = new int[myWidth * myHeight];
@@ -231,7 +231,7 @@ public final class Sprite extends DrawingArea {
             }
         } else if (s.startsWith("staticons")) {
             try {
-                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/" + s + " " + i + ".png");
+                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/" + s + " " + i + ".png");
                 myWidth = 28;
                 myHeight = 28;
                 myPixels = new int[myWidth * myHeight];
@@ -242,7 +242,7 @@ public final class Sprite extends DrawingArea {
             }
         } else if (s.startsWith("chat")) {
             try {
-                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/gameframe/chatback.png");
+                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/gameframe/chatback.png");
                 myWidth = 600;
                 myHeight = 400;
                 myPixels = new int[myWidth * myHeight];
@@ -253,7 +253,7 @@ public final class Sprite extends DrawingArea {
             }
         } else if (s.startsWith("redstone2")) {
             try {
-                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/gameframe/stones/n.png");
+                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/gameframe/stones/n.png");
                 myWidth = 100;
                 myHeight = 100;
                 myPixels = new int[myWidth * myHeight];
@@ -267,15 +267,15 @@ public final class Sprite extends DrawingArea {
                 myWidth = 100;
                 myHeight = 100;
                 myPixels = new int[myWidth * myHeight];
-                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/gameframe/stones/REDSTONE1 0.png");
-                if (client.flip) {
-                    image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/gameframe/stones/REDSTONE1 1.png");
+                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/gameframe/stones/REDSTONE1 0.png");
+                if (Client.flip) {
+                    image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/gameframe/stones/REDSTONE1 1.png");
                 }
-                if (client.flip_s) {
-                    image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/gameframe/stones/REDSTONE1 2.png");
+                if (Client.flip_s) {
+                    image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/gameframe/stones/REDSTONE1 2.png");
                 }
-                if (client.flip_r) {
-                    image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/gameframe/stones/REDSTONE1 3.png");
+                if (Client.flip_r) {
+                    image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/gameframe/stones/REDSTONE1 3.png");
                 }
                 PixelGrabber pixelgrabber = new PixelGrabber(image, 0, 0, myWidth, myHeight, myPixels, 0, myWidth);
                 pixelgrabber.grabPixels();
@@ -286,7 +286,7 @@ public final class Sprite extends DrawingArea {
             try {
                 myWidth = 28;
                 myHeight = 16;
-                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/" + s + " " + i + ".png");
+                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/" + s + " " + i + ".png");
                 myPixels = new int[myWidth * myHeight];
                 PixelGrabber pixelgrabber = new PixelGrabber(image, 0, 0, myWidth, myHeight, myPixels, 0, myWidth);
                 pixelgrabber.grabPixels();
@@ -295,7 +295,7 @@ public final class Sprite extends DrawingArea {
             }
         } else if (s.equalsIgnoreCase("invback")) {
             try {
-                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/gameframe/invback.png");
+                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/gameframe/invback.png");
                 myWidth = 192;
                 myHeight = 261;
                 myPixels = new int[myWidth * myHeight];
@@ -306,7 +306,7 @@ public final class Sprite extends DrawingArea {
             }
         } else if (s.equalsIgnoreCase("compass")) {
             try {
-                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/gameframe/compass.png");
+                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/gameframe/compass.png");
                 myPixels = new int[myWidth * myHeight];
                 PixelGrabber pixelgrabber = new PixelGrabber(image, 0, 0, myWidth, myHeight, myPixels, 0, myWidth);
                 pixelgrabber.grabPixels();
@@ -315,7 +315,7 @@ public final class Sprite extends DrawingArea {
             }
         } else if (s.equalsIgnoreCase("mod_icons")) {
             try {
-                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/misc/mod " + i + ".png");
+                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/misc/mod " + i + ".png");
                 myPixels = new int[myWidth * myHeight];
                 PixelGrabber pixelgrabber = new PixelGrabber(image, 0, 0, myWidth, myHeight, myPixels, 0, myWidth);
                 pixelgrabber.grabPixels();
@@ -324,7 +324,7 @@ public final class Sprite extends DrawingArea {
             }
         } else if (s.equalsIgnoreCase("STEELBORDER")) { //corners
             try {
-                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/borders/corners " + i + ".png");
+                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/borders/corners " + i + ".png");
                 myPixels = new int[myWidth * myHeight];
                 PixelGrabber pixelgrabber = new PixelGrabber(image, 0, 0, myWidth, myHeight, myPixels, 0, myWidth);
                 pixelgrabber.grabPixels();
@@ -333,7 +333,7 @@ public final class Sprite extends DrawingArea {
             }
         } else if (s.equalsIgnoreCase("STEELBORDER2") && i == 0 || s.equalsIgnoreCase("STEELBORDER2") && i == 1) { //vert and horizontal top and left
             try {
-                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/borders/topright " + i + ".png");
+                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/borders/topright " + i + ".png");
                 myPixels = new int[myWidth * myHeight];
                 PixelGrabber pixelgrabber = new PixelGrabber(image, 0, 0, myWidth, myHeight, myPixels, 0, myWidth);
                 pixelgrabber.grabPixels();
@@ -342,7 +342,7 @@ public final class Sprite extends DrawingArea {
             }
         } else if (s.equalsIgnoreCase("MISCGRAPHICS") && i == 2 || s.equalsIgnoreCase("MISCGRAPHICS") && i == 3) { //vert and horizontal bottom and right
             try {
-                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findcachedir() + "sprites/borders/botleft " + i + ".png");
+                Image image = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + "sprites/borders/botleft " + i + ".png");
                 myPixels = new int[myWidth * myHeight];
                 PixelGrabber pixelgrabber = new PixelGrabber(image, 0, 0, myWidth, myHeight, myPixels, 0, myWidth);
                 pixelgrabber.grabPixels();

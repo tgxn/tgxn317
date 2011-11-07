@@ -10,13 +10,13 @@ public class Sounds {
     public static int anIntArray326[] = new int[5000];
     private static byte aByteArray327[];
     private static Stream aClass30_Sub2_Sub2_328;
-    private Class6 aClass6Array329[];
+    private SoundTrack aClass6Array329[];
     private int anInt330;
     private int anInt331;
     
     private Sounds(int i) {
         aBoolean321 = true;
-        aClass6Array329 = new Class6[10];
+        aClass6Array329 = new SoundTrack[10];
     }
 
     public static void unpack(int i, Stream class30_sub2_sub2) {
@@ -25,7 +25,7 @@ public class Sounds {
         if (i != 0) {
             aBoolean322 = !aBoolean322;
         }
-        Class6.method166();
+        SoundTrack.initialise();
         do {
             int j = class30_sub2_sub2.readUnsignedWord();
             if (j == 65535) {
@@ -51,8 +51,8 @@ public class Sounds {
             int j = class30_sub2_sub2.readUnsignedByte();
             if (j != 0) {
                 class30_sub2_sub2.currentOffset--;
-                aClass6Array329[i] = new Class6();
-                aClass6Array329[i].method169(true, class30_sub2_sub2);
+                aClass6Array329[i] = new SoundTrack();
+                aClass6Array329[i].unpack(class30_sub2_sub2);
             }
         }
 
@@ -110,8 +110,8 @@ public class Sounds {
     private int method245(int i) {
         int j = 0;
         for (int k = 0; k < 10; k++) {
-            if (aClass6Array329[k] != null && aClass6Array329[k].anInt113 + aClass6Array329[k].anInt114 > j) {
-                j = aClass6Array329[k].anInt113 + aClass6Array329[k].anInt114;
+            if (aClass6Array329[k] != null && aClass6Array329[k].msLength + aClass6Array329[k].anInt114 > j) {
+                j = aClass6Array329[k].msLength + aClass6Array329[k].anInt114;
             }
         }
 
@@ -131,9 +131,9 @@ public class Sounds {
 
         for (int i2 = 0; i2 < 10; i2++) {
             if (aClass6Array329[i2] != null) {
-                int j2 = (aClass6Array329[i2].anInt113 * 22050) / 1000;
+                int j2 = (aClass6Array329[i2].msLength * 22050) / 1000;
                 int i3 = (aClass6Array329[i2].anInt114 * 22050) / 1000;
-                int ai[] = aClass6Array329[i2].method167(j2, aClass6Array329[i2].anInt113);
+                int ai[] = aClass6Array329[i2].buildSoundData(j2, aClass6Array329[i2].msLength);
                 for (int l3 = 0; l3 < j2; l3++) {
                     aByteArray327[l3 + i3 + 44] += (byte) (ai[l3] >> 8);
                 }

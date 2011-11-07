@@ -93,6 +93,7 @@ public class MapMain extends RSApplet {
         "Hair Dressers", "Farming patch", "Makeover Mage", "Guide",
         "Transportation", "???", "Farming shop", "Loom", "Brewery"
     };
+    private MapMain mapMain;
     
     public MapMain() {
         brownBoxColour = 0x776644; //colour for brown unselected boxes
@@ -226,7 +227,7 @@ public class MapMain extends RSApplet {
         DrawingArea.fillPixels(1, 1, overviewWidth - 2, overviewHeight - 2, brownBoxColour);
         super.fullScreen.initializeDrawingArea();
     }
-
+    
     public void method13(byte abyte0[], byte abyte1[][], byte abyte2[][], byte abyte3[][]) {
         for (int i = 0; i < abyte0.length;) {
             int k = (abyte0[i++] & 0xff) * 64 - mapStartX;
@@ -505,7 +506,7 @@ public class MapMain extends RSApplet {
 
             if (super.saveClickX > 660 && super.saveClickX < 760 && super.saveClickY > 5 && super.saveClickY < 30) {
                 this.rsFrame.setVisible(false);
-                client.RSApplet.gameFrame.setVisible(true);
+                client.GameShell.gameFrame.setVisible(true);
             }
 
 
@@ -1563,7 +1564,7 @@ public class MapMain extends RSApplet {
     public Class6 readDAT() {
         byte abyte0[] = null;
         try {
-            abyte0 = FileOperations.ReadFile(sign.signlink.findcachedir() + "worldmap.dat");
+            abyte0 = FileOperations.ReadFile(sign.signlink.findCacheDIR() + "worldmap.dat");
             return new Class6(abyte0);
         } catch (Throwable _ex) {
         }
@@ -1580,9 +1581,9 @@ public class MapMain extends RSApplet {
             }
             DataInputStream datainputstream;
             if (super.rsFrame != null) {
-                datainputstream = new DataInputStream(new FileInputStream(sign.signlink.findcachedir() + "worldmap.dat"));
+                datainputstream = new DataInputStream(new FileInputStream(sign.signlink.findCacheDIR() + "worldmap.dat"));
             } else {
-                datainputstream = new DataInputStream((new URL(getCodeBase(), sign.signlink.findcachedir() + "worldmap" + s + ".dat")).openStream());
+                datainputstream = new DataInputStream((new URL(getCodeBase(), sign.signlink.findCacheDIR() + "worldmap" + s + ".dat")).openStream());
             }
             int j = 0;
             int k = 0; //starting %?

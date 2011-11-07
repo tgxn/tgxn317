@@ -1,5 +1,6 @@
 package client;
 
+import client.custom.cSettings;
 import java.awt.*;
 import sign.signlink;
 import java.awt.Toolkit;
@@ -12,16 +13,13 @@ import javax.swing.JOptionPane;
 public final class RSFrame extends Frame {
 
     public static TrayIcon trayIcon;
-    RSApplet rsApplet;
+    private final GameShell gameShell;
 
-    public RSFrame(RSApplet rsApplet, int i, int j) {
-
-        this.rsApplet = rsApplet;
-
-        // Set frame defaults.
+    public RSFrame(GameShell gameShell, int i, int j) {
+        this.gameShell = gameShell;
         setTitle("-GaMeR X-'s 317 Client");
         setResizable(false);
-        Image image1 = Toolkit.getDefaultToolkit().getImage(signlink.findcachedir() + Csettings.mainIconLocation);
+        Image image1 = Toolkit.getDefaultToolkit().getImage(signlink.findCacheDIR() + cSettings.mainIconLocation);
         setIconImage(image1);
         setFocusTraversalKeysEnabled(false);
         setVisible(true);
@@ -32,10 +30,33 @@ public final class RSFrame extends Frame {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds(screenSize.width / 2 - (i + 8) / 2, screenSize.height / 2 - (j + 28) / 2, i + 8, j + 28);
 
-        // Check tray support and enable it.
+        setUpSystemTray();
+    }
+
+    @Override
+    public Graphics getGraphics() {
+        Graphics g = super.getGraphics();
+        g.translate(4, 24);
+        return g;
+    }
+
+    @Override
+    public final void update(Graphics g) {
+        gameShell.update(g);
+    }
+
+    @Override
+    public final void paint(Graphics g) {
+        gameShell.paint(g);
+    }
+
+    /**
+     * Setup the tray icon, and menu's.
+     */
+    private void setUpSystemTray() {
         if (SystemTray.isSupported()) {
 
-            Image icon = Toolkit.getDefaultToolkit().getImage(signlink.findcachedir() + Csettings.mainIconLocation);
+            Image icon = Toolkit.getDefaultToolkit().getImage(signlink.findCacheDIR() + cSettings.mainIconLocation);
             trayIcon = new TrayIcon(icon, "-GaMeR X-'s Client is Running.");
             trayIcon.setImageAutoSize(true);
 
@@ -61,11 +82,11 @@ public final class RSFrame extends Frame {
 
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        if (RSApplet.gameFrame.isVisible()) {
-                            RSApplet.gameFrame.setVisible(false);
+                        if (GameShell.gameFrame.isVisible()) {
+                            GameShell.gameFrame.setVisible(false);
                             minimiseItem.setLabel("Restore");
                         } else {
-                            RSApplet.gameFrame.setVisible(true);
+                            GameShell.gameFrame.setVisible(true);
                             minimiseItem.setLabel("Minimise to Tray");
                         }
                     }
@@ -81,7 +102,7 @@ public final class RSFrame extends Frame {
                         Object[] options = new String[]{"Okay"};
                         pane.setOptions(options);
                         JDialog dialog = pane.createDialog(new JFrame(), "About Dialog");
-                        Image image1 = Toolkit.getDefaultToolkit().getImage(signlink.findcachedir() + Csettings.mainIconLocation); //icon
+                        Image image1 = Toolkit.getDefaultToolkit().getImage(signlink.findCacheDIR() + cSettings.mainIconLocation); //icon
                         dialog.setIconImage(image1);
                         dialog.setVisible(true); //show it
                     }
@@ -92,7 +113,7 @@ public final class RSFrame extends Frame {
 
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        Csettings.exitWarningDialog();
+                        cSettings.showExitWarningDialog();
                     }
                 };
                 exitItem.addActionListener(exitListener);
@@ -114,22 +135,5 @@ public final class RSFrame extends Frame {
                 System.err.println(e);//prints error
             }
         }
-    }
-
-    @Override
-    public Graphics getGraphics() {
-        Graphics g = super.getGraphics();
-        g.translate(4, 24);
-        return g;
-    }
-
-    @Override
-    public final void update(Graphics g) {
-        rsApplet.update(g);
-    }
-
-    @Override
-    public final void paint(Graphics g) {
-        rsApplet.paint(g);
     }
 }

@@ -6,7 +6,7 @@ final class NPC extends Entity {
     private int anInt1693;
     private boolean aBoolean1694;
     private int anInt1695;
-    EntityDef desc;
+    NPCDef desc;
     
     NPC() {
         aBoolean1694 = false;
@@ -14,19 +14,19 @@ final class NPC extends Entity {
     }
     
     private Model method450() {
-        if (super.anim >= 0 && super.anInt1529 == 0) {
-            int k = Animation.anims[super.anim].anIntArray353[super.anInt1527];
+        if (super.animation >= 0 && super.anInt1529 == 0) {
+            int k = Animation.animCache[super.animation].animationFrameID2[super.anInt1527];
             int i1 = -1;
             if (super.anInt1517 >= 0 && super.anInt1517 != super.anInt1511) {
-                i1 = Animation.anims[super.anInt1517].anIntArray353[super.anInt1518];
+                i1 = Animation.animCache[super.anInt1517].animationFrameID2[super.anInt1518];
             }
-            return desc.method164(0, i1, k, Animation.anims[super.anim].anIntArray357);
+            return desc.method164(i1, k, Animation.animCache[super.animation].animationFlowControl);
         }
         int l = -1;
         if (super.anInt1517 >= 0) {
-            l = Animation.anims[super.anInt1517].anIntArray353[super.anInt1518];
+            l = Animation.animCache[super.anInt1517].animationFrameID2[super.anInt1518];
         }
-        return desc.method164(0, -1, l, null);
+        return desc.method164(-1, l, null);
     }
 
     @Override
@@ -43,25 +43,25 @@ final class NPC extends Entity {
             SpotAnim class23 = SpotAnim.cache[super.anInt1520];
             Model class30_sub2_sub4_sub6_1 = class23.getModel();
             if (class30_sub2_sub4_sub6_1 != null) {
-                int j = class23.aClass20_407.anIntArray353[super.anInt1521];
-                Model class30_sub2_sub4_sub6_2 = new Model(9, true, Class36.method532(j), false, class30_sub2_sub4_sub6_1);
-                class30_sub2_sub4_sub6_2.method475(0, -super.anInt1524, 16384, 0);
-                class30_sub2_sub4_sub6_2.method469((byte) -71);
-                class30_sub2_sub4_sub6_2.method470(j, 40542);
-                class30_sub2_sub4_sub6_2.anIntArrayArray1658 = null;
-                class30_sub2_sub4_sub6_2.anIntArrayArray1657 = null;
-                if (class23.anInt410 != 128 || class23.anInt411 != 128) {
-                    class30_sub2_sub4_sub6_2.method478(class23.anInt410, class23.anInt410, anInt1695, class23.anInt411);
+                int j = class23.animation.animationFrameID2[super.anInt1521];
+                Model class30_sub2_sub4_sub6_2 = new Model(9, true, AnimationFrame.isNullFrame(j), false, class30_sub2_sub4_sub6_1);
+                class30_sub2_sub4_sub6_2.method475(0, -super.anInt1524, 0);
+                class30_sub2_sub4_sub6_2.createBones((byte) -71);
+                class30_sub2_sub4_sub6_2.applyTransform(j, 40542);
+                class30_sub2_sub4_sub6_2.triangleSkin = null;
+                class30_sub2_sub4_sub6_2.vertexSkin = null;
+                if (class23.resizeXY != 128 || class23.resizeZ != 128) {
+                    class30_sub2_sub4_sub6_2.scaleT(class23.resizeXY, class23.resizeXY, class23.resizeZ);
                 }
-                class30_sub2_sub4_sub6_2.method479(64 + class23.anInt413, 850 + class23.anInt414, -30, -50, -30, true);
+                class30_sub2_sub4_sub6_2.light(64 + class23.modelBrightness, 850 + class23.modelShadow, -30, -50, -30, true);
                 Model aclass30_sub2_sub4_sub6[] = {
                     class30_sub2_sub4_sub6, class30_sub2_sub4_sub6_2
                 };
                 class30_sub2_sub4_sub6 = new Model(2, -819, true, aclass30_sub2_sub4_sub6);
             }
         }
-        if (desc.aByte68 == 1) {
-            class30_sub2_sub4_sub6.aBoolean1659 = true;
+        if (desc.boundDim == 1) {
+            class30_sub2_sub4_sub6.oneSquareModel = true;
         }
         return class30_sub2_sub4_sub6;
     }

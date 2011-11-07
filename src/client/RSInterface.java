@@ -2,143 +2,137 @@ package client;
 
 public class RSInterface {
     
-    public Sprite sprite1;
-    public int anInt208;
+    public Sprite disabledSprite;
+    public int animationDelay;
     public Sprite sprites[];
     public static RSInterface interfaceCache[];
-    public int anInt211;
-    public int anIntArray212[];
-    private int anInt213;
-    public int anInt214;
+    public int requiredValues[];
+    public int contentType;
     public int spritesX[];
-    public int anInt216;
+    public int disabledHoverColor;
     public int atActionType;
     public String spellName;
-    public int anInt219;
+    public int enabledColor;
     public int width;
     public String tooltip;
     public String selectedActionName;
-    public boolean aBoolean223;
+    public boolean textCentered;
     public int scrollPosition;
-    public String actions[];
+    public String itemActions[];
     public int valueIndexArray[][];
-    public boolean aBoolean227;
-    public String aString228;
-    private int anInt229;
-    public int anInt230;
+    public boolean boxFilled;
+    public String enabledMessage;
+    public int hoverType;
     public int invSpritePadX;
-    public int textColor;
-    public int anInt233;
-    public int mediaID;
-    public boolean aBoolean235;
+    public int disabledColor;
+    public int disabledMediaType;
+    public int disabledMediaID;
+    public boolean deletesTargetSlot;
     public int parentID;
     public int spellUsableOn;
-    private static MRUNodes aClass12_238;
-    public int anInt239;
+    private static MemCache spriteNodes;
+    public int enabledHoverColor;
     public int children[];
     public int childX[];
     public boolean usableItemInterface;
-    public RSFont textDrawingAreas;
+    public TextDrawingArea font;
     public int invSpritePadY;
-    public int anIntArray245[];
-    public int anInt246;
+    public int valueCompareType[];
+    public int animationLength;
     public int spritesY[];
-    public String message;
+    public String disabledMessage;
     public boolean isInventoryInterface;
     public int id;
-    public boolean aBoolean251;
-    public int invStackSized[];
-    public int inv[];
-    public byte aByte254;
-    public int anInt255;
-    public int anInt256;
-    public int anInt257;
-    public int anInt258;
-    public boolean aBoolean259;
-    public Sprite sprite2;
+    public int inventoryValue[];
+    public int inventory[];
+    public byte opacity;
+    public int enabledMediaType;
+    public int enabledMediaID;
+    public int disabledAnimation;
+    public int enabledAnimation;
+    public boolean allowSwapItems;
+    public Sprite enabledSprite;
     public int scrollMax;
-    public int type;
-    public int anInt263;
-    static MRUNodes aClass12_264 = new MRUNodes(30);
-    public int anInt265;
-    public boolean aBoolean266;
+    public int interfaceType;
+    public int xOffset;
+    static MemCache modelNodes = new MemCache(30);
+    public int yOffset;
+    public boolean interfaceShown;
     public int height;
-    public boolean aBoolean268;
-    public int anInt269;
-    public int anInt270;
-    public int anInt271;
+    public boolean textShadowed;
+    public int modelZoom;
+    public int modelRotationY;
+    public int modelRotationX;
     public int childY[];
-    static StreamLoader aClass44;
+    static JagexArchive streamLoader;
     
     public RSInterface() {
-        anInt213 = 9;
-        anInt229 = 891;
     }
     
     public static RSInterface addTab(int i) {
         RSInterface class9 = interfaceCache[i] = new RSInterface();
         class9.id = i;
         class9.parentID = i;
-        class9.type = 0;
+        class9.interfaceType = 0;
         class9.atActionType = 0;
-        class9.anInt214 = 0;
+        class9.contentType = 0;
         class9.width = 512;
         class9.height = 334;
-        class9.aByte254 = 0;
-        class9.anInt230 = 0;
+        class9.opacity = 0;
+        class9.hoverType = 0;
         return class9;
     }
 
-    public static void addText(int id, String text, RSFont wid[], int idx, int color) {
+    public static void addText(int id, String text, TextDrawingArea wid[], int idx, int color) {
         RSInterface Tab = addTab(id);
         Tab.id = id;
         Tab.parentID = id;
-        Tab.type = 4;
+        Tab.interfaceType = 4;
         Tab.atActionType = 0;
         Tab.width = 174;
         Tab.height = 11;
-        Tab.anInt214 = 0;
-        Tab.aByte254 = 0;
-        Tab.anInt230 = -1;
-        Tab.aBoolean223 = false;
-        Tab.aBoolean268 = true;
-        Tab.textDrawingAreas = wid[idx];
-        Tab.message = text;
-        Tab.aString228 = "";
-        Tab.textColor = color;
-        Tab.anInt219 = 0;
-        Tab.anInt216 = 0;
-        Tab.anInt239 = 0;
+        Tab.contentType = 0;
+        Tab.opacity = 0;
+        Tab.hoverType = -1;
+        Tab.textCentered = false;
+        Tab.textShadowed = true;
+        Tab.font = wid[idx];
+        Tab.disabledMessage = text;
+        Tab.enabledMessage = "";
+        Tab.disabledColor = color;
+        Tab.enabledColor = 0;
+        Tab.disabledHoverColor = 0;
+        Tab.enabledHoverColor = 0;
     }
 
     public static void removeSomething(int i) {
         RSInterface Tab = interfaceCache[i] = new RSInterface();
         Tab.id = i;
         Tab.parentID = i;
-        Tab.type = 5;
+        Tab.interfaceType = 5;
         Tab.atActionType = 1;
-        Tab.anInt214 = 0;
-        Tab.aByte254 = 0;
-        Tab.anInt230 = 52;
+        Tab.contentType = 0;
+        Tab.opacity = 0;
+        Tab.hoverType = 52;
     }
 
     public static void addActionButton(int i, int j, int k, int width, int height, String s) {
         RSInterface Tab = interfaceCache[i] = new RSInterface();
         Tab.id = i;
         Tab.parentID = i;
-        Tab.type = 5;
+        Tab.interfaceType = 5;
         Tab.atActionType = 1;
-        Tab.anInt214 = 0;
+        Tab.contentType = 0;
         Tab.width = width;
         Tab.height = height;
-        Tab.aByte254 = 0;
-        Tab.anInt230 = 52;
-        Tab.sprite1 = new Sprite(sign.signlink.findcachedir() + "sprites/interfaces/new/custom " + j + ".png");
-        Tab.sprite2 = new Sprite(sign.signlink.findcachedir() + "sprites/interfaces/new/custom " + k + ".png");
+        Tab.opacity = 0;
+        Tab.hoverType = 52;
+        Tab.disabledSprite = new Sprite(sign.signlink.findCacheDIR() + "sprites/interfaces/new/custom " + j + ".png");
+        Tab.enabledSprite = new Sprite(sign.signlink.findCacheDIR() + "sprites/interfaces/new/custom " + k + ".png");
         Tab.tooltip = s;
     }
 
-    public static void testing(RSFont[] wid) {
+    public static void testing(TextDrawingArea[] wid) {
         RSInterface t = addTab(18000);
         addText(18001, "test", wid, 0, 0xffffff);
         t.children = new int[1];
@@ -153,13 +147,13 @@ public class RSInterface {
         RSInterface tab = addTab(i);
         tab.parentID = i;
         tab.id = i;
-        tab.type = 0;
+        tab.interfaceType = 0;
         tab.atActionType = 0;
         tab.width = w;
         tab.height = h;
-        tab.aBoolean266 = true;
-        tab.aByte254 = 0;
-        tab.anInt230 = -1;
+        tab.interfaceShown = true;
+        tab.opacity = 0;
+        tab.hoverType = -1;
         tab.scrollMax = 0;
         addHoverImage(IMAGEID, j, j, imageName);
 
@@ -181,13 +175,13 @@ public class RSInterface {
         RSInterface tab = addTab(i);
         tab.id = i;
         tab.parentID = i;
-        tab.type = 5;
+        tab.interfaceType = 5;
         tab.atActionType = aT;
-        tab.anInt214 = contentType;
-        tab.aByte254 = 0;
-        tab.anInt230 = hoverOver;
-        tab.sprite1 = new Sprite(sign.signlink.findcachedir() + "sprites/interfaces/notes/NOTE " + j + ".png");
-        tab.sprite2 = new Sprite(sign.signlink.findcachedir() + "sprites/interfaces/notes/NOTE " + j + ".png");
+        tab.contentType = contentType;
+        tab.opacity = 0;
+        tab.hoverType = hoverOver;
+        tab.disabledSprite = new Sprite(sign.signlink.findCacheDIR() + "sprites/interfaces/notes/NOTE " + j + ".png");
+        tab.enabledSprite = new Sprite(sign.signlink.findCacheDIR() + "sprites/interfaces/notes/NOTE " + j + ".png");
         tab.width = anInt220;
         tab.height = anInt267;
         tab.tooltip = text;
@@ -197,33 +191,33 @@ public class RSInterface {
         RSInterface tab = addTab(i);
         tab.id = i;
         tab.parentID = i;
-        tab.type = 5;
+        tab.interfaceType = 5;
         tab.atActionType = 0;
-        tab.anInt214 = 0;
+        tab.contentType = 0;
         tab.width = 512;
         tab.height = 334;
-        tab.aByte254 = 0;
-        tab.anInt230 = 52;
-        tab.sprite1 = new Sprite(sign.signlink.findcachedir() + "sprites/interfaces/notes/NOTE " + j + ".png");
-        tab.sprite2 = new Sprite(sign.signlink.findcachedir() + "sprites/interfaces/notes/NOTE " + k + ".png");
+        tab.opacity = 0;
+        tab.hoverType = 52;
+        tab.disabledSprite = new Sprite(sign.signlink.findCacheDIR() + "sprites/interfaces/notes/NOTE " + j + ".png");
+        tab.enabledSprite = new Sprite(sign.signlink.findCacheDIR() + "sprites/interfaces/notes/NOTE " + k + ".png");
     }
 
     public static void addSprite(int ID, int i, String name) { //static sprite
         RSInterface Tab = addTab(ID);
         Tab.id = ID;
         Tab.parentID = ID;
-        Tab.type = 5;
+        Tab.interfaceType = 5;
         Tab.atActionType = 0;
-        Tab.anInt214 = 0;
+        Tab.contentType = 0;
         Tab.width = 512;
         Tab.height = 334;
-        Tab.aByte254 = 0;
-        Tab.anInt230 = 0;
-        Tab.sprite1 = new Sprite(sign.signlink.findcachedir() + "sprites/interfaces/" + name + " " + i + ".png");
-        Tab.sprite2 = new Sprite(sign.signlink.findcachedir() + "sprites/interfaces/" + name + " " + i + ".png");
+        Tab.opacity = 0;
+        Tab.hoverType = 0;
+        Tab.disabledSprite = new Sprite(sign.signlink.findCacheDIR() + "sprites/interfaces/" + name + " " + i + ".png");
+        Tab.enabledSprite = new Sprite(sign.signlink.findCacheDIR() + "sprites/interfaces/" + name + " " + i + ".png");
     }
 
-    public static void Sidebar7(RSFont[] tda) {
+    public static void Sidebar7(TextDrawingArea[] tda) {
         RSInterface t = addTab(19000);
         addSprite(17351, 0, "notes/NOTE");
         addHoverButton(17352, "NOTE", 1, 200, 30, "Add note", -1, 17353, 1);
@@ -294,7 +288,7 @@ public class RSInterface {
         }
     }
 
-    public static void LogoutSB(RSFont[] wid) {
+    public static void LogoutSB(TextDrawingArea[] wid) {
         RSInterface class9 = interfaceCache[2449];
 
         //top line
@@ -332,17 +326,17 @@ public class RSInterface {
 
         //top text
         class9 = interfaceCache[2450];
-        class9.textColor = 0xff981f;
-        class9.message = "When you have finished playing,";
+        class9.disabledColor = 0xff981f;
+        class9.disabledMessage = "When you have finished playing,";
         class9 = interfaceCache[2452];
-        class9.textColor = 0xff981f;
-        class9.message = "on -GaMeR X-'s Client,";
+        class9.disabledColor = 0xff981f;
+        class9.disabledMessage = "on -GaMeR X-'s Client,";
         class9 = interfaceCache[2451];
-        class9.textColor = 0xff981f;
-        class9.message = "click below, to logout safely.";
+        class9.disabledColor = 0xff981f;
+        class9.disabledMessage = "click below, to logout safely.";
     }
 
-    public static void Sidebar4(RSFont[] wid) {
+    public static void Sidebar4(TextDrawingArea[] wid) {
         RSInterface t = interfaceCache[1644];
         /*addActionButton(ID, SpriteON, SpriteOFF, SpriteX, SpriteY, "SpriteText");*/
         addActionButton(15101, 15101, 15101, 40, 39, "Show Equipment Screen");
@@ -364,7 +358,7 @@ public class RSInterface {
         t.childY[26] = 212;
     }
 
-    public static void Sidebar8(RSFont[] wid) {
+    public static void Sidebar8(TextDrawingArea[] wid) {
         RSInterface class9 = interfaceCache[5065];
         addText(5070, "Add Friend", wid, 0, 0xff9933);
         addText(5071, "Del Friend", wid, 0, 0xff9933);
@@ -381,12 +375,12 @@ public class RSInterface {
             class9.childY[i] -= 1;
         }
         class9 = interfaceCache[5067];
-        class9.message = "Friends List - World 1";
-        class9.aBoolean223 = true;
-        class9.textColor = 0xff9933;
+        class9.disabledMessage = "Friends List - World 1";
+        class9.textCentered = true;
+        class9.disabledColor = 0xff9933;
     }
 
-    public static void Sidebar9(RSFont[] wid) {
+    public static void Sidebar9(TextDrawingArea[] wid) {
         RSInterface class9 = interfaceCache[5715];
         addText(5720, " Add Name", wid, 0, 0xff9933);
         addText(5721, " Del Name", wid, 0, 0xff9933);
@@ -398,237 +392,228 @@ public class RSInterface {
         class9.childY[4] = 236; //add friend Y
         class9.childY[5] = 236; //del friend Y
         class9 = interfaceCache[5717]; //this makes to we can ser a new text..
-        class9.message = "Ignore List";
-        class9.aBoolean223 = true; //offsets to old location of the header..
-        class9.textColor = 0xff9933; //sets the colour
+        class9.disabledMessage = "Ignore List";
+        class9.textCentered = true; //offsets to old location of the header..
+        class9.disabledColor = 0xff9933; //sets the colour
     }
 
-    public void swapInventoryItems(int i, byte byte0, int j) {
-        int k = inv[i];
-        inv[i] = inv[j];
-        if (byte0 == 9) {
-            byte0 = 0;
-        } else {
-            anInt229 = -76;
-        }
-        inv[j] = k;
-        k = invStackSized[i];
-        invStackSized[i] = invStackSized[j];
-        invStackSized[j] = k;
+    public void swapInventoryItems(int startSlot, int endSlot) {
+        int next = inventory[startSlot];
+        inventory[startSlot] = inventory[endSlot];
+        inventory[endSlot] = next;
+        next = inventoryValue[startSlot];
+        inventoryValue[startSlot] = inventoryValue[endSlot];
+        inventoryValue[endSlot] = next;
     }
 
-    public static void unpack(StreamLoader class44, RSFont aclass30_sub2_sub1_sub4[], byte byte0, StreamLoader class44_1) {
-        aClass12_238 = new MRUNodes(50000);
-        Stream class30_sub2_sub2 = new Stream(class44.getDataForName("data"));
-        int i = -1;
-        int j = class30_sub2_sub2.readUnsignedWord();
-        interfaceCache = new RSInterface[20001];
-        do {
-            if (class30_sub2_sub2.currentOffset >= class30_sub2_sub2.buffer.length) {
-                break;
+    public static void unpack(JagexArchive interfaceIndex, TextDrawingArea fonts[], JagexArchive spriteArchive) {
+        spriteNodes = new MemCache(50000);
+        Stream data = new Stream(interfaceIndex.getDataForName("data"));
+        int child = -1;
+        data.readUnsignedWord();
+        interfaceCache = new RSInterface[50000]; //20001
+        while(data.currentOffset < data.buffer.length) {
+            int parent = data.readUnsignedWord();
+            if (parent == 65535) {
+                child = data.readUnsignedWord();
+                parent = data.readUnsignedWord();
             }
-            int k = class30_sub2_sub2.readUnsignedWord();
-            if (k == 65535) {
-                i = class30_sub2_sub2.readUnsignedWord();
-                k = class30_sub2_sub2.readUnsignedWord();
-            }
-            RSInterface class9 = interfaceCache[k] = new RSInterface();
-            class9.id = k;
-            class9.parentID = i;
-            class9.type = class30_sub2_sub2.readUnsignedByte();
-            class9.atActionType = class30_sub2_sub2.readUnsignedByte();
-            class9.anInt214 = class30_sub2_sub2.readUnsignedWord();
-            class9.width = class30_sub2_sub2.readUnsignedWord();
-            class9.height = class30_sub2_sub2.readUnsignedWord();
-            class9.aByte254 = (byte) class30_sub2_sub2.readUnsignedByte();
-            class9.anInt230 = class30_sub2_sub2.readUnsignedByte();
-            if (class9.anInt230 != 0) {
-                class9.anInt230 = (class9.anInt230 - 1 << 8) + class30_sub2_sub2.readUnsignedByte();
+            RSInterface rsInterface = interfaceCache[parent] = new RSInterface();
+            rsInterface.id = parent;
+            rsInterface.parentID = child;
+            rsInterface.interfaceType = data.readUnsignedByte();
+            rsInterface.atActionType = data.readUnsignedByte();
+            rsInterface.contentType = data.readUnsignedWord();
+            rsInterface.width = data.readUnsignedWord();
+            rsInterface.height = data.readUnsignedWord();
+            rsInterface.opacity = (byte) data.readUnsignedByte();
+            rsInterface.hoverType = data.readUnsignedByte();
+            if (rsInterface.hoverType != 0) {
+                rsInterface.hoverType = (rsInterface.hoverType - 1 << 8) + data.readUnsignedByte();
             } else {
-                class9.anInt230 = -1;
+                rsInterface.hoverType = -1;
             }
-            int l = class30_sub2_sub2.readUnsignedByte();
-            if (l > 0) {
-                class9.anIntArray245 = new int[l];
-                class9.anIntArray212 = new int[l];
-                for (int i1 = 0; i1 < l; i1++) {
-                    class9.anIntArray245[i1] = class30_sub2_sub2.readUnsignedByte();
-                    class9.anIntArray212[i1] = class30_sub2_sub2.readUnsignedWord();
+            int requirementIndex = data.readUnsignedByte();
+            if (requirementIndex > 0) {
+                rsInterface.valueCompareType = new int[requirementIndex];
+                rsInterface.requiredValues = new int[requirementIndex];
+                for (int index = 0; index < requirementIndex; index++) {
+                    rsInterface.valueCompareType[index] = data.readUnsignedByte();
+                    rsInterface.requiredValues[index] = data.readUnsignedWord();
                 }
             }
-            int j1 = class30_sub2_sub2.readUnsignedByte();
-            if (j1 > 0) {
-                class9.valueIndexArray = new int[j1][];
-                for (int k1 = 0; k1 < j1; k1++) {
-                    int j3 = class30_sub2_sub2.readUnsignedWord();
-                    class9.valueIndexArray[k1] = new int[j3];
-                    for (int l4 = 0; l4 < j3; l4++) {
-                        class9.valueIndexArray[k1][l4] = class30_sub2_sub2.readUnsignedWord();
+            int valueType = data.readUnsignedByte();
+            if (valueType > 0) {
+                rsInterface.valueIndexArray = new int[valueType][];
+                for (int valueIndex = 0; valueIndex < valueType; valueIndex++) {
+                    int size = data.readUnsignedWord();
+                    rsInterface.valueIndexArray[valueIndex] = new int[size];
+                    for (int nextIndex = 0; nextIndex < size; nextIndex++) {
+                        rsInterface.valueIndexArray[valueIndex][nextIndex] = data.readUnsignedWord();
                     }
                 }
             }
-            if (class9.type == 0) { //type
-                class9.scrollMax = class30_sub2_sub2.readUnsignedWord();
-                class9.aBoolean266 = class30_sub2_sub2.readUnsignedByte() == 1;
-                int l1 = class30_sub2_sub2.readUnsignedWord();
-                class9.children = new int[l1];
-                class9.childX = new int[l1];
-                class9.childY = new int[l1];
-                for (int k3 = 0; k3 < l1; k3++) {
-                    class9.children[k3] = class30_sub2_sub2.readUnsignedWord();
-                    class9.childX[k3] = class30_sub2_sub2.readSignedWord();
-                    class9.childY[k3] = class30_sub2_sub2.readSignedWord();
+            if (rsInterface.interfaceType == 0) {
+                rsInterface.scrollMax = data.readUnsignedWord();
+                rsInterface.interfaceShown = data.readUnsignedByte() == 1;
+                int childCount = data.readUnsignedWord();
+                rsInterface.children = new int[childCount];
+                rsInterface.childX = new int[childCount];
+                rsInterface.childY = new int[childCount];
+                for (int childIndex = 0; childIndex < childCount; childIndex++) {
+                    rsInterface.children[childIndex] = data.readUnsignedWord();
+                    rsInterface.childX[childIndex] = data.readSignedWord();
+                    rsInterface.childY[childIndex] = data.readSignedWord();
                 }
             }
-            if (class9.type == 1) {
-                class9.anInt211 = class30_sub2_sub2.readUnsignedWord();
-                class9.aBoolean251 = class30_sub2_sub2.readUnsignedByte() == 1;
+            if (rsInterface.interfaceType == 1) {
+                data.readUnsignedWord();
+                data.readUnsignedByte();
             }
-            if (class9.type == 2) {
-                class9.inv = new int[class9.width * class9.height];
-                class9.invStackSized = new int[class9.width * class9.height];
-                class9.aBoolean259 = class30_sub2_sub2.readUnsignedByte() == 1;
-                class9.isInventoryInterface = class30_sub2_sub2.readUnsignedByte() == 1;
-                class9.usableItemInterface = class30_sub2_sub2.readUnsignedByte() == 1;
-                class9.aBoolean235 = class30_sub2_sub2.readUnsignedByte() == 1;
-                class9.invSpritePadX = class30_sub2_sub2.readUnsignedByte();
-                class9.invSpritePadY = class30_sub2_sub2.readUnsignedByte();
-                class9.spritesX = new int[20];
-                class9.spritesY = new int[20];
-                class9.sprites = new Sprite[20];
-                for (int i2 = 0; i2 < 20; i2++) {
-                    int l3 = class30_sub2_sub2.readUnsignedByte();
-                    if (l3 != 1) {
-                        continue;
-                    }
-                    class9.spritesX[i2] = class30_sub2_sub2.readSignedWord();
-                    class9.spritesY[i2] = class30_sub2_sub2.readSignedWord();
-                    String s1 = class30_sub2_sub2.readString();
-                    if (class44_1 != null && s1.length() > 0) {
-                        int i5 = s1.lastIndexOf(",");
-                        class9.sprites[i2] = method207(Integer.parseInt(s1.substring(i5 + 1)), false, class44_1, s1.substring(0, i5));
-                    }
-                }
-                class9.actions = new String[5];
-                for (int j2 = 0; j2 < 5; j2++) {
-                    class9.actions[j2] = class30_sub2_sub2.readString();
-                    if (class9.actions[j2].length() == 0) {
-                        class9.actions[j2] = null;
+            if (rsInterface.interfaceType == 2) {
+                rsInterface.inventory = new int[rsInterface.width * rsInterface.height];
+                rsInterface.inventoryValue = new int[rsInterface.width * rsInterface.height];
+                rsInterface.allowSwapItems = data.readUnsignedByte() == 1;
+                rsInterface.isInventoryInterface = data.readUnsignedByte() == 1;
+                rsInterface.usableItemInterface = data.readUnsignedByte() == 1;
+                rsInterface.deletesTargetSlot = data.readUnsignedByte() == 1;
+                rsInterface.invSpritePadX = data.readUnsignedByte();
+                rsInterface.invSpritePadY = data.readUnsignedByte();
+                rsInterface.spritesX = new int[20];
+                rsInterface.spritesY = new int[20];
+                rsInterface.sprites = new Sprite[20];
+                for (int index = 0; index < 20; index++) {
+                    int dummy = data.readUnsignedByte();
+                    if (dummy == 1) {
+                        rsInterface.spritesX[index] = data.readSignedWord();
+                        rsInterface.spritesY[index] = data.readSignedWord();
+                        String spriteName = data.readString();
+                        if (spriteArchive != null && spriteName.length() > 0) {
+                            int spriteID = spriteName.lastIndexOf(",");
+                            rsInterface.sprites[index] = getSprite(Integer.parseInt(spriteName.substring(spriteID + 1)), spriteArchive, spriteName.substring(0, spriteID));
+                        }
                     }
                 }
-            }
-            if (class9.type == 3) {
-                class9.aBoolean227 = class30_sub2_sub2.readUnsignedByte() == 1;
-            }
-            if (class9.type == 4 || class9.type == 1) {
-                class9.aBoolean223 = class30_sub2_sub2.readUnsignedByte() == 1;
-                int k2 = class30_sub2_sub2.readUnsignedByte();
-                if (aclass30_sub2_sub1_sub4 != null) {
-                    class9.textDrawingAreas = aclass30_sub2_sub1_sub4[k2];
-                }
-                class9.aBoolean268 = class30_sub2_sub2.readUnsignedByte() == 1;
-            }
-            if (class9.type == 4) { //type = 4??
-                class9.message = class30_sub2_sub2.readString(); //readString
-                class9.message = class9.message.replaceAll("RuneScape", "-GaMeR X's Client"); //message
-                class9.aString228 = class30_sub2_sub2.readString(); //readString
-            }
-            if (class9.type == 1 || class9.type == 3 || class9.type == 4) {
-                class9.textColor = class30_sub2_sub2.readDWord();
-            }
-            if (class9.type == 3 || class9.type == 4) {
-                class9.anInt219 = class30_sub2_sub2.readDWord();
-                class9.anInt216 = class30_sub2_sub2.readDWord();
-                class9.anInt239 = class30_sub2_sub2.readDWord();
-            }
-            if (class9.type == 5) {
-                String s = class30_sub2_sub2.readString();
-                if (class44_1 != null && s.length() > 0) {
-                    int i4 = s.lastIndexOf(",");
-                    class9.sprite1 = method207(Integer.parseInt(s.substring(i4 + 1)), false, class44_1, s.substring(0, i4));
-                }
-                s = class30_sub2_sub2.readString();
-                if (class44_1 != null && s.length() > 0) {
-                    int j4 = s.lastIndexOf(",");
-                    class9.sprite2 = method207(Integer.parseInt(s.substring(j4 + 1)), false, class44_1, s.substring(0, j4));
+                rsInterface.itemActions = new String[5];
+                for (int actionIndex = 0; actionIndex < 5; actionIndex++) {
+                    rsInterface.itemActions[actionIndex] = data.readString();
+                    if (rsInterface.itemActions[actionIndex].length() == 0) {
+                        rsInterface.itemActions[actionIndex] = null;
+                    }
                 }
             }
-            if (class9.type == 6) {
-                int l2 = class30_sub2_sub2.readUnsignedByte();
-                if (l2 != 0) {
-                    class9.anInt233 = 1;
-                    class9.mediaID = (l2 - 1 << 8) + class30_sub2_sub2.readUnsignedByte();
+            if (rsInterface.interfaceType == 3) {
+                rsInterface.boxFilled = data.readUnsignedByte() == 1;
+            }
+            if (rsInterface.interfaceType == 4 || rsInterface.interfaceType == 1) {
+                rsInterface.textCentered = data.readUnsignedByte() == 1;
+                int fontID = data.readUnsignedByte();
+                if (fonts != null) {
+                    rsInterface.font = fonts[fontID];
                 }
-                l2 = class30_sub2_sub2.readUnsignedByte();
-                if (l2 != 0) {
-                    class9.anInt255 = 1;
-                    class9.anInt256 = (l2 - 1 << 8) + class30_sub2_sub2.readUnsignedByte();
+                rsInterface.textShadowed = data.readUnsignedByte() == 1;
+            }
+            if (rsInterface.interfaceType == 4) {
+                rsInterface.disabledMessage = data.readString(); //readString
+                //rsInterface.message = rsInterface.message.replaceAll("RuneScape", "-GaMeR X's Client"); //message
+                rsInterface.enabledMessage = data.readString();
+            }
+            if (rsInterface.interfaceType == 1 || rsInterface.interfaceType == 3 || rsInterface.interfaceType == 4) {
+                rsInterface.disabledColor = data.readDWord();
+            }
+            if (rsInterface.interfaceType == 3 || rsInterface.interfaceType == 4) {
+                rsInterface.enabledColor = data.readDWord();
+                rsInterface.disabledHoverColor = data.readDWord();
+                rsInterface.enabledHoverColor = data.readDWord();
+            }
+            if (rsInterface.interfaceType == 5) {
+                String spriteName = data.readString();
+                if (spriteArchive != null && spriteName.length() > 0) {
+                    int disabledSpriteId = spriteName.lastIndexOf(",");
+                    rsInterface.disabledSprite = getSprite(Integer.parseInt(spriteName.substring(disabledSpriteId + 1)), spriteArchive, spriteName.substring(0, disabledSpriteId));
                 }
-                l2 = class30_sub2_sub2.readUnsignedByte();
-                if (l2 != 0) {
-                    class9.anInt257 = (l2 - 1 << 8) + class30_sub2_sub2.readUnsignedByte();
+                spriteName = data.readString();
+                if (spriteArchive != null && spriteName.length() > 0) {
+                    int enabledSpriteId = spriteName.lastIndexOf(",");
+                    rsInterface.enabledSprite = getSprite(Integer.parseInt(spriteName.substring(enabledSpriteId + 1)), spriteArchive, spriteName.substring(0, enabledSpriteId));
+                }
+            }
+            if (rsInterface.interfaceType == 6) {
+                int readValue = data.readUnsignedByte();
+                if (readValue != 0) {
+                    rsInterface.disabledMediaType = 1;
+                    rsInterface.disabledMediaID = (readValue - 1 << 8) + data.readUnsignedByte();
+                }
+                readValue = data.readUnsignedByte();
+                if (readValue != 0) {
+                    rsInterface.enabledMediaType = 1;
+                    rsInterface.enabledMediaID = (readValue - 1 << 8) + data.readUnsignedByte();
+                }
+                readValue = data.readUnsignedByte();
+                if (readValue != 0) {
+                    rsInterface.disabledAnimation = (readValue - 1 << 8) + data.readUnsignedByte();
                 } else {
-                    class9.anInt257 = -1;
+                    rsInterface.disabledAnimation = -1;
                 }
-                l2 = class30_sub2_sub2.readUnsignedByte();
-                if (l2 != 0) {
-                    class9.anInt258 = (l2 - 1 << 8) + class30_sub2_sub2.readUnsignedByte();
+                readValue = data.readUnsignedByte();
+                if (readValue != 0) {
+                    rsInterface.enabledAnimation = (readValue - 1 << 8) + data.readUnsignedByte();
                 } else {
-                    class9.anInt258 = -1;
+                    rsInterface.enabledAnimation = -1;
                 }
-                class9.anInt269 = class30_sub2_sub2.readUnsignedWord();
-                class9.anInt270 = class30_sub2_sub2.readUnsignedWord();
-                class9.anInt271 = class30_sub2_sub2.readUnsignedWord();
+                rsInterface.modelZoom = data.readUnsignedWord();
+                rsInterface.modelRotationY = data.readUnsignedWord();
+                rsInterface.modelRotationX = data.readUnsignedWord();
             }
-            if (class9.type == 7) {
-                class9.inv = new int[class9.width * class9.height];
-                class9.invStackSized = new int[class9.width * class9.height];
-                class9.aBoolean223 = class30_sub2_sub2.readUnsignedByte() == 1;
-                int i3 = class30_sub2_sub2.readUnsignedByte();
-                if (aclass30_sub2_sub1_sub4 != null) {
-                    class9.textDrawingAreas = aclass30_sub2_sub1_sub4[i3];
+            if (rsInterface.interfaceType == 7) {
+                rsInterface.inventory = new int[rsInterface.width * rsInterface.height];
+                rsInterface.inventoryValue = new int[rsInterface.width * rsInterface.height];
+                rsInterface.textCentered = data.readUnsignedByte() == 1;
+                int fontID = data.readUnsignedByte();
+                if (fonts != null) {
+                    rsInterface.font = fonts[fontID];
                 }
-                class9.aBoolean268 = class30_sub2_sub2.readUnsignedByte() == 1;
-                class9.textColor = class30_sub2_sub2.readDWord();
-                class9.invSpritePadX = class30_sub2_sub2.readSignedWord();
-                class9.invSpritePadY = class30_sub2_sub2.readSignedWord();
-                class9.isInventoryInterface = class30_sub2_sub2.readUnsignedByte() == 1;
-                class9.actions = new String[5];
-                for (int k4 = 0; k4 < 5; k4++) {
-                    class9.actions[k4] = class30_sub2_sub2.readString();
-                    if (class9.actions[k4].length() == 0) {
-                        class9.actions[k4] = null;
-                    }
-                }
-            }
-            if (class9.atActionType == 2 || class9.type == 2) {
-                class9.selectedActionName = class30_sub2_sub2.readString();
-                class9.spellName = class30_sub2_sub2.readString();
-                class9.spellUsableOn = class30_sub2_sub2.readUnsignedWord();
-            }
-            if (class9.type == 8) {	//	Loads new .dat files
-                class9.message = class30_sub2_sub2.readString();
-            }
-            if (class9.atActionType == 1 || class9.atActionType == 4 || class9.atActionType == 5 || class9.atActionType == 6) {
-                class9.tooltip = class30_sub2_sub2.readString();
-                if (class9.tooltip.length() == 0) {
-                    if (class9.atActionType == 1) {
-                        class9.tooltip = "Ok";
-                    }
-                    if (class9.atActionType == 4) {
-                        class9.tooltip = "Select";
-                    }
-                    if (class9.atActionType == 5) {
-                        class9.tooltip = "Select";
-                    }
-                    if (class9.atActionType == 6) {
-                        class9.tooltip = "Continue";
+                rsInterface.textShadowed = data.readUnsignedByte() == 1;
+                rsInterface.disabledColor = data.readDWord();
+                rsInterface.invSpritePadX = data.readSignedWord();
+                rsInterface.invSpritePadY = data.readSignedWord();
+                rsInterface.isInventoryInterface = data.readUnsignedByte() == 1;
+                rsInterface.itemActions = new String[5];
+                for (int actionIndex = 0; actionIndex < 5; actionIndex++) {
+                    rsInterface.itemActions[actionIndex] = data.readString();
+                    if (rsInterface.itemActions[actionIndex].length() == 0) {
+                        rsInterface.itemActions[actionIndex] = null;
                     }
                 }
             }
-        } while (true);
-        aClass12_238 = null;
-        aClass44 = class44;
+            if (rsInterface.atActionType == 2 || rsInterface.interfaceType == 2) {
+                rsInterface.selectedActionName = data.readString();
+                rsInterface.spellName = data.readString();
+                rsInterface.spellUsableOn = data.readUnsignedWord();
+            }
+            if (rsInterface.interfaceType == 8) {
+                rsInterface.disabledMessage = data.readString();
+            }
+            if (rsInterface.atActionType == 1 || rsInterface.atActionType == 4 || rsInterface.atActionType == 5 || rsInterface.atActionType == 6) {
+                rsInterface.tooltip = data.readString();
+                if (rsInterface.tooltip.length() == 0) {
+                    if (rsInterface.atActionType == 1) {
+                        rsInterface.tooltip = "Ok";
+                    }
+                    if (rsInterface.atActionType == 4) {
+                        rsInterface.tooltip = "Select";
+                    }
+                    if (rsInterface.atActionType == 5) {
+                        rsInterface.tooltip = "Select";
+                    }
+                    if (rsInterface.atActionType == 6) {
+                        rsInterface.tooltip = "Continue";
+                    }
+                }
+            }
+        }
+        spriteNodes = null;
+        streamLoader = interfaceIndex;
         ////////////////////////// HEREEEEEEEEEEEEE /////////////////////////////
         /////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////
@@ -637,100 +622,96 @@ public class RSInterface {
         /////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////
 
-        Sidebar4(aclass30_sub2_sub1_sub4); //equip
+        Sidebar4(fonts); //equip
 
-        Sidebar7(aclass30_sub2_sub1_sub4); //notes
-        Sidebar8(aclass30_sub2_sub1_sub4); //friends
-        Sidebar9(aclass30_sub2_sub1_sub4);//ignores
-
-
-        LogoutSB(aclass30_sub2_sub1_sub4); //logout
-
-        testing(aclass30_sub2_sub1_sub4);
+        Sidebar7(fonts); //notes
+        Sidebar8(fonts); //friends
+        Sidebar9(fonts);//ignores
 
 
+        LogoutSB(fonts); //logout
 
-        if (byte0 != -84);
+        testing(fonts);
+
+
+
     }
 
-    private Model method206(int i, int j) {
-        Model class30_sub2_sub4_sub6 = (Model) aClass12_264.insertFromCache((i << 16) + j);
-        if (class30_sub2_sub4_sub6 != null) {
-            return class30_sub2_sub4_sub6;
+    private Model getModelByType(int modelType, int modelID) {
+        Model model = (Model) modelNodes.get((modelType << 16) + modelID);
+        if (model != null) {
+            return model;
         }
-        if (i == 1) {
-            class30_sub2_sub4_sub6 = Model.method462(anInt213, j);
+        if (modelType == 1) {
+            model = Model.getModel(modelID);
         }
-        if (i == 2) {
-            class30_sub2_sub4_sub6 = EntityDef.forID(j).method160(true);
+        if (modelType == 2) {
+            model = NPCDef.forID(modelID).getHeadModel();
         }
-        if (i == 3) {
-            class30_sub2_sub4_sub6 = client.aClass30_Sub2_Sub4_Sub1_Sub2_1126.method453((byte) -41);
+        if (modelType == 3) {
+            model = Client.myPlayer.getPlayerModel();
         }
-        if (i == 4) {
-            class30_sub2_sub4_sub6 = ItemDef.forID(j).method202(50, true);
+        if (modelType == 4) {
+            model = ItemDef.forID(modelID).getInventoryModel(50);
         }
-        if (i == 5) {
-            class30_sub2_sub4_sub6 = null;
+        if (modelType == 5) {
+            model = null;
         }
-        if (class30_sub2_sub4_sub6 != null) {
-            aClass12_264.removeFromCache(class30_sub2_sub4_sub6, (i << 16) + j, (byte) 2);
+        if (model != null) {
+            modelNodes.put(model, (modelType << 16) + modelID);
         }
-        return class30_sub2_sub4_sub6;
+        return model;
     }
 
-    private static Sprite method207(int i, boolean flag, StreamLoader class44, String s) {
+    private static Sprite getSprite(int i, JagexArchive spriteArchive, String s) {
         long l = (TextClass.method585(s) << 8) + (long) i;
-        if (flag) {
-            throw new NullPointerException();
-        }
-        Sprite class30_sub2_sub1_sub1 = (Sprite) aClass12_238.insertFromCache(l);
-        if (class30_sub2_sub1_sub1 != null) {
-            return class30_sub2_sub1_sub1;
+        Sprite cacheSprite = (Sprite) spriteNodes.get(l);
+        if (cacheSprite != null) {
+            return cacheSprite;
         }
         try {
-            class30_sub2_sub1_sub1 = new Sprite(class44, s, i);
-            aClass12_238.removeFromCache(class30_sub2_sub1_sub1, l, (byte) 2);
+            cacheSprite = new Sprite(spriteArchive, s, i);
+            spriteNodes.put(cacheSprite, l);
         } catch (Exception exception) {
             return null;
         }
-        return class30_sub2_sub1_sub1;
+        return cacheSprite;
     }
 
-    public static void method208(int i, boolean flag, int j, Model class30_sub2_sub4_sub6) {
+    public static void getRegularModel(boolean flag, Model model) {
         if (flag) {
             return;
         }
-        aClass12_264.unlinkAll();
-        if (class30_sub2_sub4_sub6 != null && j != 4) {
-            aClass12_264.removeFromCache(class30_sub2_sub4_sub6, (j << 16) + i, (byte) 2);
+        modelNodes.unlinkAll();
+        if (model != null) {
+            modelNodes.put(model, (5 << 16));
         }
     }
 
-    public Model method209(int j, int k, boolean flag) {
-        Model model;
-        if (flag) {
-            model = method206(anInt255, anInt256);
+    public Model getAnimatedModel(int id, int k, boolean enabled) {
+        Model animatedModel;
+        if (enabled) {
+            animatedModel = getModelByType(enabledMediaType, enabledMediaID);
         } else {
-            model = method206(anInt233, mediaID);
+            animatedModel = getModelByType(disabledMediaType, disabledMediaID);
         }
-        if (model == null) {
+        if (animatedModel == null) {
             return null;
         }
-        if (k == -1 && j == -1 && model.trianglecolours == null) {
-            return model;
+        if (k == -1 && id == -1 && animatedModel.triangleColourOrTexture == null) {
+            return animatedModel;
         }
-        Model model_1 = new Model(9, true, Class36.method532(k) & Class36.method532(j), false, model);
-        if (k != -1 || j != -1) {
-            model_1.method469((byte) -71);
+        Model model_1 = new Model(9, true, AnimationFrame.isNullFrame(k) & AnimationFrame.isNullFrame(id), false, animatedModel);
+        if (k != -1 || id != -1) {
+            model_1.createBones((byte) -71);
         }
         if (k != -1) {
-            model_1.method470(k, 40542);
+            model_1.applyTransform(k, 40542);
         }
-        if (j != -1) {
-            model_1.method470(j, 40542);
+        if (id != -1) {
+            model_1.applyTransform(id, 40542);
         }
-        model_1.method479(64, 768, -50, -10, -50, true);
+        model_1.light(64, 768, -50, -10, -50, true);
         return model_1;
     }
 }

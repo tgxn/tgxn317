@@ -30,7 +30,7 @@ final class ObjectDef {
     public boolean aBoolean762;
     private boolean aBoolean763;
     public boolean aBoolean764;
-    public static client clientInstance;
+    public static Client clientInstance;
     public boolean aBoolean766;
     public boolean aBoolean767;
     public int anInt768;
@@ -45,12 +45,12 @@ final class ObjectDef {
     public byte description[];
     public boolean hasActions;
     public boolean aBoolean779;
-    public static MRUNodes mruNodes2 = new MRUNodes(30);
+    public static MemCache mruNodes2 = new MemCache(30);
     public int anInt781;
     private static ObjectDef cache[];
     private int anInt783;
     private int modifiedModelColors[];
-    public static MRUNodes mruNodes1 = new MRUNodes(500);
+    public static MemCache mruNodes1 = new MemCache(500);
     public String actions[];
     
     ObjectDef() {
@@ -207,18 +207,14 @@ final class ObjectDef {
         }
     }
 
-    public static final void nullLoader(int i) {
+    public static void nullLoader() {
         mruNodes1 = null;
         mruNodes2 = null;
         streamIndices = null;
         cache = null;
-        for (stream = null; i >= 0;) {
-            return;
-        }
-
     }
 
-    public static final void unpackConfig(StreamLoader class44) {
+    public static void unpackConfig(JagexArchive class44) {
         stream = new Stream(class44.getDataForName("loc.dat"));
         Stream class30_sub2_sub2 = new Stream(class44.getDataForName("loc.idx"));
         totalObjects = class30_sub2_sub2.readUnsignedWord();
@@ -249,14 +245,14 @@ final class ObjectDef {
             }
             boolean flag1 = true;
             for (int k = 0; k < modelArray.length; k++) {
-                flag1 &= Model.method463(modelArray[k] & 0xffff);
+                flag1 &= Model.isCached(modelArray[k] & 0xffff);
             }
 
             return flag1;
         }
         for (int j = 0; j < anIntArray776.length; j++) {
             if (anIntArray776[j] == i) {
-                return Model.method463(modelArray[j] & 0xffff);
+                return Model.isCached(modelArray[j] & 0xffff);
             }
         }
 
@@ -273,7 +269,7 @@ final class ObjectDef {
         }
         if (aBoolean762) {
             int l1 = (k + l + i1 + j1) / 4;
-            for (int i2 = 0; i2 < class30_sub2_sub4_sub6.numVertices; i2++) {
+            for (int i2 = 0; i2 < class30_sub2_sub4_sub6.vertexCount; i2++) {
                 int j2 = class30_sub2_sub4_sub6.vertexX[i2];
                 int k2 = class30_sub2_sub4_sub6.vertexZ[i2];
                 int l2 = k + ((l - k) * (j2 + 64)) / 128;
@@ -282,7 +278,7 @@ final class ObjectDef {
                 class30_sub2_sub4_sub6.vertexY[i2] += j3 - l1;
             }
 
-            class30_sub2_sub4_sub6.method467(false);
+            class30_sub2_sub4_sub6.method467();
         }
         return class30_sub2_sub4_sub6;
     }
@@ -293,7 +289,7 @@ final class ObjectDef {
         }
         boolean flag1 = true;
         for (int i = 0; i < modelArray.length; i++) {
-            flag1 &= Model.method463(modelArray[i] & 0xffff);
+            flag1 &= Model.isCached(modelArray[i] & 0xffff);
         }
 
         if (!flag) {
@@ -310,10 +306,10 @@ final class ObjectDef {
         int i = -1;
         if (anInt774 != -1) {
             VarBit class37 = VarBit.cache[anInt774];
-            int j = class37.anInt648;
-            int k = class37.anInt649;
-            int l = class37.anInt650;
-            int i1 = client.anIntArray1232[l - k];
+            int j = class37.configId;
+            int k = class37.leastSignificantBit;
+            int l = class37.mostSignificantBit;
+            int i1 = Client.anIntArray1232[l - k];
             i = clientInstance.variousSettings[j] >> k & i1;
         } else if (anInt749 != -1) {
             i = clientInstance.variousSettings[anInt749];
@@ -333,7 +329,7 @@ final class ObjectDef {
                 return null;
             }
             l1 = (long) ((type << 6) + l) + ((long) (k + 1) << 32);
-            Model class30_sub2_sub4_sub6_1 = (Model) mruNodes2.insertFromCache(l1);
+            Model class30_sub2_sub4_sub6_1 = (Model) mruNodes2.get(l1);
             if (class30_sub2_sub4_sub6_1 != null) {
                 return class30_sub2_sub4_sub6_1;
             }
@@ -347,16 +343,16 @@ final class ObjectDef {
                 if (flag1) {
                     l2 += 0x10000;
                 }
-                class30_sub2_sub4_sub6 = (Model) mruNodes1.insertFromCache(l2);
+                class30_sub2_sub4_sub6 = (Model) mruNodes1.get(l2);
                 if (class30_sub2_sub4_sub6 == null) {
-                    class30_sub2_sub4_sub6 = Model.method462(anInt770, l2 & 0xffff);
+                    class30_sub2_sub4_sub6 = Model.getModel(l2 & 0xffff);
                     if (class30_sub2_sub4_sub6 == null) {
                         return null;
                     }
                     if (flag1) {
-                        class30_sub2_sub4_sub6.method477(0);
+                        class30_sub2_sub4_sub6.method477();
                     }
-                    mruNodes1.removeFromCache(class30_sub2_sub4_sub6, l2, (byte) 2);
+                    mruNodes1.put(class30_sub2_sub4_sub6, l2);
                 }
                 if (k1 > 1) {
                     model[i2] = class30_sub2_sub4_sub6;
@@ -364,7 +360,7 @@ final class ObjectDef {
             }
 
             if (k1 > 1) {
-                class30_sub2_sub4_sub6 = new Model(k1, model, -38);
+                class30_sub2_sub4_sub6 = new Model(k1, model);
             }
         } else {
             int i1 = -1;
@@ -380,7 +376,7 @@ final class ObjectDef {
                 return null;
             }
             l1 = (long) ((type << 6) + (i1 << 3) + l) + ((long) (k + 1) << 32);
-            Model class30_sub2_sub4_sub6_2 = (Model) mruNodes2.insertFromCache(l1);
+            Model class30_sub2_sub4_sub6_2 = (Model) mruNodes2.get(l1);
             if (class30_sub2_sub4_sub6_2 != null) {
                 return class30_sub2_sub4_sub6_2;
             }
@@ -389,16 +385,16 @@ final class ObjectDef {
             if (flag3) {
                 j2 += 0x10000;
             }
-            class30_sub2_sub4_sub6 = (Model) mruNodes1.insertFromCache(j2);
+            class30_sub2_sub4_sub6 = (Model) mruNodes1.get(j2);
             if (class30_sub2_sub4_sub6 == null) {
-                class30_sub2_sub4_sub6 = Model.method462(anInt770, j2 & 0xffff);
+                class30_sub2_sub4_sub6 = Model.getModel(j2 & 0xffff);
                 if (class30_sub2_sub4_sub6 == null) {
                     return null;
                 }
                 if (flag3) {
-                    class30_sub2_sub4_sub6.method477(0);
+                    class30_sub2_sub4_sub6.method477();
                 }
-                mruNodes1.removeFromCache(class30_sub2_sub4_sub6, j2, (byte) 2);
+                mruNodes1.put(class30_sub2_sub4_sub6, j2);
             }
         }
         boolean flag;
@@ -413,33 +409,33 @@ final class ObjectDef {
         } else {
             flag2 = false;
         }
-        Model class30_sub2_sub4_sub6_3 = new Model(9, modifiedModelColors == null, Class36.method532(k), l == 0 && k == -1 && !flag && !flag2, class30_sub2_sub4_sub6);
+        Model class30_sub2_sub4_sub6_3 = new Model(9, modifiedModelColors == null, AnimationFrame.isNullFrame(k), l == 0 && k == -1 && !flag && !flag2, class30_sub2_sub4_sub6);
         if (k != -1) {
-            class30_sub2_sub4_sub6_3.method469((byte) -71);
-            class30_sub2_sub4_sub6_3.method470(k, 40542);
-            class30_sub2_sub4_sub6_3.anIntArrayArray1658 = null;
-            class30_sub2_sub4_sub6_3.anIntArrayArray1657 = null;
+            class30_sub2_sub4_sub6_3.createBones((byte) -71);
+            class30_sub2_sub4_sub6_3.applyTransform(k, 40542);
+            class30_sub2_sub4_sub6_3.triangleSkin = null;
+            class30_sub2_sub4_sub6_3.vertexSkin = null;
         }
         while (l-- > 0) {
             class30_sub2_sub4_sub6_3.method473(360);
         }
         if (modifiedModelColors != null) {
             for (int k2 = 0; k2 < modifiedModelColors.length; k2++) {
-                class30_sub2_sub4_sub6_3.method476(modifiedModelColors[k2], originalModelColors[k2]);
+                class30_sub2_sub4_sub6_3.reColour(modifiedModelColors[k2], originalModelColors[k2]);
             }
 
         }
         if (flag) {
-            class30_sub2_sub4_sub6_3.method478(anInt748, anInt740, anInt743, anInt772);
+            class30_sub2_sub4_sub6_3.scaleT(anInt748, anInt740, anInt772);
         }
         if (flag2) {
-            class30_sub2_sub4_sub6_3.method475(anInt738, anInt745, 16384, anInt783);
+            class30_sub2_sub4_sub6_3.method475(anInt738, anInt745, anInt783);
         }
-        class30_sub2_sub4_sub6_3.method479(64 + aByte737, 768 + aByte742 * 5, -50, -10, -50, !aBoolean769);
+        class30_sub2_sub4_sub6_3.light(64 + aByte737, 768 + aByte742 * 5, -50, -10, -50, !aBoolean769);
         if (anInt760 == 1) {
             class30_sub2_sub4_sub6_3.anInt1654 = ((Animable) (class30_sub2_sub4_sub6_3)).modelHeight;
         }
-        mruNodes2.removeFromCache(class30_sub2_sub4_sub6_3, l1, (byte) 2);
+        mruNodes2.put(class30_sub2_sub4_sub6_3, l1);
         if (i != 0) {
             anInt743 = 422;
         }

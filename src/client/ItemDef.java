@@ -11,8 +11,8 @@ final class ItemDef {
     public int value;
     private int modifiedModelColors[];
     public int id;
-    static MRUNodes mruNodes1 = new MRUNodes(100);
-    public static MRUNodes mruNodes2 = new MRUNodes(50);
+    static MemCache mruNodes1 = new MemCache(100);
+    public static MemCache mruNodes2 = new MemCache(50);
     private int originalModelColors[];
     public boolean membersObject;
     public int anInt162;
@@ -227,16 +227,16 @@ final class ItemDef {
             return true;
         }
         boolean flag = true;
-        if (!Model.method463(k)) {
+        if (!Model.isCached(k)) {
             flag = false;
         }
-        if (l != -1 && !Model.method463(l)) {
+        if (l != -1 && !Model.isCached(l)) {
             flag = false;
         }
         return flag;
     }
 
-    public static final void unpackConfig(StreamLoader streamLoader) {
+    public static final void unpackConfig(JagexArchive streamLoader) {
         stream = new Stream(streamLoader.getDataForName("obj.dat"));
         Stream stream1 = new Stream(streamLoader.getDataForName("obj.idx"));
         totalItems = stream1.readUnsignedWord();
@@ -265,17 +265,17 @@ final class ItemDef {
         if (k == -1) {
             return null;
         }
-        Model class30_sub2_sub4_sub6 = Model.method462(anInt171, k);
+        Model class30_sub2_sub4_sub6 = Model.getModel(k);
         if (l != -1) {
-            Model class30_sub2_sub4_sub6_1 = Model.method462(anInt171, l);
+            Model class30_sub2_sub4_sub6_1 = Model.getModel(l);
             Model aclass30_sub2_sub4_sub6[] = {
                 class30_sub2_sub4_sub6, class30_sub2_sub4_sub6_1
             };
-            class30_sub2_sub4_sub6 = new Model(2, aclass30_sub2_sub4_sub6, -38);
+            class30_sub2_sub4_sub6 = new Model(2, aclass30_sub2_sub4_sub6);
         }
         if (modifiedModelColors != null) {
             for (int i1 = 0; i1 < modifiedModelColors.length; i1++) {
-                class30_sub2_sub4_sub6.method476(modifiedModelColors[i1], originalModelColors[i1]);
+                class30_sub2_sub4_sub6.reColour(modifiedModelColors[i1], originalModelColors[i1]);
             }
         }
         return class30_sub2_sub4_sub6;
@@ -297,13 +297,13 @@ final class ItemDef {
             return true;
         }
         boolean flag = true;
-        if (!Model.method463(k)) {
+        if (!Model.isCached(k)) {
             flag = false;
         }
-        if (l != -1 && !Model.method463(l)) {
+        if (l != -1 && !Model.isCached(l)) {
             flag = false;
         }
-        if (i1 != -1 && !Model.method463(i1)) {
+        if (i1 != -1 && !Model.isCached(i1)) {
             flag = false;
         }
         return flag;
@@ -324,32 +324,32 @@ final class ItemDef {
         if (j == -1) {
             return null;
         }
-        Model class30_sub2_sub4_sub6 = Model.method462(anInt171, j);
+        Model class30_sub2_sub4_sub6 = Model.getModel(j);
         if (k != -1) {
             if (l != -1) {
-                Model class30_sub2_sub4_sub6_1 = Model.method462(anInt171, k);
-                Model class30_sub2_sub4_sub6_3 = Model.method462(anInt171, l);
+                Model class30_sub2_sub4_sub6_1 = Model.getModel(k);
+                Model class30_sub2_sub4_sub6_3 = Model.getModel(l);
                 Model aclass30_sub2_sub4_sub6_1[] = {
                     class30_sub2_sub4_sub6, class30_sub2_sub4_sub6_1, class30_sub2_sub4_sub6_3
                 };
-                class30_sub2_sub4_sub6 = new Model(3, aclass30_sub2_sub4_sub6_1, -38);
+                class30_sub2_sub4_sub6 = new Model(3, aclass30_sub2_sub4_sub6_1);
             } else {
-                Model class30_sub2_sub4_sub6_2 = Model.method462(anInt171, k);
+                Model class30_sub2_sub4_sub6_2 = Model.getModel(k);
                 Model aclass30_sub2_sub4_sub6[] = {
                     class30_sub2_sub4_sub6, class30_sub2_sub4_sub6_2
                 };
-                class30_sub2_sub4_sub6 = new Model(2, aclass30_sub2_sub4_sub6, -38);
+                class30_sub2_sub4_sub6 = new Model(2, aclass30_sub2_sub4_sub6);
             }
         }
         if (i == 0 && aByte205 != 0) {
-            class30_sub2_sub4_sub6.method475(0, aByte205, 16384, 0);
+            class30_sub2_sub4_sub6.method475(0, aByte205, 0);
         }
         if (i == 1 && aByte154 != 0) {
-            class30_sub2_sub4_sub6.method475(0, aByte154, 16384, 0);
+            class30_sub2_sub4_sub6.method475(0, aByte154, 0);
         }
         if (modifiedModelColors != null) {
             for (int i1 = 0; i1 < modifiedModelColors.length; i1++) {
-                class30_sub2_sub4_sub6.method476(modifiedModelColors[i1], originalModelColors[i1]);
+                class30_sub2_sub4_sub6.reColour(modifiedModelColors[i1], originalModelColors[i1]);
             }
         }
         return class30_sub2_sub4_sub6;
@@ -4039,7 +4039,7 @@ final class ItemDef {
 
     public static final Sprite getSprite(int i, int j, int k, int l) {
         if (k == 0) {
-            Sprite class30_sub2_sub1_sub1 = (Sprite) mruNodes1.insertFromCache(i);
+            Sprite class30_sub2_sub1_sub1 = (Sprite) mruNodes1.get(i);
             if (class30_sub2_sub1_sub1 != null && class30_sub2_sub1_sub1.maxHeight != j && class30_sub2_sub1_sub1.maxHeight != -1) {
                 class30_sub2_sub1_sub1.unlink();
                 class30_sub2_sub1_sub1 = null;
@@ -4075,9 +4075,9 @@ final class ItemDef {
             }
         }
         Sprite class30_sub2_sub1_sub1_1 = new Sprite(32, 32);
-        int k1 = Texture.textureInt1;
-        int l1 = Texture.textureInt2;
-        int ai[] = Texture.anIntArray1472;
+        int k1 = Rasterizer.textureInt1;
+        int l1 = Rasterizer.textureInt2;
+        int ai[] = Rasterizer.anIntArray1472;
         int ai1[] = DrawingArea.pixels;
         int i2 = DrawingArea.width;
         int j2 = DrawingArea.height;
@@ -4085,10 +4085,10 @@ final class ItemDef {
         int l2 = DrawingArea.bottomX;
         int i3 = DrawingArea.topY;
         int j3 = DrawingArea.bottomY;
-        Texture.aBoolean1464 = false;
+        Rasterizer.aBoolean1464 = false;
         DrawingArea.initDrawingArea(32, 32, class30_sub2_sub1_sub1_1.myPixels);
-        DrawingArea.method336(32, 0, 0, 0, 32);
-        Texture.method364();
+        DrawingArea.fillBox(0, 0, 32, 32, 0);
+        Rasterizer.method364();
         int k3 = class8.modelZoom;
         if (k == -1) {
             k3 = (int) ((double) k3 * 1.5D);
@@ -4096,8 +4096,8 @@ final class ItemDef {
         if (k > 0) {
             k3 = (int) ((double) k3 * 1.04D);
         }
-        int l3 = Texture.anIntArray1470[class8.modelRotation1] * k3 >> 16;
-        int i4 = Texture.anIntArray1471[class8.modelRotation1] * k3 >> 16;
+        int l3 = Rasterizer.SINE[class8.modelRotation1] * k3 >> 16;
+        int i4 = Rasterizer.COSINE[class8.modelRotation1] * k3 >> 16;
         class30_sub2_sub4_sub6.method482(0, class8.modelRotation2, class8.anInt204, class8.modelRotation1, class8.modelOffset1, l3 + ((Animable) (class30_sub2_sub4_sub6)).modelHeight / 2 + class8.modelOffset2, i4 + class8.modelOffset2);
         for (int i5 = 31; i5 >= 0; i5--) {
             for (int j4 = 31; j4 >= 0; j4--) {
@@ -4149,14 +4149,14 @@ final class ItemDef {
             class30_sub2_sub1_sub1_2.maxHeight = j6;
         }
         if (k == 0) {
-            mruNodes1.removeFromCache(class30_sub2_sub1_sub1_1, i, (byte) 2);
+            mruNodes1.put(class30_sub2_sub1_sub1_1, i);
         }
         DrawingArea.initDrawingArea(j2, i2, ai1);
-        DrawingArea.setDrawingArea(j3, k2, l2, i3);
-        Texture.textureInt1 = k1;
-        Texture.textureInt2 = l1;
-        Texture.anIntArray1472 = ai;
-        Texture.aBoolean1464 = true;
+        DrawingArea.setDrawingArea(k2, i3, l2, j3);
+        Rasterizer.textureInt1 = k1;
+        Rasterizer.textureInt2 = l1;
+        Rasterizer.anIntArray1472 = ai;
+        Rasterizer.aBoolean1464 = true;
         if (l < 9 || l > 9) {
             for (int i6 = 1; i6 > 0; i6++);
         }
@@ -4181,29 +4181,29 @@ final class ItemDef {
                 return forID(j).method201(1);
             }
         }
-        Model class30_sub2_sub4_sub6 = (Model) mruNodes2.insertFromCache(id);
+        Model class30_sub2_sub4_sub6 = (Model) mruNodes2.get(id);
         if (class30_sub2_sub4_sub6 != null) {
             return class30_sub2_sub4_sub6;
         }
-        class30_sub2_sub4_sub6 = Model.method462(anInt171, modelID);
+        class30_sub2_sub4_sub6 = Model.getModel(modelID);
         if (class30_sub2_sub4_sub6 == null) {
             return null;
         }
         if (anInt167 != 128 || anInt192 != 128 || anInt191 != 128) {
-            class30_sub2_sub4_sub6.method478(anInt167, anInt191, anInt177, anInt192);
+            class30_sub2_sub4_sub6.scaleT(anInt167, anInt191, anInt192);
         }
         if (modifiedModelColors != null) {
             for (int l = 0; l < modifiedModelColors.length; l++) {
-                class30_sub2_sub4_sub6.method476(modifiedModelColors[l], originalModelColors[l]);
+                class30_sub2_sub4_sub6.reColour(modifiedModelColors[l], originalModelColors[l]);
             }
         }
-        class30_sub2_sub4_sub6.method479(64 + anInt196, 768 + anInt184, -50, -10, -50, true);
-        class30_sub2_sub4_sub6.aBoolean1659 = true;
-        mruNodes2.removeFromCache(class30_sub2_sub4_sub6, id, (byte) 2);
+        class30_sub2_sub4_sub6.light(64 + anInt196, 768 + anInt184, -50, -10, -50, true);
+        class30_sub2_sub4_sub6.oneSquareModel = true;
+        mruNodes2.put(class30_sub2_sub4_sub6, id);
         return class30_sub2_sub4_sub6;
     }
 
-    public final Model method202(int i, boolean flag) {
+    public final Model getInventoryModel(int i) {
         if (stackIDs != null && i > 1) {
             int j = -1;
             for (int k = 0; k < 10; k++) {
@@ -4212,19 +4212,16 @@ final class ItemDef {
                 }
             }
             if (j != -1) {
-                return forID(j).method202(1, true);
+                return forID(j).getInventoryModel(1);
             }
         }
-        Model class30_sub2_sub4_sub6 = Model.method462(anInt171, modelID);
-        if (!flag) {
-            throw new NullPointerException();
-        }
+        Model class30_sub2_sub4_sub6 = Model.getModel(modelID);
         if (class30_sub2_sub4_sub6 == null) {
             return null;
         }
         if (modifiedModelColors != null) {
             for (int l = 0; l < modifiedModelColors.length; l++) {
-                class30_sub2_sub4_sub6.method476(modifiedModelColors[l], originalModelColors[l]);
+                class30_sub2_sub4_sub6.reColour(modifiedModelColors[l], originalModelColors[l]);
             }
         }
         return class30_sub2_sub4_sub6;

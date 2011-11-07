@@ -4,13 +4,13 @@ package client;
 final class Player extends Entity {
     
     long aLong1697;
-    EntityDef desc;
+    NPCDef desc;
     boolean aBoolean1699;
     int anIntArray1700[];
     int team;
     int anInt1702;
     static String name;
-    static MRUNodes mruNodes = new MRUNodes(260);
+    static MemCache mruNodes = new MemCache(260);
     int combatLevel;
     int headIcon;
     int anInt1707;
@@ -30,7 +30,7 @@ final class Player extends Entity {
     int anInt1721;
     int anInt1722;
     int skill;
-    
+        
     Player() {
         aLong1697 = -1L;
         aBoolean1699 = false;
@@ -51,7 +51,7 @@ final class Player extends Entity {
             return null;
         }
         super.height = ((Animable) (class30_sub2_sub4_sub6)).modelHeight;
-        class30_sub2_sub4_sub6.aBoolean1659 = true;
+        class30_sub2_sub4_sub6.oneSquareModel = true;
         if (aBoolean1699) {
             return class30_sub2_sub4_sub6;
         }
@@ -59,16 +59,17 @@ final class Player extends Entity {
             SpotAnim class23 = SpotAnim.cache[super.anInt1520];
             Model class30_sub2_sub4_sub6_2 = class23.getModel();
             if (class30_sub2_sub4_sub6_2 != null) {
-                Model class30_sub2_sub4_sub6_3 = new Model(9, true, Class36.method532(super.anInt1521), false, class30_sub2_sub4_sub6_2);
-                class30_sub2_sub4_sub6_3.method475(0, -super.anInt1524, 16384, 0);
-                class30_sub2_sub4_sub6_3.method469((byte) -71);
-                class30_sub2_sub4_sub6_3.method470(class23.aClass20_407.anIntArray353[super.anInt1521], 40542);
-                class30_sub2_sub4_sub6_3.anIntArrayArray1658 = null;
-                class30_sub2_sub4_sub6_3.anIntArrayArray1657 = null;
-                if (class23.anInt410 != 128 || class23.anInt411 != 128) {
-                    class30_sub2_sub4_sub6_3.method478(class23.anInt410, class23.anInt410, anInt1715, class23.anInt411);
+                Model class30_sub2_sub4_sub6_3 = new Model(9, true, AnimationFrame.isNullFrame(super.anInt1521), false, class30_sub2_sub4_sub6_2);
+                class30_sub2_sub4_sub6_3.method475(0, -super.anInt1524, 0);
+                class30_sub2_sub4_sub6_3.createBones((byte) -71);
+                class30_sub2_sub4_sub6_3.applyTransform(class23.animation.animationFrameID2[super.anInt1521], 40542);
+                class30_sub2_sub4_sub6_3.triangleSkin = null;
+                class30_sub2_sub4_sub6_3.vertexSkin = null;
+                if (class23.resizeXY != 128 || class23.resizeZ != 128) {
+                    class30_sub2_sub4_sub6_3.scaleT(class23.resizeXY, class23.resizeXY, class23.resizeZ);
+                    //class30_sub2_sub4_sub6_3.method479(frontLight, backLight, rightLight, middleLight, leftLight, true);
                 }
-                class30_sub2_sub4_sub6_3.method479(64 + class23.anInt413, 850 + class23.anInt414, -30, -50, -30, true);
+                class30_sub2_sub4_sub6_3.light(64 + class23.modelBrightness, 850 + class23.modelShadow, -30, -50, -30, true);
                 Model aclass30_sub2_sub4_sub6_1[] = {
                     class30_sub2_sub4_sub6, class30_sub2_sub4_sub6_3
                 };
@@ -76,12 +77,12 @@ final class Player extends Entity {
             }
         }
         if (aModel_1714 != null) {
-            if (client.loopCycle >= anInt1708) {
+            if (Client.loopCycle >= anInt1708) {
                 aModel_1714 = null;
             }
-            if (client.loopCycle >= anInt1707 && client.loopCycle < anInt1708) {
+            if (Client.loopCycle >= anInt1707 && Client.loopCycle < anInt1708) {
                 Model class30_sub2_sub4_sub6_1 = aModel_1714;
-                class30_sub2_sub4_sub6_1.method475(anInt1711 - super.x, anInt1712 - anInt1709, 16384, anInt1713 - super.y);
+                class30_sub2_sub4_sub6_1.method475(anInt1711 - super.boundExtentX, anInt1712 - anInt1709, anInt1713 - super.boundExtentY);
                 if (super.turnDirection == 512) {
                     class30_sub2_sub4_sub6_1.method473(360);
                     class30_sub2_sub4_sub6_1.method473(360);
@@ -106,10 +107,10 @@ final class Player extends Entity {
                     class30_sub2_sub4_sub6_1.method473(360);
                     class30_sub2_sub4_sub6_1.method473(360);
                 }
-                class30_sub2_sub4_sub6_1.method475(super.x - anInt1711, anInt1709 - anInt1712, 16384, super.y - anInt1713);
+                class30_sub2_sub4_sub6_1.method475(super.boundExtentX - anInt1711, anInt1709 - anInt1712, super.boundExtentY - anInt1713);
             }
         }
-        class30_sub2_sub4_sub6.aBoolean1659 = true;
+        class30_sub2_sub4_sub6.oneSquareModel = true;
         return class30_sub2_sub4_sub6;
     }
 
@@ -131,7 +132,7 @@ final class Player extends Entity {
             int i1 = class30_sub2_sub2.readUnsignedByte();
             equipment[j] = (k << 8) + i1;
             if (j == 0 && equipment[0] == 65535) {
-                desc = EntityDef.forID(class30_sub2_sub2.readUnsignedWord());
+                desc = NPCDef.forID(class30_sub2_sub2.readUnsignedWord());
                 break;
             }
             if (equipment[j] >= 512 && equipment[j] - 512 < ItemDef.totalItems) {
@@ -144,7 +145,7 @@ final class Player extends Entity {
 
         for (int l = 0; l < 5; l++) {
             int j1 = class30_sub2_sub2.readUnsignedByte();
-            if (j1 < 0 || j1 >= client.anIntArrayArray1003[l].length) {
+            if (j1 < 0 || j1 >= Client.anIntArrayArray1003[l].length) {
                 j1 = 0;
             }
             anIntArray1700[l] = j1;
@@ -208,12 +209,12 @@ final class Player extends Entity {
     private final Model method452(int i) {
         if (desc != null) {
             int j = -1;
-            if (super.anim >= 0 && super.anInt1529 == 0) {
-                j = Animation.anims[super.anim].anIntArray353[super.anInt1527];
+            if (super.animation >= 0 && super.anInt1529 == 0) {
+                j = Animation.animCache[super.animation].animationFrameID2[super.anInt1527];
             } else if (super.anInt1517 >= 0) {
-                j = Animation.anims[super.anInt1517].anIntArray353[super.anInt1518];
+                j = Animation.animCache[super.anInt1517].animationFrameID2[super.anInt1518];
             }
-            Model class30_sub2_sub4_sub6 = desc.method164(0, -1, j, null);
+            Model class30_sub2_sub4_sub6 = desc.method164(-1, j, null);
             return class30_sub2_sub4_sub6;
         }
         long l = aLong1718;
@@ -221,11 +222,11 @@ final class Player extends Entity {
         int i1 = -1;
         int j1 = -1;
         int k1 = -1;
-        if (super.anim >= 0 && super.anInt1529 == 0) {
-            Animation class20 = Animation.anims[super.anim];
-            k = class20.anIntArray353[super.anInt1527];
+        if (super.animation >= 0 && super.anInt1529 == 0) {
+            Animation class20 = Animation.animCache[super.animation];
+            k = class20.animationFrameID2[super.anInt1527];
             if (super.anInt1517 >= 0 && super.anInt1517 != super.anInt1511) {
-                i1 = Animation.anims[super.anInt1517].anIntArray353[super.anInt1518];
+                i1 = Animation.animCache[super.anInt1517].animationFrameID2[super.anInt1518];
             }
             if (class20.anInt360 >= 0) {
                 j1 = class20.anInt360;
@@ -236,9 +237,9 @@ final class Player extends Entity {
                 l += k1 - equipment[3] << 48;
             }
         } else if (super.anInt1517 >= 0) {
-            k = Animation.anims[super.anInt1517].anIntArray353[super.anInt1518];
+            k = Animation.animCache[super.anInt1517].animationFrameID2[super.anInt1518];
         }
-        Model class30_sub2_sub4_sub6_1 = (Model) mruNodes.insertFromCache(l);
+        Model class30_sub2_sub4_sub6_1 = (Model) mruNodes.get(l);
         if (i != 0) {
             for (int l1 = 1; l1 > 0; l1++);
         }
@@ -262,7 +263,7 @@ final class Player extends Entity {
 
             if (flag) {
                 if (aLong1697 != -1L) {
-                    class30_sub2_sub4_sub6_1 = (Model) mruNodes.insertFromCache(aLong1697);
+                    class30_sub2_sub4_sub6_1 = (Model) mruNodes.get(aLong1697);
                 }
                 if (class30_sub2_sub4_sub6_1 == null) {
                     return null;
@@ -294,34 +295,34 @@ final class Player extends Entity {
                 }
             }
 
-            class30_sub2_sub4_sub6_1 = new Model(j2, aclass30_sub2_sub4_sub6, -38);
+            class30_sub2_sub4_sub6_1 = new Model(j2, aclass30_sub2_sub4_sub6);
             for (int j3 = 0; j3 < 5; j3++) {
                 if (anIntArray1700[j3] != 0) {
-                    class30_sub2_sub4_sub6_1.method476(client.anIntArrayArray1003[j3][0], client.anIntArrayArray1003[j3][anIntArray1700[j3]]);
+                    class30_sub2_sub4_sub6_1.reColour(Client.anIntArrayArray1003[j3][0], Client.anIntArrayArray1003[j3][anIntArray1700[j3]]);
                     if (j3 == 1) {
-                        class30_sub2_sub4_sub6_1.method476(client.anIntArray1204[0], client.anIntArray1204[anIntArray1700[j3]]);
+                        class30_sub2_sub4_sub6_1.reColour(Client.anIntArray1204[0], Client.anIntArray1204[anIntArray1700[j3]]);
                     }
                 }
             }
 
-            class30_sub2_sub4_sub6_1.method469((byte) -71);
-            class30_sub2_sub4_sub6_1.method479(64, 850, -30, -50, -30, true);
-            mruNodes.removeFromCache(class30_sub2_sub4_sub6_1, l, (byte) 2);
+            class30_sub2_sub4_sub6_1.createBones((byte) -71);
+            class30_sub2_sub4_sub6_1.light(64, 850, -30, -50, -30, true);
+            mruNodes.put(class30_sub2_sub4_sub6_1, l);
             aLong1697 = l;
         }
         if (aBoolean1699) {
             return class30_sub2_sub4_sub6_1;
         }
         Model class30_sub2_sub4_sub6_2 = Model.aModel_1621;
-        class30_sub2_sub4_sub6_2.method464(7, class30_sub2_sub4_sub6_1, Class36.method532(k) & Class36.method532(i1));
+        class30_sub2_sub4_sub6_2.method464(class30_sub2_sub4_sub6_1, AnimationFrame.isNullFrame(k) & AnimationFrame.isNullFrame(i1));
         if (k != -1 && i1 != -1) {
-            class30_sub2_sub4_sub6_2.method471(-20491, Animation.anims[super.anim].anIntArray357, i1, k);
+            class30_sub2_sub4_sub6_2.mixAnimationFrames(-20491, Animation.animCache[super.animation].animationFlowControl, i1, k);
         } else if (k != -1) {
-            class30_sub2_sub4_sub6_2.method470(k, 40542);
+            class30_sub2_sub4_sub6_2.applyTransform(k, 40542);
         }
-        class30_sub2_sub4_sub6_2.method466(false);
-        class30_sub2_sub4_sub6_2.anIntArrayArray1658 = null;
-        class30_sub2_sub4_sub6_2.anIntArrayArray1657 = null;
+        class30_sub2_sub4_sub6_2.calculateDiagonals();
+        class30_sub2_sub4_sub6_2.triangleSkin = null;
+        class30_sub2_sub4_sub6_2.vertexSkin = null;
         return class30_sub2_sub4_sub6_2;
     }
 
@@ -330,15 +331,12 @@ final class Player extends Entity {
         return visible;
     }
 
-    public final Model method453(byte byte0) {
-        if (byte0 != -41) {
-            anInt1715 = 132;
-        }
+    public final Model getPlayerModel() {
         if (!visible) {
             return null;
         }
         if (desc != null) {
-            return desc.method160(true);
+            return desc.getHeadModel();
         }
         boolean flag = false;
         for (int i = 0; i < 12; i++) {
@@ -372,12 +370,12 @@ final class Player extends Entity {
             }
         }
 
-        Model class30_sub2_sub4_sub6 = new Model(k, aclass30_sub2_sub4_sub6, -38);
+        Model class30_sub2_sub4_sub6 = new Model(k, aclass30_sub2_sub4_sub6);
         for (int j1 = 0; j1 < 5; j1++) {
             if (anIntArray1700[j1] != 0) {
-                class30_sub2_sub4_sub6.method476(client.anIntArrayArray1003[j1][0], client.anIntArrayArray1003[j1][anIntArray1700[j1]]);
+                class30_sub2_sub4_sub6.reColour(Client.anIntArrayArray1003[j1][0], Client.anIntArrayArray1003[j1][anIntArray1700[j1]]);
                 if (j1 == 1) {
-                    class30_sub2_sub4_sub6.method476(client.anIntArray1204[0], client.anIntArray1204[anIntArray1700[j1]]);
+                    class30_sub2_sub4_sub6.reColour(Client.anIntArray1204[0], Client.anIntArray1204[anIntArray1700[j1]]);
                 }
             }
         }

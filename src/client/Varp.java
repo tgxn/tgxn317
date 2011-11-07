@@ -28,7 +28,7 @@ public class Varp {
         anInt714 = -1;
     }
     
-    public static void unpackConfig(int i, StreamLoader class44) {
+    public static void unpackConfig(int i, JagexArchive class44) {
         Stream class30_sub2_sub2 = new Stream(class44.getDataForName("varp.dat"));
         anInt702 = 0;
         anInt700 = class30_sub2_sub2.readUnsignedWord();

@@ -22,7 +22,7 @@ public class Flo {
         aBoolean393 = true;
     }
         
-    public static void unpackConfig(StreamLoader class44) {
+    public static void unpackConfig(JagexArchive class44) {
         Stream class30_sub2_sub2 = new Stream(class44.getDataForName("flo.dat"));
         anInt387 = class30_sub2_sub2.readUnsignedWord();
         if (floorCache == null) {

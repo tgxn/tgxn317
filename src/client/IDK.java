@@ -23,7 +23,7 @@ public class IDK {
         aBoolean662 = false;
     }
 
-    public static void unpackConfig(StreamLoader class44) {
+    public static void unpackConfig(JagexArchive class44) {
         Stream class30_sub2_sub2 = new Stream(class44.getDataForName("idk.dat"));
         length = class30_sub2_sub2.readUnsignedWord();
         if (cache == null) {
@@ -72,7 +72,7 @@ public class IDK {
         }
         boolean flag = true;
         for (int j = 0; j < anIntArray658.length; j++) {
-            if (!Model.method463(anIntArray658[j])) {
+            if (!Model.isCached(anIntArray658[j])) {
                 flag = false;
             }
         }
@@ -86,20 +86,20 @@ public class IDK {
         }
         Model aclass30_sub2_sub4_sub6[] = new Model[anIntArray658.length];
         for (int i = 0; i < anIntArray658.length; i++) {
-            aclass30_sub2_sub4_sub6[i] = Model.method462(anInt654, anIntArray658[i]);
+            aclass30_sub2_sub4_sub6[i] = Model.getModel(anIntArray658[i]);
         }
 
         Model class30_sub2_sub4_sub6;
         if (aclass30_sub2_sub4_sub6.length == 1) {
             class30_sub2_sub4_sub6 = aclass30_sub2_sub4_sub6[0];
         } else {
-            class30_sub2_sub4_sub6 = new Model(aclass30_sub2_sub4_sub6.length, aclass30_sub2_sub4_sub6, -38);
+            class30_sub2_sub4_sub6 = new Model(aclass30_sub2_sub4_sub6.length, aclass30_sub2_sub4_sub6);
         }
         for (int j = 0; j < 6; j++) {
             if (anIntArray659[j] == 0) {
                 break;
             }
-            class30_sub2_sub4_sub6.method476(anIntArray659[j], anIntArray660[j]);
+            class30_sub2_sub4_sub6.reColour(anIntArray659[j], anIntArray660[j]);
         }
 
         return class30_sub2_sub4_sub6;
@@ -108,7 +108,7 @@ public class IDK {
     public boolean method539() {
         boolean flag1 = true;
         for (int i = 0; i < 5; i++) {
-            if (anIntArray661[i] != -1 && !Model.method463(anIntArray661[i])) {
+            if (anIntArray661[i] != -1 && !Model.isCached(anIntArray661[i])) {
                 flag1 = false;
             }
         }
@@ -120,15 +120,15 @@ public class IDK {
         int j = 0;
         for (int k = 0; k < 5; k++) {
             if (anIntArray661[k] != -1) {
-                aclass30_sub2_sub4_sub6[j++] = Model.method462(anInt654, anIntArray661[k]);
+                aclass30_sub2_sub4_sub6[j++] = Model.getModel(anIntArray661[k]);
             }
         }
-        Model class30_sub2_sub4_sub6 = new Model(j, aclass30_sub2_sub4_sub6, -38);
+        Model class30_sub2_sub4_sub6 = new Model(j, aclass30_sub2_sub4_sub6);
         for (int l = 0; l < 6; l++) {
             if (anIntArray659[l] == 0) {
                 break;
             }
-            class30_sub2_sub4_sub6.method476(anIntArray659[l], anIntArray660[l]);
+            class30_sub2_sub4_sub6.reColour(anIntArray659[l], anIntArray660[l]);
         }
         return class30_sub2_sub4_sub6;
     }

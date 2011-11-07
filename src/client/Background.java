@@ -13,7 +13,7 @@ public final class Background extends DrawingArea {
     public int imageWidth;
     public int imageHeight;
     
-    public Background(StreamLoader streamLoader, String s, int i) {
+    public Background(JagexArchive streamLoader, String s, int i) {
         aBoolean1447 = false;
         Stream stream = new Stream(streamLoader.getDataForName(s + ".dat"));
         Stream stream_1 = new Stream(streamLoader.getDataForName("index.dat"));

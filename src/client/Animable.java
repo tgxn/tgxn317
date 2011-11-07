@@ -1,15 +1,12 @@
 package client;
 
-
 public class Animable extends NodeSub {
     
-    private int anInt1424;
-    Class33 aClass33Array1425[];
+    VertexNormal aClass33Array1425[];
     public int modelHeight;
     public static boolean aBoolean1427;
     
     public Animable() {
-        anInt1424 = 923;
         modelHeight = 1000;
     }
         

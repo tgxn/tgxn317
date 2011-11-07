@@ -3,70 +3,66 @@ package client;
 
 public class SpotAnim {
     
-    private int anInt400;
-    private static boolean aBoolean401 = true;
-    public static int anInt402;
     public static SpotAnim cache[];
-    public int anInt404;
-    public int anInt405;
-    public int anInt406;
-    public Animation aClass20_407;
-    public int anIntArray408[];
-    public int anIntArray409[];
-    public int anInt410;
-    public int anInt411;
-    public int anInt412;
-    public int anInt413;
-    public int anInt414;
-    public static MRUNodes aMRUNodes_415 = new MRUNodes(30);
+    public int id;
+    public int modelID;
+    public int animationID;
+    public Animation animation;
+    public int originalModelColours[];
+    public int modifiedModelColours[];
+    public int resizeXY;
+    public int resizeZ;
+    public int rotation;
+    public int modelBrightness;
+    public int modelShadow;
+    public static MemCache memCache = new MemCache(30);
     
     public SpotAnim() {
-        anInt400 = 9;
-        anInt406 = -1;
-        anIntArray408 = new int[6];
-        anIntArray409 = new int[6];
-        anInt410 = 128;
-        anInt411 = 128;
+        animationID = -1;
+        originalModelColours = new int[6];
+        modifiedModelColours = new int[6];
+        resizeXY = 128;
+        resizeZ = 128;
     }
         
-    public static void unpackConfig(StreamLoader class44) {
-        Stream class30_sub2_sub2 = new Stream(class44.getDataForName("spotanim.dat"));
+    public static void unpackConfig(JagexArchive jagexArchive) {
+        Stream stream = new Stream(jagexArchive.getDataForName("spotanim.dat"));
 
         int newSpotAnimCount = 5;
         /* Yarnova: Raise this by one every time you add a new GFX */
 
-        anInt402 = class30_sub2_sub2.readUnsignedWord() + newSpotAnimCount;
+        int length = stream.readUnsignedWord() + newSpotAnimCount;
         if (cache == null) {
-            cache = new SpotAnim[anInt402];
+            cache = new SpotAnim[length];
         }
-        for (int j = 0; j < anInt402; j++) {
+        for (int j = 0; j < length; j++) {
             if (cache[j] == null) {
                 cache[j] = new SpotAnim();
             }
-            cache[j].anInt404 = j;
+            cache[j].id = j;
             int originalDataID = -1;
-            SpotAnim gfx = cache[j];
+            SpotAnim spotAnim = cache[j];
             switch (j) {
 
                 case 642: /* gfx ID veng */
                     originalDataID = 601; // you can change this , this id makes it spin ;)
-                    gfx.anInt405 = 1828; /* Model ID 16828*/
+                    spotAnim.modelID = 1828; /* Model ID 16828*/
                     break;
                 case 643: // This is the GFX ID
                     originalDataID = 602; // makes it spin =]
-                    gfx.anInt405 = 9950; // This is the Model ID! (Original was 19086)
+                    spotAnim.modelID = 9950; // This is the Model ID! (Original was 19086)
                     break;
                 case 590: //Bandos
                     originalDataID = 290;
-                    gfx.anInt405 = 10555;
+                    spotAnim.modelID = 10555;
                     break;
                 case 592: //Zamorak
                     originalDataID = 291;
-                    gfx.anInt405 = 10556;
+                    spotAnim.modelID = 10556;
                     break;
                 case 594: // Armadyl
                     originalDataID = 292;
-                    gfx.anInt405 = 10557;
+                    spotAnim.modelID = 10557;
                     break;
 
 
@@ -75,51 +71,51 @@ public class SpotAnim {
                     break;
             }
             if (originalDataID != -1) {
-                gfx.anInt406 = cache[originalDataID].anInt406;
-                if (Animation.anims != null) {
-                    gfx.aClass20_407 = Animation.anims[gfx.anInt406];
+                spotAnim.animationID = cache[originalDataID].animationID;
+                if (Animation.animCache != null) {
+                    spotAnim.animation = Animation.animCache[spotAnim.animationID];
                 }
-                gfx.anInt410 = cache[originalDataID].anInt410;
-                gfx.anInt411 = cache[originalDataID].anInt411;
-                gfx.anInt412 = cache[originalDataID].anInt412;
-                gfx.anInt413 = cache[originalDataID].anInt413;
-                gfx.anInt414 = cache[originalDataID].anInt414;
-                gfx.anIntArray408 = cache[originalDataID].anIntArray408;
-                gfx.anIntArray409 = cache[originalDataID].anIntArray409;
+                spotAnim.resizeXY = cache[originalDataID].resizeXY;
+                spotAnim.resizeZ = cache[originalDataID].resizeZ;
+                spotAnim.rotation = cache[originalDataID].rotation;
+                spotAnim.modelBrightness = cache[originalDataID].modelBrightness;
+                spotAnim.modelShadow = cache[originalDataID].modelShadow;
+                spotAnim.originalModelColours = cache[originalDataID].originalModelColours;
+                spotAnim.modifiedModelColours = cache[originalDataID].modifiedModelColours;
             } else {
-                gfx.readValues(class30_sub2_sub2);
+                spotAnim.readValues(stream);
             }
         }
 
     }
 
-    public void readValues(Stream class30_sub2_sub2) {
+    public void readValues(Stream stream) {
         do {
-            int i = class30_sub2_sub2.readUnsignedByte();
+            int i = stream.readUnsignedByte();
             if (i == 0) {
                 return;
             }
             if (i == 1) {
-                anInt405 = class30_sub2_sub2.readUnsignedWord();
+                modelID = stream.readUnsignedWord();
             } else if (i == 2) {
-                anInt406 = class30_sub2_sub2.readUnsignedWord();
-                if (Animation.anims != null) {
-                    aClass20_407 = Animation.anims[anInt406];
+                animationID = stream.readUnsignedWord();
+                if (Animation.animCache != null) {
+                    animation = Animation.animCache[animationID];
                 }
             } else if (i == 4) {
-                anInt410 = class30_sub2_sub2.readUnsignedWord();
+                resizeXY = stream.readUnsignedWord();
             } else if (i == 5) {
-                anInt411 = class30_sub2_sub2.readUnsignedWord();
+                resizeZ = stream.readUnsignedWord();
             } else if (i == 6) {
-                anInt412 = class30_sub2_sub2.readUnsignedWord();
+                rotation = stream.readUnsignedWord();
             } else if (i == 7) {
-                anInt413 = class30_sub2_sub2.readUnsignedByte();
+                modelBrightness = stream.readUnsignedByte();
             } else if (i == 8) {
-                anInt414 = class30_sub2_sub2.readUnsignedByte();
+                modelShadow = stream.readUnsignedByte();
             } else if (i >= 40 && i < 50) {
-                anIntArray408[i - 40] = class30_sub2_sub2.readUnsignedWord();
+                originalModelColours[i - 40] = stream.readUnsignedWord();
             } else if (i >= 50 && i < 60) {
-                anIntArray409[i - 50] = class30_sub2_sub2.readUnsignedWord();
+                modifiedModelColours[i - 50] = stream.readUnsignedWord();
             } else {
                 System.out.println("Error unrecognised spotanim config code: " + i);
             }
@@ -127,21 +123,20 @@ public class SpotAnim {
     }
 
     public Model getModel() {
-        Model class30_sub2_sub4_sub6 = (Model) aMRUNodes_415.insertFromCache(anInt404);
-        if (class30_sub2_sub4_sub6 != null) {
-            return class30_sub2_sub4_sub6;
+        Model model = (Model) memCache.get(id);
+        if (model != null) {
+            return model;
         }
-        class30_sub2_sub4_sub6 = Model.method462(anInt400, anInt405);
-        if (class30_sub2_sub4_sub6 == null) {
+        model = Model.getModel(modelID);
+        if (model == null) {
             return null;
         }
         for (int i = 0; i < 6; i++) {
-            if (anIntArray408[0] != 0) {
-                class30_sub2_sub4_sub6.method476(anIntArray408[i], anIntArray409[i]);
+            if (originalModelColours[0] != 0) {
+                model.reColour(originalModelColours[i], modifiedModelColours[i]);
             }
         }
-
-        aMRUNodes_415.removeFromCache(class30_sub2_sub4_sub6, anInt404, (byte) 2);
-        return class30_sub2_sub4_sub6;
+        memCache.put(model, id);
+        return model;
     }
 }

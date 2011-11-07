@@ -28,7 +28,7 @@ public final class Censor {
     };
     public static boolean aBoolean627;
 
-    public static void loadConfig(StreamLoader class44) {
+    public static void loadConfig(JagexArchive class44) {
         Stream class30_sub2_sub2 = new Stream(class44.getDataForName("fragmentsenc.txt"));
         Stream class30_sub2_sub2_1 = new Stream(class44.getDataForName("badenc.txt"));
         Stream class30_sub2_sub2_2 = new Stream(class44.getDataForName("domainenc.txt"));

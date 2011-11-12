@@ -1,5 +1,9 @@
 package client;
 
+import client.drawing.DrawingArea;
+import client.drawing.Sprite;
+import client.animation.Animable;
+import client.fileio.JagexArchive;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -4075,9 +4079,9 @@ final class ItemDef {
             }
         }
         Sprite class30_sub2_sub1_sub1_1 = new Sprite(32, 32);
-        int k1 = Rasterizer.textureInt1;
-        int l1 = Rasterizer.textureInt2;
-        int ai[] = Rasterizer.anIntArray1472;
+        int k1 = Rasterizer.intCenterX;
+        int l1 = Rasterizer.intCenterY;
+        int ai[] = Rasterizer.lineOffsets;
         int ai1[] = DrawingArea.pixels;
         int i2 = DrawingArea.width;
         int j2 = DrawingArea.height;
@@ -4085,10 +4089,10 @@ final class ItemDef {
         int l2 = DrawingArea.bottomX;
         int i3 = DrawingArea.topY;
         int j3 = DrawingArea.bottomY;
-        Rasterizer.aBoolean1464 = false;
+        Rasterizer.notTextured = false;
         DrawingArea.initDrawingArea(32, 32, class30_sub2_sub1_sub1_1.myPixels);
         DrawingArea.fillBox(0, 0, 32, 32, 0);
-        Rasterizer.method364();
+        Rasterizer.setDefaultBounds();
         int k3 = class8.modelZoom;
         if (k == -1) {
             k3 = (int) ((double) k3 * 1.5D);
@@ -4144,7 +4148,7 @@ final class ItemDef {
             int j6 = class30_sub2_sub1_sub1_2.maxHeight;
             class30_sub2_sub1_sub1_2.maxWidth = 32;
             class30_sub2_sub1_sub1_2.maxHeight = 32;
-            class30_sub2_sub1_sub1_2.method348(0, 0);
+            class30_sub2_sub1_sub1_2.drawSprite(0, 0);
             class30_sub2_sub1_sub1_2.maxWidth = l5;
             class30_sub2_sub1_sub1_2.maxHeight = j6;
         }
@@ -4153,10 +4157,10 @@ final class ItemDef {
         }
         DrawingArea.initDrawingArea(j2, i2, ai1);
         DrawingArea.setDrawingArea(k2, i3, l2, j3);
-        Rasterizer.textureInt1 = k1;
-        Rasterizer.textureInt2 = l1;
-        Rasterizer.anIntArray1472 = ai;
-        Rasterizer.aBoolean1464 = true;
+        Rasterizer.intCenterX = k1;
+        Rasterizer.intCenterY = l1;
+        Rasterizer.lineOffsets = ai;
+        Rasterizer.notTextured = true;
         if (l < 9 || l > 9) {
             for (int i6 = 1; i6 > 0; i6++);
         }

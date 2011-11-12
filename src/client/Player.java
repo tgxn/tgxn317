@@ -1,5 +1,11 @@
 package client;
 
+import client.animation.Animable;
+import client.animation.Animation;
+import client.animation.AnimationFrame;
+import client.text.TextClass;
+import client.animation.SpotAnim;
+
 
 final class Player extends Entity {
     
@@ -62,7 +68,7 @@ final class Player extends Entity {
                 Model class30_sub2_sub4_sub6_3 = new Model(9, true, AnimationFrame.isNullFrame(super.anInt1521), false, class30_sub2_sub4_sub6_2);
                 class30_sub2_sub4_sub6_3.method475(0, -super.anInt1524, 0);
                 class30_sub2_sub4_sub6_3.createBones((byte) -71);
-                class30_sub2_sub4_sub6_3.applyTransform(class23.animation.animationFrameID2[super.anInt1521], 40542);
+                class30_sub2_sub4_sub6_3.applyTransform(class23.animationSequence.animationFrameID2[super.anInt1521], 40542);
                 class30_sub2_sub4_sub6_3.triangleSkin = null;
                 class30_sub2_sub4_sub6_3.vertexSkin = null;
                 if (class23.resizeXY != 128 || class23.resizeZ != 128) {
@@ -84,28 +90,28 @@ final class Player extends Entity {
                 Model class30_sub2_sub4_sub6_1 = aModel_1714;
                 class30_sub2_sub4_sub6_1.method475(anInt1711 - super.boundExtentX, anInt1712 - anInt1709, anInt1713 - super.boundExtentY);
                 if (super.turnDirection == 512) {
-                    class30_sub2_sub4_sub6_1.method473(360);
-                    class30_sub2_sub4_sub6_1.method473(360);
-                    class30_sub2_sub4_sub6_1.method473(360);
+                    class30_sub2_sub4_sub6_1.rotateBy90(360);
+                    class30_sub2_sub4_sub6_1.rotateBy90(360);
+                    class30_sub2_sub4_sub6_1.rotateBy90(360);
                 } else if (super.turnDirection == 1024) {
-                    class30_sub2_sub4_sub6_1.method473(360);
-                    class30_sub2_sub4_sub6_1.method473(360);
+                    class30_sub2_sub4_sub6_1.rotateBy90(360);
+                    class30_sub2_sub4_sub6_1.rotateBy90(360);
                 } else if (super.turnDirection == 1536) {
-                    class30_sub2_sub4_sub6_1.method473(360);
+                    class30_sub2_sub4_sub6_1.rotateBy90(360);
                 }
                 Model aclass30_sub2_sub4_sub6[] = {
                     class30_sub2_sub4_sub6, class30_sub2_sub4_sub6_1
                 };
                 class30_sub2_sub4_sub6 = new Model(2, -819, true, aclass30_sub2_sub4_sub6);
                 if (super.turnDirection == 512) {
-                    class30_sub2_sub4_sub6_1.method473(360);
+                    class30_sub2_sub4_sub6_1.rotateBy90(360);
                 } else if (super.turnDirection == 1024) {
-                    class30_sub2_sub4_sub6_1.method473(360);
-                    class30_sub2_sub4_sub6_1.method473(360);
+                    class30_sub2_sub4_sub6_1.rotateBy90(360);
+                    class30_sub2_sub4_sub6_1.rotateBy90(360);
                 } else if (super.turnDirection == 1536) {
-                    class30_sub2_sub4_sub6_1.method473(360);
-                    class30_sub2_sub4_sub6_1.method473(360);
-                    class30_sub2_sub4_sub6_1.method473(360);
+                    class30_sub2_sub4_sub6_1.rotateBy90(360);
+                    class30_sub2_sub4_sub6_1.rotateBy90(360);
+                    class30_sub2_sub4_sub6_1.rotateBy90(360);
                 }
                 class30_sub2_sub4_sub6_1.method475(super.boundExtentX - anInt1711, anInt1709 - anInt1712, super.boundExtentY - anInt1713);
             }
@@ -253,7 +259,7 @@ final class Player extends Entity {
                 if (j1 >= 0 && i2 == 5) {
                     k2 = j1;
                 }
-                if (k2 >= 256 && k2 < 512 && !IDK.cache[k2 - 256].method537()) {
+                if (k2 >= 256 && k2 < 512 && !IdentityKit.cache[k2 - 256].isBodyDownloaded()) {
                     flag = true;
                 }
                 if (k2 >= 512 && !ItemDef.forID(k2 - 512).method195(40903, anInt1702)) {
@@ -282,7 +288,7 @@ final class Player extends Entity {
                     i3 = j1;
                 }
                 if (i3 >= 256 && i3 < 512) {
-                    Model class30_sub2_sub4_sub6_3 = IDK.cache[i3 - 256].method538();
+                    Model class30_sub2_sub4_sub6_3 = IdentityKit.cache[i3 - 256].getBodyModel();
                     if (class30_sub2_sub4_sub6_3 != null) {
                         aclass30_sub2_sub4_sub6[j2++] = class30_sub2_sub4_sub6_3;
                     }
@@ -341,7 +347,7 @@ final class Player extends Entity {
         boolean flag = false;
         for (int i = 0; i < 12; i++) {
             int j = equipment[i];
-            if (j >= 256 && j < 512 && !IDK.cache[j - 256].method539()) {
+            if (j >= 256 && j < 512 && !IdentityKit.cache[j - 256].isHeadDownloaded()) {
                 flag = true;
             }
             if (j >= 512 && !ItemDef.forID(j - 512).method192(-2836, anInt1702)) {
@@ -357,7 +363,7 @@ final class Player extends Entity {
         for (int l = 0; l < 12; l++) {
             int i1 = equipment[l];
             if (i1 >= 256 && i1 < 512) {
-                Model class30_sub2_sub4_sub6_1 = IDK.cache[i1 - 256].method540();
+                Model class30_sub2_sub4_sub6_1 = IdentityKit.cache[i1 - 256].getHeadModel();
                 if (class30_sub2_sub4_sub6_1 != null) {
                     aclass30_sub2_sub4_sub6[k++] = class30_sub2_sub4_sub6_1;
                 }

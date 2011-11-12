@@ -1,5 +1,9 @@
 package client;
 
+import client.ondemand.OnDemandFetcherParent;
+import client.drawing.DrawingArea;
+import client.animation.AnimationFrame;
+import client.animation.Animable;
 
 public class Model extends Entity {
     
@@ -1175,7 +1179,7 @@ public class Model extends Entity {
         }
     }
 
-    public void method473(int i) {
+    public void rotateBy90(int i) {
         if (i <= 0) {
             return;
         }
@@ -1391,8 +1395,8 @@ public class Model extends Entity {
     }
 
     public final void method482(int i, int j, int k, int l, int i1, int j1, int k1) {
-        int l1 = Rasterizer.textureInt1;
-        int i2 = Rasterizer.textureInt2;
+        int l1 = Rasterizer.intCenterX;
+        int i2 = Rasterizer.intCenterY;
         int j2 = SINE[i];
         int k2 = COSINE[i];
         int l2 = SINE[j];
@@ -1499,8 +1503,8 @@ public class Model extends Entity {
                 k4 /= i3;
                 i5 /= k5;
             }
-            int i6 = cursorXPos - Rasterizer.textureInt1;
-            int k6 = cursorYPos - Rasterizer.textureInt2;
+            int i6 = cursorXPos - Rasterizer.intCenterX;
+            int k6 = cursorYPos - Rasterizer.intCenterY;
             if (i6 > k3 && i6 < l3 && k6 > i5 && k6 < k4) {
                 if (oneSquareModel) {
                     resourceIDTag[resourceCount++] = i2;
@@ -1509,8 +1513,8 @@ public class Model extends Entity {
                 }
             }
         }
-        int l5 = Rasterizer.textureInt1;
-        int j6 = Rasterizer.textureInt2;
+        int l5 = Rasterizer.intCenterX;
+        int j6 = Rasterizer.intCenterY;
         int l6 = 0;
         int i7 = 0;
         if (i != 0) {
@@ -1737,11 +1741,11 @@ public class Model extends Entity {
         int j = facePoint1[i];
         int k = facePoint2[i];
         int l = facePoint3[i];
-        Rasterizer.aBoolean1462 = aBooleanArray1663[i];
+        Rasterizer.restrictEdges = aBooleanArray1663[i];
         if (triangleAlpha == null) {
-            Rasterizer.anInt1465 = 0;
+            Rasterizer.alpha = 0;
         } else {
-            Rasterizer.anInt1465 = triangleAlpha[i];
+            Rasterizer.alpha = triangleAlpha[i];
         }
         int i1;
         if (triangleDrawType == null) {
@@ -1750,7 +1754,7 @@ public class Model extends Entity {
             i1 = triangleDrawType[i] & 3;
         }
         if (i1 == 0) {
-            Rasterizer.method374(vertexSY[j], vertexSY[k], vertexSY[l], vertexSX[j], vertexSX[k], vertexSX[l], triangleHslA[i], triangleHslB[i], triangleHslC[i]);
+            Rasterizer.drawShadedTriangle(vertexSY[j], vertexSY[k], vertexSY[l], vertexSX[j], vertexSX[k], vertexSX[l], triangleHslA[i], triangleHslB[i], triangleHslC[i]);
             return;
         }
         if (i1 == 1) {
@@ -1775,8 +1779,8 @@ public class Model extends Entity {
     }
 
     private final void method485(int i) {
-        int j = Rasterizer.textureInt1;
-        int k = Rasterizer.textureInt2;
+        int j = Rasterizer.intCenterX;
+        int k = Rasterizer.intCenterY;
         int l = 0;
         int i1 = facePoint1[i];
         int j1 = facePoint2[i];
@@ -1854,10 +1858,10 @@ public class Model extends Entity {
         int j7 = anIntArray1679[1];
         int k7 = anIntArray1679[2];
         if ((j3 - j4) * (k7 - j7) - (i7 - j7) * (j5 - j4) > 0) {
-            Rasterizer.aBoolean1462 = false;
+            Rasterizer.restrictEdges = false;
             if (l == 3) {
                 if (j3 < 0 || j4 < 0 || j5 < 0 || j3 > DrawingArea.centerX || j4 > DrawingArea.centerX || j5 > DrawingArea.centerX) {
-                    Rasterizer.aBoolean1462 = true;
+                    Rasterizer.restrictEdges = true;
                 }
                 int l7;
                 if (triangleDrawType == null) {
@@ -1866,7 +1870,7 @@ public class Model extends Entity {
                     l7 = triangleDrawType[i] & 3;
                 }
                 if (l7 == 0) {
-                    Rasterizer.method374(i7, j7, k7, j3, j4, j5, anIntArray1680[0], anIntArray1680[1], anIntArray1680[2]);
+                    Rasterizer.drawShadedTriangle(i7, j7, k7, j3, j4, j5, anIntArray1680[0], anIntArray1680[1], anIntArray1680[2]);
                 } else if (l7 == 1) {
                     Rasterizer.method376(i7, j7, k7, j3, j4, j5, HSL2RGB[triangleHslA[i]]);
                 } else if (l7 == 2) {
@@ -1885,7 +1889,7 @@ public class Model extends Entity {
             }
             if (l == 4) {
                 if (j3 < 0 || j4 < 0 || j5 < 0 || j3 > DrawingArea.centerX || j4 > DrawingArea.centerX || j5 > DrawingArea.centerX || anIntArray1678[3] < 0 || anIntArray1678[3] > DrawingArea.centerX) {
-                    Rasterizer.aBoolean1462 = true;
+                    Rasterizer.restrictEdges = true;
                 }
                 int i8;
                 if (triangleDrawType == null) {
@@ -1894,8 +1898,8 @@ public class Model extends Entity {
                     i8 = triangleDrawType[i] & 3;
                 }
                 if (i8 == 0) {
-                    Rasterizer.method374(i7, j7, k7, j3, j4, j5, anIntArray1680[0], anIntArray1680[1], anIntArray1680[2]);
-                    Rasterizer.method374(i7, k7, anIntArray1679[3], j3, j5, anIntArray1678[3], anIntArray1680[0], anIntArray1680[2], anIntArray1680[3]);
+                    Rasterizer.drawShadedTriangle(i7, j7, k7, j3, j4, j5, anIntArray1680[0], anIntArray1680[1], anIntArray1680[2]);
+                    Rasterizer.drawShadedTriangle(i7, k7, anIntArray1679[3], j3, j5, anIntArray1678[3], anIntArray1680[0], anIntArray1680[2], anIntArray1680[3]);
                     return;
                 }
                 if (i8 == 1) {

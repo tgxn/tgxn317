@@ -1,10 +1,7 @@
 package map;
 
-
-
-
-
-
+import map.drawing.RSImageProducer;
+import map.drawing.MapFunctions;
 import java.applet.Applet;
 import java.awt.*;
 import java.awt.event.*;
@@ -113,58 +110,58 @@ public class RSApplet extends Applet implements Runnable, MouseListener, MouseMo
     @Override
     public void keyPressed(KeyEvent keyevent) {
         idleTime = 0;
-        int i = keyevent.getKeyCode();
-        int j = keyevent.getKeyChar();
-        if (j < 30) {
-            j = 0;
+        int keyCode = keyevent.getKeyCode();
+        int keyChar = keyevent.getKeyChar();
+        if (keyChar < 30) {
+            keyChar = 0;
         }
-        if (i == 37) {
-            j = 1;
+        if (keyCode == 37) {
+            keyChar = 1;
         }
-        if (i == 39) {
-            j = 2;
+        if (keyCode == 39) {
+            keyChar = 2;
         }
-        if (i == 38) {
-            j = 3;
+        if (keyCode == 38) {
+            keyChar = 3;
         }
-        if (i == 40) {
-            j = 4;
+        if (keyCode == 40) {
+            keyChar = 4;
         }
-        if (i == 17) {
-            j = 5;
+        if (keyCode == 17) {
+            keyChar = 5;
         }
-        if (i == 8) {
-            j = 8;
+        if (keyCode == 8) {
+            keyChar = 8;
         }
-        if (i == 127) {
-            j = 8;
+        if (keyCode == 127) {
+            keyChar = 8;
         }
-        if (i == 9) {
-            j = 9;
+        if (keyCode == 9) {
+            keyChar = 9;
         }
-        if (i == 10) {
-            j = 10;
+        if (keyCode == 10) {
+            keyChar = 10;
         }
-        if (i >= 112 && i <= 123) {
-            j = (1008 + i) - 112;
+        if (keyCode >= 112 && keyCode <= 123) {
+            keyChar = (1008 + keyCode) - 112;
         }
-        if (i == 36) {
-            j = 1000;
+        if (keyCode == 36) {
+            keyChar = 1000;
         }
-        if (i == 35) {
-            j = 1001;
+        if (keyCode == 35) {
+            keyChar = 1001;
         }
-        if (i == 33) {
-            j = 1002;
+        if (keyCode == 33) {
+            keyChar = 1002;
         }
-        if (i == 34) {
-            j = 1003;
+        if (keyCode == 34) {
+            keyChar = 1003;
         }
-        if (j > 0 && j < 128) {
-            keyArray[j] = 1;
+        if (keyChar > 0 && keyChar < 128) {
+            keyArray[keyChar] = 1;
         }
-        if (j > 4) {
-            charQueue[writeIndex] = j;
+        if (keyChar > 4) {
+            charQueue[writeIndex] = keyChar;
             writeIndex = writeIndex + 1 & 0x7f;
         }
     }
@@ -245,12 +242,12 @@ public class RSApplet extends Applet implements Runnable, MouseListener, MouseMo
     }
 
     public int method7() {
-        int i = -1;
+        int charID = -1;
         if (writeIndex != readIndex) {
-            i = charQueue[readIndex];
+            charID = charQueue[readIndex];
             readIndex = readIndex + 1 & 0x7f;
         }
-        return i;
+        return charID;
     }
 
     public void processDrawing() {

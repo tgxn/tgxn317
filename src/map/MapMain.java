@@ -1,8 +1,9 @@
 package map;
 
+import map.data.*;
+import map.drawing.*;
+
 import java.io.*;
-import java.net.URL;
-import java.security.MessageDigest;
 
 public class MapMain extends RSApplet {
     
@@ -67,7 +68,7 @@ public class MapMain extends RSApplet {
     public String labelsArray[];
     public int labelPosXArray[];
     public int labelPosYArray[];
-    public static int anIntArray100[] = {
+    public static int hashArray[] = {
         118, -62, 7, 24, 121, -123, -10, -8, 116, 6,
         -106, 28, -36, 86, 109, 112, -115, -116, -37, -35
     };
@@ -93,7 +94,6 @@ public class MapMain extends RSApplet {
         "Hair Dressers", "Farming patch", "Makeover Mage", "Guide",
         "Transportation", "???", "Farming shop", "Loom", "Brewery"
     };
-    private MapMain mapMain;
     
     public MapMain() {
         brownBoxColour = 0x776644; //colour for brown unselected boxes
@@ -128,84 +128,89 @@ public class MapMain extends RSApplet {
         zoomTo = 4D;
         zoomLevel = 4D;
     }
+    
+    public static void main(String args[]) {
+        MapMain mapMain = new MapMain();
+        mapMain.createFrame(765, 503);
+    }
 
+    
     @Override
     public void startUp() {
-        Class6 class6 = readDAT();
+        JagexArchive jagexArchive = readDAT();
         
-        drawLoadingText(50, "Rendering Map");
-
-        ByteVector byteVector = new ByteVector(class6.method76("size.dat", null)); //map size??
-        mapStartX = byteVector.getShort();
-        mapStartY = byteVector.getShort();
-
-        mapWidth = byteVector.getShort();
-        mapHeight = byteVector.getShort();
-
-        mapViewX = 3200 - mapStartX; //starting position? X
-        mapViewY = (mapStartY + mapHeight) - 3200; //starting pos Y
-
+        drawLoadingText(9, "Loading size data");
+        Stream sizeData = new Stream(jagexArchive.getDataForName("size.dat"));
+        mapStartX = sizeData.getShort();
+        mapStartY = sizeData.getShort();
+        mapWidth = sizeData.getShort();
+        mapHeight = sizeData.getShort();
+        mapViewX = 3200 - mapStartX;
+        mapViewY = (mapStartY + mapHeight) - 3200;
         overviewHeight = 190;
         overviewWidth = (mapWidth * overviewHeight) / mapHeight;
-
         overviewLocX = 765 - overviewWidth - 5;
         overviewLocY = 503 - overviewHeight - 20;
-
-        byteVector = new ByteVector(class6.method76("labels.dat", null));
-        labelAmount = byteVector.getShort();
-
-        for (int i = 0; i < labelAmount; i++) {
-            labelsArray[i] = byteVector.getString();
-            labelPosXArray[i] = byteVector.getShort(); //labelPosXArray
-            labelPosYArray[i] = byteVector.getShort(); //labelPosYArray
-            labelSizeArray[i] = byteVector.getUnsignedByte();
+        
+        drawLoadingText(18, "Loading label data");
+        Stream labelData = new Stream(jagexArchive.getDataForName("labels.dat"));
+        labelAmount = labelData.getShort();
+        for (int pos = 0; pos < labelAmount; pos++) {
+            labelsArray[pos] = labelData.getString();
+            labelPosXArray[pos] = labelData.getShort();
+            labelPosYArray[pos] = labelData.getShort();
+            labelSizeArray[pos] = labelData.getUnsignedByte();
         }
+        
+        drawLoadingText(27, "Loading floor color data");
+        Stream floorColorData = new Stream(jagexArchive.getDataForName("floorcol.dat"));
 
-        byteVector = new ByteVector(class6.method76("floorcol.dat", null));
-
-        int j = byteVector.getShort(); //amount of colours??
-
-        anIntArray115 = new int[j + 1];
-        anIntArray116 = new int[j + 1];
-
-        for (int k = 0; k < j; k++) {
-            anIntArray115[k + 1] = byteVector.getInt();
-            anIntArray116[k + 1] = byteVector.getInt();
+        int colorAmount = floorColorData.getShort();
+        anIntArray115 = new int[colorAmount + 1];
+        anIntArray116 = new int[colorAmount + 1];
+        for (int pos = 0; pos < colorAmount; pos++) {
+            anIntArray115[pos + 1] = floorColorData.getInt();
+            anIntArray116[pos + 1] = floorColorData.getInt();
         }
-
-        byte abyte0[] = class6.method76("underlay.dat", null);
-        byte abyte1[][] = new byte[mapWidth][mapHeight];
-        method14(abyte0, abyte1);
-
-        byte abyte2[] = class6.method76("overlay.dat", null);
+        
+        drawLoadingText(36, "Loading map underlay");
+        byte underlayData[] = jagexArchive.getDataForName("underlay.dat");
+        byte mapSizeArray[][] = new byte[mapWidth][mapHeight];
+        loadUnderlay(underlayData, mapSizeArray);
+        anIntArrayArray117 = new int[mapWidth][mapHeight];
+        method16(mapSizeArray, anIntArrayArray117);
+        
+        drawLoadingText(45, "Loading map overlay");
+        byte overlayData[] = jagexArchive.getDataForName("overlay.dat");
         anIntArrayArray118 = new int[mapWidth][mapHeight];
         aByteArrayArray119 = new byte[mapWidth][mapHeight];
-        method15(abyte2, anIntArrayArray118, aByteArrayArray119);
-
-        byte abyte3[] = class6.method76("loc.dat", null);
+        loadOverlay(overlayData, anIntArrayArray118, aByteArrayArray119);
+        
+        drawLoadingText(54, "Loading map loc");
+        byte locData[] = jagexArchive.getDataForName("loc.dat");
         aByteArrayArray120 = new byte[mapWidth][mapHeight];
         aByteArrayArray122 = new byte[mapWidth][mapHeight];
         aByteArrayArray121 = new byte[mapWidth][mapHeight];
-        method13(abyte3, aByteArrayArray120, aByteArrayArray122, aByteArrayArray121);
-
+        loadLoc(locData, aByteArrayArray120, aByteArrayArray122, aByteArrayArray121);
+        
+        drawLoadingText(63, "Loading map scenes");
         try {
-            for (int l = 0; l < 100; l++) {
-                mapScenesArray[l] = new MapScenes(class6, "mapscene", l);
+            for (int sceneIndex = 0; sceneIndex < 100; sceneIndex++) {
+                mapScenesArray[sceneIndex] = new MapScenes(jagexArchive, "mapscene", sceneIndex);
             }
-        } catch (Exception _ex) {
+        } catch (Exception ignored) {
         }
         
+        drawLoadingText(72, "Loading map functions");
         try {
-            for (int i1 = 0; i1 < 100; i1++) {
-                mapFunctionsArray[i1] = new MapFunctions(class6, "mapfunction", i1);
+            for (int functionIndex = 0; functionIndex < 100; functionIndex++) {
+                mapFunctionsArray[functionIndex] = new MapFunctions(jagexArchive, "mapfunction", functionIndex);
             }
-        } catch (Exception _ex) {
+        } catch (Exception ignored) {
         }
-
-        normalFont = new MapFont(class6, "b12_full", false);
-
-
-        // Fonts - PT Size.
+        
+        drawLoadingText(81, "Loading fonts");
+        normalFont = new MapFont(jagexArchive, "b12_full", false);
         font11PT = new Sprite(11, this);
         font12PT = new Sprite(12, this);
         font14PT = new Sprite(14, this);
@@ -214,21 +219,19 @@ public class MapMain extends RSApplet {
         font22PT = new Sprite(22, this);
         font26PT = new Sprite(26, this);
         font30PT = new Sprite(30, this);
-
-
-        anIntArrayArray117 = new int[mapWidth][mapHeight];
-
-        method16(abyte1, anIntArrayArray117);
-
+        
+        drawLoadingText(90, "Loading map functions");
         worldOverviewSprite = new MapFunctions(overviewWidth, overviewHeight);
         worldOverviewSprite.method45();
+        
+        drawLoadingText(100, "Rendering map");
         drawMap(0, 0, mapWidth, mapHeight, 0, 0, overviewWidth, overviewHeight);
         DrawingArea.fillPixels(0, 0, overviewWidth, overviewHeight, 0);
         DrawingArea.fillPixels(1, 1, overviewWidth - 2, overviewHeight - 2, brownBoxColour);
         super.fullScreen.initializeDrawingArea();
     }
     
-    public void method13(byte abyte0[], byte abyte1[][], byte abyte2[][], byte abyte3[][]) {
+    public void loadLoc(byte abyte0[], byte abyte1[][], byte abyte2[][], byte abyte3[][]) {
         for (int i = 0; i < abyte0.length;) {
             int k = (abyte0[i++] & 0xff) * 64 - mapStartX;
             int l = (abyte0[i++] & 0xff) * 64 - mapStartY;
@@ -272,7 +275,7 @@ public class MapMain extends RSApplet {
         }
     }
 
-    public void method14(byte abyte0[], byte abyte1[][]) {
+    public void loadUnderlay(byte abyte0[], byte abyte1[][]) {
         for (int i = 0; i < abyte0.length;) {
             int j = (abyte0[i++] & 0xff) * 64 - mapStartX;
             int k = (abyte0[i++] & 0xff) * 64 - mapStartY;
@@ -290,7 +293,7 @@ public class MapMain extends RSApplet {
         }
     }
 
-    public void method15(byte abyte0[], int ai[][], byte abyte1[][]) {
+    public void loadOverlay(byte abyte0[], int ai[][], byte abyte1[][]) {
         for (int i = 0; i < abyte0.length;) {
             int j = (abyte0[i++] & 0xff) * 64 - mapStartX;
             int k = (abyte0[i++] & 0xff) * 64 - mapStartY;
@@ -448,8 +451,7 @@ public class MapMain extends RSApplet {
 
     @Override
     public void processLoop() {
-
-        //keys, up down left right
+        
         if (super.keyArray[1] == 1) {
             mapViewX = (int) ((double) mapViewX - 16D / zoomTo); //move left
             needToDraw = true;
@@ -664,7 +666,7 @@ public class MapMain extends RSApplet {
     @Override
     public void processDrawing() {
         if (needToDraw) {
-            needToDraw = false; //needToDraw
+            needToDraw = false;
             DrawingArea.setAllPixelsToZero();
 
             int i = mapViewX - (int) (765D / zoomTo);
@@ -718,7 +720,7 @@ public class MapMain extends RSApplet {
 
             }
 
-            drawBoxWithText(660, 5, 100, 25, brownBoxColour, brownBoxColour, brownBoxColour, "Close Map");
+            drawBoxWithText(660, 5, 100, 25, brownBoxColour, brownBoxColour, brownBoxColour, "Hide Map");
 
 
             drawBoxWithText(overviewLocX, overviewLocY + overviewHeight, overviewWidth, 18, brownBoxColour, brownBoxColour, brownBoxColour, "Overview");
@@ -767,8 +769,8 @@ public class MapMain extends RSApplet {
         DrawingArea.method28(posX, posY, widthY, i1);
         DrawingArea.method27(posX, (posY + widthY) - 1, widthX, k1);
         DrawingArea.method28((posX + widthX) - 1, posY, widthY, k1);
-        normalFont.method55(text, posX + widthX / 2 + 1, posY + widthY / 2 + 1 + 4, 0);
-        normalFont.method55(text, posX + widthX / 2, posY + widthY / 2 + 4, 0xffffff);
+        normalFont.drawText(text, posX + widthX / 2 + 1, posY + widthY / 2 + 1 + 4, 0);
+        normalFont.drawText(text, posX + widthX / 2, posY + widthY / 2 + 4, 0xffffff);
     }
 
     public void drawMap(int i, int j, int k, int l, int i1, int j1, int k1, int l1) {
@@ -922,74 +924,73 @@ public class MapMain extends RSApplet {
 
         }
         if (zoomTo == zoomLevel && drawLabels) {
-            for (int k5 = 0; k5 < labelAmount; k5++) {
-                int j6 = labelPosXArray[k5];
-                int l6 = labelPosYArray[k5];
-                j6 -= mapStartX;
-                l6 = (mapStartY + mapHeight) - l6;
-                int k7 = i1 + ((k1 - i1) * (j6 - i)) / (k - i);
-                int j8 = j1 + ((l1 - j1) * (l6 - j)) / (l - j);
-                int j9 = labelSizeArray[k5];
-                int j10 = 0xffffff; //white for smaller labels
-                Sprite class1_sub1_sub1_sub1 = null;
+            for (int pos = 0; pos < labelAmount; pos++) {
+                int labelPosX = labelPosXArray[pos];
+                int labelPosY = labelPosYArray[pos];
+                labelPosX -= mapStartX;
+                labelPosY = (mapStartY + mapHeight) - labelPosY;
+                int k7 = i1 + ((k1 - i1) * (labelPosX - i)) / (k - i);
+                int j8 = j1 + ((l1 - j1) * (labelPosY - j)) / (l - j);
+                int labelSize = labelSizeArray[pos];
+                int labelColor = 0xffffff;
+                Sprite fontToDraw = null;
 
-                if (j9 == 0) { //small labels
+                if (labelSize == 0) {
                     if (zoomTo == 3D) {
-                        class1_sub1_sub1_sub1 = font11PT;
+                        fontToDraw = font11PT;
                     }
                     if (zoomTo == 4D) {
-                        class1_sub1_sub1_sub1 = font12PT;
+                        fontToDraw = font12PT;
                     }
                     if (zoomTo == 6D) {
-                        class1_sub1_sub1_sub1 = font14PT;
+                        fontToDraw = font14PT;
                     }
                     if (zoomTo == 8D) {
-                        class1_sub1_sub1_sub1 = font17PT;
+                        fontToDraw = font17PT;
                     }
                     if (zoomTo == 16D) {
-                        class1_sub1_sub1_sub1 = font17PT;
+                        fontToDraw = font17PT;
                     }
                 }
-                if (j9 == 1) { //bigger labels
+                if (labelSize == 1) {
                     if (zoomTo == 3D) {
-                        class1_sub1_sub1_sub1 = font14PT;
+                        fontToDraw = font14PT;
                     }
                     if (zoomTo == 4D) {
-                        class1_sub1_sub1_sub1 = font17PT;
+                        fontToDraw = font17PT;
                     }
                     if (zoomTo == 6D) {
-                        class1_sub1_sub1_sub1 = font19PT;
+                        fontToDraw = font19PT;
                     }
                     if (zoomTo == 8D) {
-                        class1_sub1_sub1_sub1 = font22PT;
+                        fontToDraw = font22PT;
                     }
                     if (zoomTo == 16D) {
-                        class1_sub1_sub1_sub1 = font22PT;
+                        fontToDraw = font22PT;
                     }
                 }
-                if (j9 == 2) { //biggest labels
-                    j10 = 0xffaa00; //orange for biggest labels
+                if (labelSize == 2) {
+                    labelColor = 0xffaa00;
                     if (zoomTo == 3D) {
-                        class1_sub1_sub1_sub1 = font19PT;
+                        fontToDraw = font19PT;
                     }
                     if (zoomTo == 4D) {
-                        class1_sub1_sub1_sub1 = font22PT;
+                        fontToDraw = font22PT;
                     }
                     if (zoomTo == 6D) {
-                        class1_sub1_sub1_sub1 = font26PT;
+                        fontToDraw = font26PT;
                     }
                     if (zoomTo == 8D) {
-                        class1_sub1_sub1_sub1 = font30PT;
+                        fontToDraw = font30PT;
                     }
                     if (zoomTo == 16D) {
-                        class1_sub1_sub1_sub1 = font30PT;
+                        fontToDraw = font30PT;
                     }
-
                 }
 
 
-                if (class1_sub1_sub1_sub1 != null) {
-                    String s = labelsArray[k5];
+                if (fontToDraw != null) {
+                    String s = labelsArray[pos];
                     int j12 = 1;
                     for (int i13 = 0; i13 < s.length(); i13++) {
                         if (s.charAt(i13) == '/') {
@@ -997,17 +998,17 @@ public class MapMain extends RSApplet {
                         }
                     }
 
-                    j8 -= (class1_sub1_sub1_sub1.method40() * (j12 - 1)) / 2;
-                    j8 += class1_sub1_sub1_sub1.method44() / 2;
+                    j8 -= (fontToDraw.method40() * (j12 - 1)) / 2;
+                    j8 += fontToDraw.method44() / 2;
                     do {
                         int l13 = s.indexOf("/");
                         if (l13 == -1) {
-                            class1_sub1_sub1_sub1.method38(s, k7, j8, j10, true);
+                            fontToDraw.method38(s, k7, j8, labelColor, true);
                             break;
                         }
                         String s1 = s.substring(0, l13);
-                        class1_sub1_sub1_sub1.method38(s1, k7, j8, j10, true);
-                        j8 += class1_sub1_sub1_sub1.method40();
+                        fontToDraw.method38(s1, k7, j8, labelColor, true);
+                        j8 += fontToDraw.method40();
                         s = s.substring(l13 + 1);
                     } while (true);
                 }
@@ -1015,11 +1016,11 @@ public class MapMain extends RSApplet {
 
         }
 
-        if (showMapAreas) {
-            for (int l5 = mapStartX / 64; l5 < (mapStartX + mapWidth) / 64; l5++) {
-                for (int k6 = mapStartY / 64; k6 < (mapStartY + mapHeight) / 64; k6++) {
-                    int i7 = l5 * 64;
-                    int l7 = k6 * 64;
+        if (!showMapAreas) {
+            for (int blockX = mapStartX / 64; blockX < (mapStartX + mapWidth) / 64; blockX++) {
+                for (int blockY = mapStartY / 64; blockY < (mapStartY + mapHeight) / 64; blockY++) {
+                    int i7 = blockX * 64;
+                    int l7 = blockY * 64;
                     i7 -= mapStartX;
                     l7 = (mapStartY + mapHeight) - l7;
                     int k8 = i1 + ((k1 - i1) * (i7 - i)) / (k - i);
@@ -1027,10 +1028,10 @@ public class MapMain extends RSApplet {
                     int k10 = i1 + ((k1 - i1) * ((i7 + 64) - i)) / (k - i);
                     int j11 = j1 + ((l1 - j1) * (l7 - j)) / (l - j);
                     DrawingArea.fillPixels(k8, k9, k10 - k8, j11 - k9, 0xffffff);
-                    normalFont.method54(l5 + "_" + k6, k10 - 5, j11 - 5, 0xffffff);
-                    if (l5 == 33 && k6 >= 71 && k6 <= 73) //suggests we can load more map??
+                    normalFont.method54(blockX + "_" + blockY, k10 - 5, j11 - 5, 0xffffff);
+                    if (blockX == 33 && blockY >= 71 && blockY <= 73) //suggests we can load more map??
                     {
-                        normalFont.method55("u_pass", (k10 + k8) / 2, (j11 + k9) / 2, 0xff0000);
+                        normalFont.drawText("u_pass", (k10 + k8) / 2, (j11 + k9) / 2, 0xff0000);
                     }
                 }
             }
@@ -1561,87 +1562,75 @@ public class MapMain extends RSApplet {
         }
     }
 
-    public Class6 readDAT() {
+    public JagexArchive readDAT() {
         byte abyte0[] = null;
         try {
-            abyte0 = FileOperations.ReadFile(sign.signlink.findCacheDIR() + "worldmap.dat");
-            return new Class6(abyte0);
+            abyte0 = FileOperations.ReadFile(client.sign.Signlink.findCacheDIR() + "worldmap.dat");
+            return new JagexArchive(abyte0);
         } catch (Throwable _ex) {
         }
         abyte0 = getMap();
-        return new Class6(abyte0);
+        return new JagexArchive(abyte0);
     }
 
     public byte[] getMap() {
         drawLoadingText(0, "Requesting map");
         try {
-            String s = "";
-            for (int i = 0; i < 10; i++) {
-                s = s + anIntArray100[i];
-            }
-            DataInputStream datainputstream;
-            if (super.rsFrame != null) {
-                datainputstream = new DataInputStream(new FileInputStream(sign.signlink.findCacheDIR() + "worldmap.dat"));
-            } else {
-                datainputstream = new DataInputStream((new URL(getCodeBase(), sign.signlink.findCacheDIR() + "worldmap" + s + ".dat")).openStream());
-            }
-            int j = 0;
-            int k = 0; //starting %?
-            int l = 0x53901; //total size?
-            byte abyte0[] = new byte[l];
-            while (k < l) {
-                int i1 = l - k;
-                if (i1 > 1000) {
-                    i1 = 1000;
+            DataInputStream mapDatFile;
+            mapDatFile = new DataInputStream(new FileInputStream(client.sign.Signlink.findCacheDIR() + "worldmap.dat"));
+            int amountLoaded = 0;
+            int mapSize = 0x53901;
+            byte loadedMap[] = new byte[mapSize];
+            while (amountLoaded < mapSize) {
+                int amountLeft = mapSize - amountLoaded;
+                if (amountLeft > 1000) {
+                    amountLeft = 1000;
                 }
-                int j1 = datainputstream.read(abyte0, k, i1);
-                if (j1 < 0) {
+                int read = mapDatFile.read(loadedMap, amountLoaded, amountLeft);
+                if (read < 0) {
                     throw new IOException("End of file");
                 }
-                k += j1;
-                int k1 = (k * 100) / l;
-                if (k1 != j) {
-                    drawLoadingText(k1, "Loading map - " + k1 + "%");
+                int percentLoaded = (amountLoaded * 100) / mapSize;
+                if (percentLoaded != 0) {
+                    drawLoadingText(percentLoaded, "Loading map data - " + percentLoaded + "%");
                 }
-                j = k1;
+                amountLoaded += read;
             }
-            datainputstream.close();
-            return abyte0;
-        } catch (IOException ioexception) {
-            System.out.println("Error loading");
-            ioexception.printStackTrace();
+            mapDatFile.close();
+            return loadedMap;
+        } catch (IOException ignored) {
+            System.out.println("Error loading map");
             return null;
         }
     }
 
-    public byte[] method24(String s) throws IOException {//Decompress something?
-        File file = new File(s);
-        if (!file.exists()) {
-            return null;
-        } else {
-            int i = (int) file.length();
-            byte buffer[] = new byte[i];
-            DataInputStream datainputstream = new DataInputStream(new BufferedInputStream(new FileInputStream(s)));
-            datainputstream.readFully(buffer, 0, i);
-            datainputstream.close();
-            return buffer;
-        }
-    }
-
-    public boolean method26(byte abyte0[]) throws Exception {
-        if (abyte0 == null) {
-            return false;
-        }
-        MessageDigest messagedigest = MessageDigest.getInstance("SHA");
-        messagedigest.reset();
-        messagedigest.update(abyte0);
-        byte abyte1[] = messagedigest.digest();
-        for (int i = 0; i < 20; i++) {
-            if (abyte1[i] != anIntArray100[i]) {
-                return false;
-            }
-        }
-
-        return true;
-    }
+//    public byte[] method24(String s) throws IOException {//Decompress something?
+//        File file = new File(s);
+//        if (!file.exists()) {
+//            return null;
+//        } else {
+//            int i = (int) file.length();
+//            byte buffer[] = new byte[i];
+//            DataInputStream datainputstream = new DataInputStream(new BufferedInputStream(new FileInputStream(s)));
+//            datainputstream.readFully(buffer, 0, i);
+//            datainputstream.close();
+//            return buffer;
+//        }
+//    }
+//
+//    public boolean checkHash(byte toHash[]) throws Exception {
+//        if (toHash == null) {
+//            return false;
+//        }
+//        MessageDigest messageDigest = MessageDigest.getInstance("SHA");
+//        messageDigest.reset();
+//        messageDigest.update(toHash);
+//        byte hashed[] = messageDigest.digest();
+//        for (int pos = 0; pos < 20; pos++) {
+//            if (hashed[pos] != hashArray[pos]) {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
 }

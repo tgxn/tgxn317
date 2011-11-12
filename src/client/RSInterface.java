@@ -1,5 +1,11 @@
 package client;
 
+import client.drawing.Sprite;
+import client.animation.AnimationFrame;
+import client.text.RSFont;
+import client.text.TextClass;
+import client.fileio.JagexArchive;
+
 public class RSInterface {
     
     public Sprite disabledSprite;
@@ -35,7 +41,7 @@ public class RSInterface {
     public int children[];
     public int childX[];
     public boolean usableItemInterface;
-    public TextDrawingArea font;
+    public RSFont font;
     public int invSpritePadY;
     public int valueCompareType[];
     public int animationLength;
@@ -83,7 +89,7 @@ public class RSInterface {
         return class9;
     }
 
-    public static void addText(int id, String text, TextDrawingArea wid[], int idx, int color) {
+    public static void addText(int id, String text, RSFont wid[], int idx, int color) {
         RSInterface Tab = addTab(id);
         Tab.id = id;
         Tab.parentID = id;
@@ -127,12 +133,12 @@ public class RSInterface {
         Tab.height = height;
         Tab.opacity = 0;
         Tab.hoverType = 52;
-        Tab.disabledSprite = new Sprite(sign.signlink.findCacheDIR() + "sprites/interfaces/new/custom " + j + ".png");
-        Tab.enabledSprite = new Sprite(sign.signlink.findCacheDIR() + "sprites/interfaces/new/custom " + k + ".png");
+        Tab.disabledSprite = new Sprite(client.sign.Signlink.findCacheDIR() + "sprites/interfaces/new/custom " + j + ".png");
+        Tab.enabledSprite = new Sprite(client.sign.Signlink.findCacheDIR() + "sprites/interfaces/new/custom " + k + ".png");
         Tab.tooltip = s;
     }
 
-    public static void testing(TextDrawingArea[] wid) {
+    public static void testing(RSFont[] wid) {
         RSInterface t = addTab(18000);
         addText(18001, "test", wid, 0, 0xffffff);
         t.children = new int[1];
@@ -180,8 +186,8 @@ public class RSInterface {
         tab.contentType = contentType;
         tab.opacity = 0;
         tab.hoverType = hoverOver;
-        tab.disabledSprite = new Sprite(sign.signlink.findCacheDIR() + "sprites/interfaces/notes/NOTE " + j + ".png");
-        tab.enabledSprite = new Sprite(sign.signlink.findCacheDIR() + "sprites/interfaces/notes/NOTE " + j + ".png");
+        tab.disabledSprite = new Sprite(client.sign.Signlink.findCacheDIR() + "sprites/interfaces/notes/NOTE " + j + ".png");
+        tab.enabledSprite = new Sprite(client.sign.Signlink.findCacheDIR() + "sprites/interfaces/notes/NOTE " + j + ".png");
         tab.width = anInt220;
         tab.height = anInt267;
         tab.tooltip = text;
@@ -198,8 +204,8 @@ public class RSInterface {
         tab.height = 334;
         tab.opacity = 0;
         tab.hoverType = 52;
-        tab.disabledSprite = new Sprite(sign.signlink.findCacheDIR() + "sprites/interfaces/notes/NOTE " + j + ".png");
-        tab.enabledSprite = new Sprite(sign.signlink.findCacheDIR() + "sprites/interfaces/notes/NOTE " + k + ".png");
+        tab.disabledSprite = new Sprite(client.sign.Signlink.findCacheDIR() + "sprites/interfaces/notes/NOTE " + j + ".png");
+        tab.enabledSprite = new Sprite(client.sign.Signlink.findCacheDIR() + "sprites/interfaces/notes/NOTE " + k + ".png");
     }
 
     public static void addSprite(int ID, int i, String name) { //static sprite
@@ -213,11 +219,11 @@ public class RSInterface {
         Tab.height = 334;
         Tab.opacity = 0;
         Tab.hoverType = 0;
-        Tab.disabledSprite = new Sprite(sign.signlink.findCacheDIR() + "sprites/interfaces/" + name + " " + i + ".png");
-        Tab.enabledSprite = new Sprite(sign.signlink.findCacheDIR() + "sprites/interfaces/" + name + " " + i + ".png");
+        Tab.disabledSprite = new Sprite(client.sign.Signlink.findCacheDIR() + "sprites/interfaces/" + name + " " + i + ".png");
+        Tab.enabledSprite = new Sprite(client.sign.Signlink.findCacheDIR() + "sprites/interfaces/" + name + " " + i + ".png");
     }
 
-    public static void Sidebar7(TextDrawingArea[] tda) {
+    public static void Sidebar7(RSFont[] tda) {
         RSInterface t = addTab(19000);
         addSprite(17351, 0, "notes/NOTE");
         addHoverButton(17352, "NOTE", 1, 200, 30, "Add note", -1, 17353, 1);
@@ -288,7 +294,7 @@ public class RSInterface {
         }
     }
 
-    public static void LogoutSB(TextDrawingArea[] wid) {
+    public static void LogoutSB(RSFont[] wid) {
         RSInterface class9 = interfaceCache[2449];
 
         //top line
@@ -336,7 +342,7 @@ public class RSInterface {
         class9.disabledMessage = "click below, to logout safely.";
     }
 
-    public static void Sidebar4(TextDrawingArea[] wid) {
+    public static void Sidebar4(RSFont[] wid) {
         RSInterface t = interfaceCache[1644];
         /*addActionButton(ID, SpriteON, SpriteOFF, SpriteX, SpriteY, "SpriteText");*/
         addActionButton(15101, 15101, 15101, 40, 39, "Show Equipment Screen");
@@ -358,7 +364,7 @@ public class RSInterface {
         t.childY[26] = 212;
     }
 
-    public static void Sidebar8(TextDrawingArea[] wid) {
+    public static void Sidebar8(RSFont[] wid) {
         RSInterface class9 = interfaceCache[5065];
         addText(5070, "Add Friend", wid, 0, 0xff9933);
         addText(5071, "Del Friend", wid, 0, 0xff9933);
@@ -380,7 +386,7 @@ public class RSInterface {
         class9.disabledColor = 0xff9933;
     }
 
-    public static void Sidebar9(TextDrawingArea[] wid) {
+    public static void Sidebar9(RSFont[] wid) {
         RSInterface class9 = interfaceCache[5715];
         addText(5720, " Add Name", wid, 0, 0xff9933);
         addText(5721, " Del Name", wid, 0, 0xff9933);
@@ -406,7 +412,7 @@ public class RSInterface {
         inventoryValue[endSlot] = next;
     }
 
-    public static void unpack(JagexArchive interfaceIndex, TextDrawingArea fonts[], JagexArchive spriteArchive) {
+    public static void unpack(JagexArchive interfaceIndex, RSFont fonts[], JagexArchive spriteArchive) {
         spriteNodes = new MemCache(50000);
         Stream data = new Stream(interfaceIndex.getDataForName("data"));
         int child = -1;

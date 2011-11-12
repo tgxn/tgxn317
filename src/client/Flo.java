@@ -1,5 +1,7 @@
 package client;
 
+import client.fileio.JagexArchive;
+
 
 public class Flo {
 

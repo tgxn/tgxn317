@@ -1,5 +1,6 @@
 package client;
 
+import client.drawing.DrawingArea;
 import java.awt.*;
 import java.awt.image.*;
 

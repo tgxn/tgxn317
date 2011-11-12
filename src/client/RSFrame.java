@@ -2,7 +2,7 @@ package client;
 
 import client.custom.cSettings;
 import java.awt.*;
-import sign.signlink;
+import client.sign.Signlink;
 import java.awt.Toolkit;
 import java.awt.event.*;
 
@@ -17,9 +17,9 @@ public final class RSFrame extends Frame {
 
     public RSFrame(GameShell gameShell, int i, int j) {
         this.gameShell = gameShell;
-        setTitle("-GaMeR X-'s 317 Client");
+        setTitle("Client");
         setResizable(false);
-        Image image1 = Toolkit.getDefaultToolkit().getImage(signlink.findCacheDIR() + cSettings.mainIconLocation);
+        Image image1 = Toolkit.getDefaultToolkit().getImage(Signlink.findCacheDIR() + cSettings.mainIconLocation);
         setIconImage(image1);
         setFocusTraversalKeysEnabled(false);
         setVisible(true);
@@ -56,7 +56,7 @@ public final class RSFrame extends Frame {
     private void setUpSystemTray() {
         if (SystemTray.isSupported()) {
 
-            Image icon = Toolkit.getDefaultToolkit().getImage(signlink.findCacheDIR() + cSettings.mainIconLocation);
+            Image icon = Toolkit.getDefaultToolkit().getImage(Signlink.findCacheDIR() + cSettings.mainIconLocation);
             trayIcon = new TrayIcon(icon, "-GaMeR X-'s Client is Running.");
             trayIcon.setImageAutoSize(true);
 
@@ -102,7 +102,7 @@ public final class RSFrame extends Frame {
                         Object[] options = new String[]{"Okay"};
                         pane.setOptions(options);
                         JDialog dialog = pane.createDialog(new JFrame(), "About Dialog");
-                        Image image1 = Toolkit.getDefaultToolkit().getImage(signlink.findCacheDIR() + cSettings.mainIconLocation); //icon
+                        Image image1 = Toolkit.getDefaultToolkit().getImage(Signlink.findCacheDIR() + cSettings.mainIconLocation); //icon
                         dialog.setIconImage(image1);
                         dialog.setVisible(true); //show it
                     }

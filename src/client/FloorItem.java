@@ -1,5 +1,7 @@
 package client;
 
+import client.animation.Animable;
+
 final class FloorItem {
     
     public int view;

@@ -339,11 +339,11 @@ public class GameShell extends Applet implements Runnable, MouseListener, MouseM
     @Override
     public final void mouseEntered(MouseEvent mouseevent) {
         if(cSettings.customCursor) {
-            boolean exists = (new File(sign.signlink.findCacheDIR() + cSettings.CustomCursorPath)).exists();
+            boolean exists = (new File(client.sign.Signlink.findCacheDIR() + cSettings.CustomCursorPath)).exists();
             if (cSettings.CustomCursor && exists) {
                 //Set cursor for the frame component
                 Toolkit toolkit = Toolkit.getDefaultToolkit();
-                Image image = toolkit.getImage(sign.signlink.findCacheDIR() + cSettings.CustomCursorPath);
+                Image image = toolkit.getImage(client.sign.Signlink.findCacheDIR() + cSettings.CustomCursorPath);
                 Point point = new Point(0, 0);
                 Cursor c = toolkit.createCustomCursor(image, point, "img");
                 gameFrame.setCursor(c);

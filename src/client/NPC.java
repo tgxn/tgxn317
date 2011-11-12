@@ -1,14 +1,19 @@
 package client;
 
+import client.animation.Animation;
+import client.animation.AnimationFrame;
+import client.animation.Animable;
+import client.animation.SpotAnim;
 
-final class NPC extends Entity {
+
+public final class NPC extends Entity {
     
     private int anInt1693;
     private boolean aBoolean1694;
     private int anInt1695;
     NPCDef desc;
     
-    NPC() {
+    public NPC() {
         aBoolean1694 = false;
         anInt1695 = 9;
     }
@@ -43,7 +48,7 @@ final class NPC extends Entity {
             SpotAnim class23 = SpotAnim.cache[super.anInt1520];
             Model class30_sub2_sub4_sub6_1 = class23.getModel();
             if (class30_sub2_sub4_sub6_1 != null) {
-                int j = class23.animation.animationFrameID2[super.anInt1521];
+                int j = class23.animationSequence.animationFrameID2[super.anInt1521];
                 Model class30_sub2_sub4_sub6_2 = new Model(9, true, AnimationFrame.isNullFrame(j), false, class30_sub2_sub4_sub6_1);
                 class30_sub2_sub4_sub6_2.method475(0, -super.anInt1524, 0);
                 class30_sub2_sub4_sub6_2.createBones((byte) -71);

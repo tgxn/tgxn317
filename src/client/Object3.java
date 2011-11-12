@@ -1,5 +1,7 @@
 package client;
 
+import client.animation.Animable;
+
 public final class Object3 {
     
     int anInt811;

@@ -1,6 +1,9 @@
 package client;
 
-class Entity extends Animable {
+import client.animation.Animation;
+import client.animation.Animable;
+
+public class Entity extends Animable {
     
     int[] pathX;
     int[] pathY;
@@ -58,7 +61,7 @@ class Entity extends Animable {
     int anInt1556;//turn90clockwise?
     int anInt1557;//turn90counterclockwise?
     
-    Entity() {
+    public Entity() {
         pathX = new int[10];
         pathY = new int[10];
         interactingEntity = -1;

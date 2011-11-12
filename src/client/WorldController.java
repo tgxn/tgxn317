@@ -1,5 +1,8 @@
 package client;
 
+import client.animation.Animable;
+import client.drawing.DrawingArea;
+
 
 public final class WorldController {
 
@@ -1705,19 +1708,19 @@ public final class WorldController {
         if (j3 < 50) {
             return;
         }
-        int i5 = Rasterizer.textureInt1 + (i2 << 9) / k2;
-        int j5 = Rasterizer.textureInt2 + (l3 << 9) / k2;
-        int k5 = Rasterizer.textureInt1 + (i3 << 9) / j2;
-        int l5 = Rasterizer.textureInt2 + (i4 << 9) / j2;
-        int i6 = Rasterizer.textureInt1 + (l2 << 9) / k3;
-        int j6 = Rasterizer.textureInt2 + (j4 << 9) / k3;
-        int k6 = Rasterizer.textureInt1 + (l1 << 9) / j3;
-        int l6 = Rasterizer.textureInt2 + (k4 << 9) / j3;
-        Rasterizer.anInt1465 = 0;
+        int i5 = Rasterizer.intCenterX + (i2 << 9) / k2;
+        int j5 = Rasterizer.intCenterY + (l3 << 9) / k2;
+        int k5 = Rasterizer.intCenterX + (i3 << 9) / j2;
+        int l5 = Rasterizer.intCenterY + (i4 << 9) / j2;
+        int i6 = Rasterizer.intCenterX + (l2 << 9) / k3;
+        int j6 = Rasterizer.intCenterY + (j4 << 9) / k3;
+        int k6 = Rasterizer.intCenterX + (l1 << 9) / j3;
+        int l6 = Rasterizer.intCenterY + (k4 << 9) / j3;
+        Rasterizer.alpha = 0;
         if ((i6 - k6) * (l5 - l6) - (j6 - l6) * (k5 - k6) > 0) {
-            Rasterizer.aBoolean1462 = false;
+            Rasterizer.restrictEdges = false;
             if (i6 < 0 || k6 < 0 || k5 < 0 || i6 > DrawingArea.centerX || k6 > DrawingArea.centerX || k5 > DrawingArea.centerX) {
-                Rasterizer.aBoolean1462 = true;
+                Rasterizer.restrictEdges = true;
             }
             if (aBoolean467 && method318(anInt468, anInt469, j6, l6, l5, i6, k6, k5)) {
                 anInt470 = j1;
@@ -1725,7 +1728,7 @@ public final class WorldController {
             }
             if (pTile.texture == -1) {
                 if (pTile.anInt718 != 0xbc614e) {
-                    Rasterizer.method374(j6, l6, l5, i6, k6, k5, pTile.anInt718, pTile.anInt719, pTile.anInt717);
+                    Rasterizer.drawShadedTriangle(j6, l6, l5, i6, k6, k5, pTile.anInt718, pTile.anInt719, pTile.anInt717);
                 }
             } else if (!lowMem) {
                 if (pTile.aBoolean721) {
@@ -1735,13 +1738,13 @@ public final class WorldController {
                 }
             } else {
                 int i7 = textures[pTile.texture];
-                Rasterizer.method374(j6, l6, l5, i6, k6, k5, method317(i7, pTile.anInt718), method317(i7, pTile.anInt719), method317(i7, pTile.anInt717));
+                Rasterizer.drawShadedTriangle(j6, l6, l5, i6, k6, k5, method317(i7, pTile.anInt718), method317(i7, pTile.anInt719), method317(i7, pTile.anInt717));
             }
         }
         if ((i5 - k5) * (l6 - l5) - (j5 - l5) * (k6 - k5) > 0) {
-            Rasterizer.aBoolean1462 = false;
+            Rasterizer.restrictEdges = false;
             if (i5 < 0 || k5 < 0 || k6 < 0 || i5 > DrawingArea.centerX || k5 > DrawingArea.centerX || k6 > DrawingArea.centerX) {
-                Rasterizer.aBoolean1462 = true;
+                Rasterizer.restrictEdges = true;
             }
             if (aBoolean467 && method318(anInt468, anInt469, j5, l5, l6, i5, k5, k6)) {
                 anInt470 = j1;
@@ -1749,7 +1752,7 @@ public final class WorldController {
             }
             if (pTile.texture == -1) {
                 if (pTile.anInt716 != 0xbc614e) {
-                    Rasterizer.method374(j5, l5, l6, i5, k5, k6, pTile.anInt716, pTile.anInt717, pTile.anInt719);
+                    Rasterizer.drawShadedTriangle(j5, l5, l6, i5, k5, k6, pTile.anInt716, pTile.anInt717, pTile.anInt719);
                     return;
                 }
             } else {
@@ -1758,7 +1761,7 @@ public final class WorldController {
                     return;
                 }
                 int j7 = textures[pTile.texture];
-                Rasterizer.method374(j5, l5, l6, i5, k5, k6, method317(j7, pTile.anInt716), method317(j7, pTile.anInt717), method317(j7, pTile.anInt719));
+                Rasterizer.drawShadedTriangle(j5, l5, l6, i5, k5, k6, method317(j7, pTile.anInt716), method317(j7, pTile.anInt717), method317(j7, pTile.anInt719));
             }
         }
     }
@@ -1787,11 +1790,11 @@ public final class WorldController {
                 ShapedTile.anIntArray691[l1] = k2;
                 ShapedTile.anIntArray692[l1] = i3;
             }
-            ShapedTile.anIntArray688[l1] = Rasterizer.textureInt1 + (i2 << 9) / i3;
-            ShapedTile.anIntArray689[l1] = Rasterizer.textureInt2 + (k2 << 9) / i3;
+            ShapedTile.anIntArray688[l1] = Rasterizer.intCenterX + (i2 << 9) / i3;
+            ShapedTile.anIntArray689[l1] = Rasterizer.intCenterY + (k2 << 9) / i3;
         }
 
-        Rasterizer.anInt1465 = 0;
+        Rasterizer.alpha = 0;
         k1 = shapedTile.anIntArray679.length;
         for (int j2 = 0; j2 < k1; j2++) {
             int l2 = shapedTile.anIntArray679[j2];
@@ -1804,9 +1807,9 @@ public final class WorldController {
             int i5 = ShapedTile.anIntArray689[j3];
             int j5 = ShapedTile.anIntArray689[l3];
             if ((i4 - j4) * (j5 - i5) - (l4 - i5) * (k4 - j4) > 0) {
-                Rasterizer.aBoolean1462 = false;
+                Rasterizer.restrictEdges = false;
                 if (i4 < 0 || j4 < 0 || k4 < 0 || i4 > DrawingArea.centerX || j4 > DrawingArea.centerX || k4 > DrawingArea.centerX) {
-                    Rasterizer.aBoolean1462 = true;
+                    Rasterizer.restrictEdges = true;
                 }
                 if (aBoolean467 && method318(anInt468, anInt469, l4, i5, j5, i4, j4, k4)) {
                     anInt470 = i;
@@ -1814,7 +1817,7 @@ public final class WorldController {
                 }
                 if (shapedTile.anIntArray682 == null || shapedTile.anIntArray682[j2] == -1) {
                     if (shapedTile.anIntArray676[j2] != 0xbc614e) {
-                        Rasterizer.method374(l4, i5, j5, i4, j4, k4, shapedTile.anIntArray676[j2], shapedTile.anIntArray677[j2], shapedTile.anIntArray678[j2]);
+                        Rasterizer.drawShadedTriangle(l4, i5, j5, i4, j4, k4, shapedTile.anIntArray676[j2], shapedTile.anIntArray677[j2], shapedTile.anIntArray678[j2]);
                     }
                 } else if (!lowMem) {
                     if (shapedTile.aBoolean683) {
@@ -1824,7 +1827,7 @@ public final class WorldController {
                     }
                 } else {
                     int k5 = textures[shapedTile.anIntArray682[j2]];
-                    Rasterizer.method374(l4, i5, j5, i4, j4, k4, method317(k5, shapedTile.anIntArray676[j2]), method317(k5, shapedTile.anIntArray677[j2]), method317(k5, shapedTile.anIntArray678[j2]));
+                    Rasterizer.drawShadedTriangle(l4, i5, j5, i4, j4, k4, method317(k5, shapedTile.anIntArray676[j2]), method317(k5, shapedTile.anIntArray677[j2]), method317(k5, shapedTile.anIntArray678[j2]));
                 }
             }
         }

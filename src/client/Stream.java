@@ -2,7 +2,7 @@ package client;
 
 
 import java.math.BigInteger;
-import sign.signlink;
+import client.sign.Signlink;
 
 public final class Stream extends NodeSub {
     
@@ -32,7 +32,7 @@ public final class Stream extends NodeSub {
         0xfffff, 0x1fffff, 0x3fffff, 0x7fffff, 0xffffff, 0x1ffffff, 0x3ffffff, 0x7ffffff, 0xfffffff, 0x1fffffff,
         0x3fffffff, 0x7fffffff, -1
     };
-    public ISAACRandomGen encryption;
+    public IsaacCipher encryption;
     private static int anInt1411;
     private static int anInt1412;
     private static int anInt1413;
@@ -197,7 +197,7 @@ public final class Stream extends NodeSub {
             buffer[currentOffset++] = (byte) (int) (l >> 8);
             buffer[currentOffset++] = (byte) (int) l;
         } catch (RuntimeException runtimeexception) {
-            signlink.reportError("14395, " + l + ", " + runtimeexception.toString());
+            Signlink.reportError("14395, " + l + ", " + runtimeexception.toString());
             throw new RuntimeException();
         }
     }

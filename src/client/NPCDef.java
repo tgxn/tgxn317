@@ -1,5 +1,8 @@
 package client;
 
+import client.animation.AnimationFrame;
+import client.fileio.JagexArchive;
+
 final class NPCDef {
     
     public int turn90CCWAnimIndex;
@@ -861,10 +864,10 @@ final class NPCDef {
             int l = varBit.leastSignificantBit;
             int i1 = varBit.mostSignificantBit;
             int j1 = Client.anIntArray1232[i1 - l];
-            j = clientInstance.variousSettings[k] >> l & j1;
+            j = clientInstance.sessionSettings[k] >> l & j1;
         } else {
             if (sessionSettingID != -1) {
-                j = clientInstance.variousSettings[sessionSettingID];
+                j = clientInstance.sessionSettings[sessionSettingID];
             }
         }
         if (j < 0 || j >= childrenIDs.length || childrenIDs[j] == -1) {

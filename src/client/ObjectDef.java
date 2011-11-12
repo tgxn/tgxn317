@@ -1,6 +1,11 @@
 package client;
 
-final class ObjectDef {
+import client.ondemand.OnDemandFetcher;
+import client.animation.AnimationFrame;
+import client.animation.Animable;
+import client.fileio.JagexArchive;
+
+public final class ObjectDef {
     
     public boolean aBoolean736;
     private byte aByte737;
@@ -310,9 +315,9 @@ final class ObjectDef {
             int k = class37.leastSignificantBit;
             int l = class37.mostSignificantBit;
             int i1 = Client.anIntArray1232[l - k];
-            i = clientInstance.variousSettings[j] >> k & i1;
+            i = clientInstance.sessionSettings[j] >> k & i1;
         } else if (anInt749 != -1) {
-            i = clientInstance.variousSettings[anInt749];
+            i = clientInstance.sessionSettings[anInt749];
         }
         if (i < 0 || i >= childrenIDs.length || childrenIDs[i] == -1) {
             return null;
@@ -417,7 +422,7 @@ final class ObjectDef {
             class30_sub2_sub4_sub6_3.vertexSkin = null;
         }
         while (l-- > 0) {
-            class30_sub2_sub4_sub6_3.method473(360);
+            class30_sub2_sub4_sub6_3.rotateBy90(360);
         }
         if (modifiedModelColors != null) {
             for (int k2 = 0; k2 < modifiedModelColors.length; k2++) {

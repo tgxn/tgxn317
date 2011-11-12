@@ -8,12 +8,12 @@ public class RSFrame extends Frame {
     
     public RSFrame(RSApplet rsApplet1, int width, int height) {
         rsApplet = rsApplet1;
-        setTitle("-GaMeR X-'s Client World Map");
+        setTitle("World Map");
         setResizable(false);
-        Image image1 = Toolkit.getDefaultToolkit().getImage(sign.signlink.findCacheDIR() + client.custom.cSettings.mainIconLocation);
+        Image image1 = Toolkit.getDefaultToolkit().getImage(client.sign.Signlink.findCacheDIR() + client.custom.cSettings.mainIconLocation);
         setIconImage(image1);
-        setBackground(Color.BLACK);
-        setUndecorated(true);
+//        setBackground(Color.BLACK);
+//        setUndecorated(true);
         setVisible(true);
         toFront();
         setSize(width + 8, height + 28);

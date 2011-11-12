@@ -2,7 +2,7 @@ package client.custom;
 
 import java.io.*;
 import java.util.*;
-import sign.signlink;
+import client.sign.Signlink;
 import java.awt.*;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -114,7 +114,7 @@ public final class cSettings {
     public static int chatEffect = 0;
     public static boolean censor = true;
     //this should get loaded after the cache...
-    public static String badWords[] = loadFile(sign.signlink.findCacheDIR() + "bad/words.cfg");
+    public static String badWords[] = loadFile(client.sign.Signlink.findCacheDIR() + "bad/words.cfg");
     public static boolean RWQuote = true;
     public static String badQuotes[] = {
         "Please do not swear!",
@@ -169,7 +169,7 @@ public final class cSettings {
         String revision = "none";
         try {
             Properties p = new Properties();
-            p.load(new FileInputStream(sign.signlink.findCacheDIR() + "version.ini"));
+            p.load(new FileInputStream(client.sign.Signlink.findCacheDIR() + "version.ini"));
             revision = p.getProperty("rev");
         } catch (Exception e) {
             revision = "rev";
@@ -213,7 +213,7 @@ public final class cSettings {
         Object[] options = new String[]{"Yes", "No"};
         pane.setOptions(options);
         JDialog dialog = pane.createDialog(new JFrame(), "Really Exit?");
-        Image image1 = Toolkit.getDefaultToolkit().getImage(signlink.findCacheDIR() + mainIconLocation); //icon
+        Image image1 = Toolkit.getDefaultToolkit().getImage(Signlink.findCacheDIR() + mainIconLocation); //icon
         dialog.setIconImage(image1);
         dialog.setVisible(true); //show it
         Object obj = pane.getValue();

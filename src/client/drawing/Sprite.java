@@ -2,8 +2,8 @@ package client.drawing;
 
 
 import client.Client;
-import client.Stream;
-import client.fileio.JagexArchive;
+import client.data.Stream;
+import client.data.JagexArchive;
 import client.custom.FileOperations;
 import java.awt.*;
 import java.io.*;

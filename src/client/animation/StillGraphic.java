@@ -2,10 +2,10 @@ package client.animation;
 
 // Fully Renamed.
 
-import client.Entity;
-import client.Model;
+import client.archive.SpotAnim;
+import client.model.Model;
 
-public final class StillGraphic extends Entity {
+public final class StillGraphic extends Mobile {
     
     public int plane;
     public int z;
@@ -19,7 +19,7 @@ public final class StillGraphic extends Entity {
     
     public StillGraphic(int i, int currentTime, int k, int l, int i1, int j1, int k1, int l1) {
         transformCompleted = false;
-        spotAnim = SpotAnim.cache[i1];
+        spotAnim = SpotAnim.spotAnimCache[i1];
         plane = i;
         z = l1;
         y = k1;

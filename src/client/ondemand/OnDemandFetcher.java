@@ -2,10 +2,10 @@ package client.ondemand;
 
 
 import client.Client;
-import client.NodeList;
-import client.Queue;
-import client.Stream;
-import client.fileio.JagexArchive;
+import client.node.NodeList;
+import client.node.Queue;
+import client.data.Stream;
+import client.data.JagexArchive;
 import client.custom.cSettings;
 import java.io.*;
 import java.net.Socket;
@@ -554,7 +554,7 @@ public class OnDemandFetcher extends OnDemandFetcherParent implements Runnable {
         if (versions[i][j] == 0) {
             return;
         }
-        byte abyte0[] = clientInstance.jagexFileStores[i + 1].decompress(j);
+        byte abyte0[] = clientInstance.jagexFileStores[i + 1].decompressFile(j);
         if (byte0 > anInt1332) {
             anInt1332 = byte0;
         }
@@ -625,7 +625,7 @@ public class OnDemandFetcher extends OnDemandFetcherParent implements Runnable {
             waiting = true;
             byte abyte0[] = null;
             if (clientInstance.jagexFileStores[0] != null) {
-                abyte0 = clientInstance.jagexFileStores[class30_sub2_sub3.dataType + 1].decompress(class30_sub2_sub3.ID);
+                abyte0 = clientInstance.jagexFileStores[class30_sub2_sub3.dataType + 1].decompressFile(class30_sub2_sub3.ID);
             }
             //   if(!method549(anIntArrayArray1364[class30_sub2_sub3.dataType][class30_sub2_sub3.ID], (byte)3, anIntArrayArray1365[class30_sub2_sub3.dataType][class30_sub2_sub3.ID], abyte0))
             // abyte0 = null;

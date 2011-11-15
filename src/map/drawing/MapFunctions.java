@@ -2,7 +2,6 @@ package map.drawing;
 
 import map.data.JagexArchive;
 import map.data.Stream;
-import map.drawing.DrawingArea;
 
 public class MapFunctions extends DrawingArea {
     

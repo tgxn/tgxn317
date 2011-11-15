@@ -1,8 +1,9 @@
 package client.text;
 
 import client.drawing.DrawingArea;
-import client.Stream;
-import client.fileio.JagexArchive;
+import client.data.JagexArchive;
+import client.data.JagexArchive;
+import client.data.Stream;
 import java.util.Random;
 
 public final class RSFont extends DrawingArea {

@@ -1,11 +1,12 @@
 package client.animation;
 
+import client.archive.Sequence;
 import client.Client;
-import client.Model;
-import client.ObjectDef;
-import client.VarBit;
+import client.model.Model;
+import client.object.ObjectDef;
+import client.archive.VarBit;
 
-public class AnimableObject extends Animable {
+public class AnimableObject extends Entity {
     
     private int delay;
     private final int children[];
@@ -15,7 +16,7 @@ public class AnimableObject extends Animable {
     private final int anInt1604;
     private final int anInt1605;
     private final int anInt1606;
-    private Animation objAnim;
+    private Sequence objAnim;
     private int loopCycle;
     public static Client clientInstance;
     private int id;
@@ -31,7 +32,7 @@ public class AnimableObject extends Animable {
         anInt1605 = i1;
         anInt1606 = k1;
         if (animationID != -1) {
-            objAnim = Animation.animCache[animationID];
+            objAnim = Sequence.animCache[animationID];
             delay = 0;
             loopCycle = Client.loopCycle;
             if (flag && objAnim.frameStep != -1) {
@@ -40,9 +41,9 @@ public class AnimableObject extends Animable {
             }
         }
         ObjectDef object = ObjectDef.forID(id);
-        anInt1601 = object.anInt774;
-        anInt1602 = object.anInt749;
-        children = object.childrenIDs;
+        anInt1601 = object.currentConfigID;
+        anInt1602 = object.configID;
+        children = object.configObjectIDs;
     }
     
     @Override
@@ -80,7 +81,7 @@ public class AnimableObject extends Animable {
         if (object == null) {
             return null;
         } else {
-            return object.method578(anInt1611, anInt1612, anInt1603, anInt1604, anInt1605, anInt1606, j);
+            return object.renderObject(anInt1611, anInt1612, anInt1603, anInt1604, anInt1605, anInt1606, j);
         }
     }
 
@@ -91,7 +92,7 @@ public class AnimableObject extends Animable {
             int k = varBit.configId;
             int l = varBit.leastSignificantBit;
             int i1 = varBit.mostSignificantBit;
-            int j1 = Client.anIntArray1232[i1 - l];
+            int j1 = Client.BITFIELD_MAX_VALUE[i1 - l];
             objid = clientInstance.sessionSettings[k] >> l & j1;
         } else if (anInt1602 != -1) {
             objid = clientInstance.sessionSettings[anInt1602];

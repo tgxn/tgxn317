@@ -1,7 +1,7 @@
 package client.animation;
 
-import client.ModelTransform;
-import client.Stream;
+import client.model.ModelTransform;
+import client.data.Stream;
 
 public class AnimationFrame {
     

@@ -1,6 +1,6 @@
 package client.text;
 
-import client.Stream;
+import client.data.Stream;
 
 
 public final class TextStream {

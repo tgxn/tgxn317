@@ -1,14 +1,14 @@
 package client.animation;
 
-import client.Model;
-import client.animation.SpotAnim;
+import client.model.Model;
+import client.archive.SpotAnim;
 
 
-public final class Animable_Sub4 extends Animable {
+public final class Animable_Sub4 extends Entity {
     
     public int anInt1571;
     public int anInt1572;
-    private int anInt1573;
+    //private int anInt1573;
     private double aDouble1574;
     private double aDouble1575;
     private double aDouble1576;
@@ -19,7 +19,7 @@ public final class Animable_Sub4 extends Animable {
     public int anInt1581;
     public int anInt1582;
     public int anInt1583;
-    private int anInt1584;
+   // private int anInt1584;
     public double aDouble1585;
     public double aDouble1586;
     public double aDouble1587;
@@ -35,10 +35,10 @@ public final class Animable_Sub4 extends Animable {
     public int anInt1597;
     
     public Animable_Sub4(int i, int j, int k, int l, int i1, int j1, int k1, int l1, int i2, int j2, int k2, int l2) {
-        anInt1573 = 9;
+        //anInt1573 = 9;
         aBoolean1579 = false;
         aBoolean1591 = true;
-        aSpotAnim_1592 = SpotAnim.cache[l2];
+        aSpotAnim_1592 = SpotAnim.spotAnimCache[l2];
         if (k != 46883) {
             aBoolean1591 = !aBoolean1591;
         }
@@ -108,9 +108,9 @@ public final class Animable_Sub4 extends Animable {
         aDouble1586 += aDouble1575 * (double) i;
         aDouble1587 += aDouble1577 * (double) i + 0.5D * aDouble1578 * (double) i * (double) i;
         aDouble1577 += aDouble1578 * (double) i;
-        if (j != 0) {
-            anInt1584 = 16;
-        }
+        //if (j != 0) {
+        //    anInt1584 = 16;
+        //}
         anInt1595 = (int) (Math.atan2(aDouble1574, aDouble1575) * 325.94900000000001D) + 1024 & 0x7ff;
         anInt1596 = (int) (Math.atan2(aDouble1577, aDouble1576) * 325.94900000000001D) & 0x7ff;
         if (aSpotAnim_1592.animationSequence != null) {

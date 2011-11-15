@@ -1,13 +1,28 @@
 package client;
 
-import client.drawing.IndexedImage;
-import client.ondemand.OnDemandData;
-import client.ondemand.OnDemandFetcher;
-import client.drawing.DrawingArea;
-import client.drawing.Sprite;
+import client.tile.GroundDecoration;
+import client.tile.WallObject;
+import client.tile.WallDecoration;
+import client.world.WorldController;
+import client.skills.Skills;
+import client.model.Model;
+import client.tile.InteractableObject;
+import client.tile.TileSetting;
+import client.world.MapRegion;
+import client.archive.*;
+import client.node.NodeList;
+import client.node.Node;
+import client.item.Item;
+import client.item.ItemDef;
+import client.npc.NPCDef;
+import client.object.*;
+import client.util.*;
+import client.instance.*;
+import client.ondemand.*;
+import client.drawing.*;
 import client.animation.*;
 import client.text.*;
-import client.fileio.*;
+import client.data.*;
 import client.sounds.*;
 import client.custom.*;
 
@@ -18,16 +33,16 @@ import java.util.*;
 import java.util.zip.*;
 
 import java.applet.AppletContext;
-import map.MapMain;
+import map.Map;
 import client.sign.Signlink;
 
-public class Client extends GameShell {
+public class Client extends GameApplet {
 
     // MY CUSTOM VARIABLES //
         public static String server;
     public static String port;
     private static int aPort;
-    private MapMain mapMain = null;
+    private Map mapMain = null;
     private String homeDir = client.sign.Signlink.findCacheDIR();
     private String saveAs = client.sign.Signlink.findCacheDIR() + cSettings.cacheNAME;
     private String urlLoc = cSettings.cacheURL;
@@ -35,8 +50,6 @@ public class Client extends GameShell {
     private String latestClientVersion = cSettings.clientVersion;
     public int CameraPos1 = 3;
     public int CameraPos2 = 600;
-    
-    //CUSTOM VARS
     public static boolean flip = false;
     public static boolean flip_s = false;
     public static boolean flip_r = false;
@@ -285,7 +298,7 @@ public class Client extends GameShell {
     private int spriteDrawY;
     private int[] compassHingeSize;
    // private int anIntArray969[];
-    public JagexFileStore[] jagexFileStores;
+    public JagexFileHandle[] jagexFileStores;
     public int sessionSettings[];
     private boolean aBoolean972;
     //private byte aByte973;
@@ -425,7 +438,7 @@ public class Client extends GameShell {
     private GraphicsBuffer bottomChatArea;
     private GraphicsBuffer bottomTabArea;
     private GraphicsBuffer topTabArea;
-    static Player myPlayer;
+    public static Player myPlayer;
     private String[] atPlayerActions;
     private boolean[] atPlayerArray;
     private int[][][] constructionMapInformation;
@@ -534,7 +547,7 @@ public class Client extends GameShell {
     private int minimapShape2[];
     public TileSetting tileSettings[];
    // private static boolean aBoolean1231;
-    public static int anIntArray1232[];
+    public static int BITFIELD_MAX_VALUE[];
     public static boolean needChatAreaRedraw;
     private int mapCoordinates[];
     private int terrainIndices[];
@@ -597,7 +610,7 @@ public class Client extends GameShell {
     private int anIntArray965[] = {
         0xffff00, 0xff0000, 65280, 65535, 0xff00ff, 0xd3c3a6
     };
-    static final int anIntArrayArray1003[][] = {
+    public static final int anIntArrayArray1003[][] = {
         {
             6798, 107, 10283, 16, 4797, 7744, 5799, 4634, 33697, 22433, 2983, 54193
         }, {
@@ -617,7 +630,7 @@ public class Client extends GameShell {
         0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2,
         2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3
     };
-    static final int anIntArray1204[] = {
+    public static final int anIntArray1204[] = {
         9104, 10275, 7595, 3610, 7975, 8526, 918, 38802, 24466, 10145,
         58654, 5027, 1457, 16565, 34991, 25486
     };
@@ -631,10 +644,10 @@ public class Client extends GameShell {
             i += i1;
             xpForLevel[level] = i / 4;
         }
-        anIntArray1232 = new int[32];
+        BITFIELD_MAX_VALUE = new int[32];
         i = 2;
         for (int k = 0; k < 32; k++) {
-            anIntArray1232[k] = i - 1;
+            BITFIELD_MAX_VALUE[k] = i - 1;
             i += i;
         }
 
@@ -688,7 +701,7 @@ public class Client extends GameShell {
         spriteDrawX = -1;
         spriteDrawY = -1;
         compassHingeSize = new int[33];
-        jagexFileStores = new JagexFileStore[5];
+        jagexFileStores = new JagexFileHandle[5];
         sessionSettings = new int[2000];
         aBoolean972 = false;
         cachedChatAmount = 50;
@@ -824,14 +837,11 @@ public class Client extends GameShell {
                 System.out.println("Both Client & Cache are up to date, loading Client.");
             } else {
                 System.out.println("Client up to date, but cache version outdated, Updating, Please Wait...");
-                if (!cacheLocation.exists()) { //c:/cache <- if it dont exist
-                    cacheLocation.mkdir(); //make it
-                    updateCache();
-                } else {
+                if (cacheLocation.exists()) { //c:/cache <- if it dont exist
                     deleteFolder(cacheLocation);
-                    cacheLocation.mkdir(); //make it
-                    updateCache();
                 }
+                cacheLocation.mkdirs(); //make it
+                updateCache();
             }
         } else {
             System.out.println("Client version is outdated!");
@@ -2142,12 +2152,14 @@ public class Client extends GameShell {
             method63();
         } catch (Exception exception) {
         }
-        ObjectDef.mruNodes1.unlinkAll();
+        ObjectDef.modelCache.unlinkAll();
         loggedIn &= flag;
-        if (GameShell.gameFrame != null) {
-            stream.createFrame(210);
-            stream.writeDWord(0x3f008edd);
-        }
+
+        //@TODO Unhandled packet.
+        //if (GameShell.gameFrame != null) {
+         //   stream.createFrame(210);
+        //    stream.writeDWord(0x3f008edd);
+        //}
         if (lowMem && Signlink.cacheDatFile != null) {
             int j = onDemandFetcher.getVersionCount(79, 0);
             for (int i1 = 0; i1 < j; i1++) {
@@ -2190,8 +2202,8 @@ public class Client extends GameShell {
     }
 
     public final void method23(boolean flag) {
-        ObjectDef.mruNodes1.unlinkAll();
-        ObjectDef.mruNodes2.unlinkAll();
+        ObjectDef.modelCache.unlinkAll();
+        ObjectDef.modelCache2.unlinkAll();
         NPCDef.modelCache.unlinkAll();
         ItemDef.mruNodes2.unlinkAll();
         ItemDef.mruNodes1.unlinkAll();
@@ -2246,7 +2258,7 @@ public class Client extends GameShell {
                 int i3 = worldController.method303(plane, k2, l2);
                 if (i3 != 0) {
                     i3 = i3 >> 14 & 0x7fff;
-                    int j3 = ObjectDef.forID(i3).anInt746;
+                    int j3 = ObjectDef.forID(i3).mapFunctionID;
                     if (j3 >= 0) {
                         int k3 = k2;
                         int l3 = l2;
@@ -2292,10 +2304,10 @@ public class Client extends GameShell {
         int k = 0xfa0a1f01;
         Object obj = null;
         for (Item class30_sub2_sub4_sub2 = (Item) class19.reverseGetFirst(); class30_sub2_sub4_sub2 != null; class30_sub2_sub4_sub2 = (Item) class19.reverseGetNext()) {
-            ItemDef class8 = ItemDef.forID(class30_sub2_sub4_sub2.ID);
+            ItemDef class8 = ItemDef.forID(class30_sub2_sub4_sub2.itemID);
             int l = class8.value;
             if (class8.stackable) {
-                l *= class30_sub2_sub4_sub2.anInt1559 + 1;
+                l *= class30_sub2_sub4_sub2.itemCount + 1;
             }
             if (l > k) {
                 k = l;
@@ -2307,40 +2319,40 @@ public class Client extends GameShell {
         Object obj1 = null;
         Object obj2 = null;
         for (Item class30_sub2_sub4_sub2_1 = (Item) class19.reverseGetFirst(); class30_sub2_sub4_sub2_1 != null; class30_sub2_sub4_sub2_1 = (Item) class19.reverseGetNext()) {
-            if (class30_sub2_sub4_sub2_1.ID != ((Item) (obj)).ID && obj1 == null) {
+            if (class30_sub2_sub4_sub2_1.itemID != ((Item) (obj)).itemID && obj1 == null) {
                 obj1 = class30_sub2_sub4_sub2_1;
             }
-            if (class30_sub2_sub4_sub2_1.ID != ((Item) (obj)).ID && class30_sub2_sub4_sub2_1.ID != ((Item) (obj1)).ID && obj2 == null) {
+            if (class30_sub2_sub4_sub2_1.itemID != ((Item) (obj)).itemID && class30_sub2_sub4_sub2_1.itemID != ((Item) (obj1)).itemID && obj2 == null) {
                 obj2 = class30_sub2_sub4_sub2_1;
             }
         }
 
         int i1 = i + (j << 7) + 0x60000000;
-        worldController.addFloorItemToTile(i, j, ((Animable) (obj1)), method42(plane, j * 128 + 64, true, i * 128 + 64), i1, ((Animable) (obj2)), ((Animable) (obj)), plane);
+        worldController.addFloorItemToTile(i, j, ((Entity) (obj1)), method42(plane, j * 128 + 64, true, i * 128 + 64), i1, ((Entity) (obj2)), ((Entity) (obj)), plane);
     }
 
     public final void method26(boolean flag) {
         for (int j = 0; j < npcCount; j++) {
             NPC class30_sub2_sub4_sub1_sub1 = npcArray[npcIndices[j]];
             int k = 0x20000000 + (npcIndices[j] << 14);
-            if (class30_sub2_sub4_sub1_sub1 == null || !class30_sub2_sub4_sub1_sub1.isVisible() || class30_sub2_sub4_sub1_sub1.desc.aBoolean93 != flag) {
+            if (class30_sub2_sub4_sub1_sub1 == null || !class30_sub2_sub4_sub1_sub1.isVisible() || class30_sub2_sub4_sub1_sub1.npcDef.aBoolean93 != flag) {
                 continue;
             }
-            int l = ((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentX >> 7;
-            int i1 = ((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentY >> 7;
+            int l = ((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentX >> 7;
+            int i1 = ((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentY >> 7;
             if (l < 0 || l >= 104 || i1 < 0 || i1 >= 104) {
                 continue;
             }
-            if (((Entity) (class30_sub2_sub4_sub1_sub1)).boundDim == 1 && (((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentX & 0x7f) == 64 && (((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentY & 0x7f) == 64) {
+            if (((Mobile) (class30_sub2_sub4_sub1_sub1)).boundDim == 1 && (((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentX & 0x7f) == 64 && (((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentY & 0x7f) == 64) {
                 if (anIntArrayArray929[l][i1] == anInt1265) {
                     continue;
                 }
                 anIntArrayArray929[l][i1] = anInt1265;
             }
-            if (!class30_sub2_sub4_sub1_sub1.desc.clickable) {
+            if (!class30_sub2_sub4_sub1_sub1.npcDef.clickable) {
                 k += 0x80000000;
             }
-            worldController.addEntityToTile(plane, ((Entity) (class30_sub2_sub4_sub1_sub1)).anInt1552, method42(plane, ((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentY, true, ((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentX), k, ((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentY, (((Entity) (class30_sub2_sub4_sub1_sub1)).boundDim - 1) * 64 + 60, ((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentX, class30_sub2_sub4_sub1_sub1, ((Entity) (class30_sub2_sub4_sub1_sub1)).aBoolean1541);
+            worldController.addEntityToTile(plane, ((Mobile) (class30_sub2_sub4_sub1_sub1)).anInt1552, method42(plane, ((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentY, true, ((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentX), k, ((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentY, (((Mobile) (class30_sub2_sub4_sub1_sub1)).boundDim - 1) * 64 + 60, ((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentX, class30_sub2_sub4_sub1_sub1, ((Mobile) (class30_sub2_sub4_sub1_sub1)).aBoolean1541);
         }
     }
 
@@ -2732,8 +2744,8 @@ public class Client extends GameShell {
         method86(stream);
         for (int k = 0; k < anInt839; k++) {
             int l = anIntArray840[k];
-            if (((Entity) (npcArray[l])).anInt1537 != loopCycle) {
-                npcArray[l].desc = null;
+            if (((Mobile) (npcArray[l])).anInt1537 != loopCycle) {
+                npcArray[l].npcDef = null;
                 npcArray[l] = null;
             }
         }
@@ -2777,7 +2789,7 @@ public class Client extends GameShell {
     }
 
     public final void method33(int i) {
-        int j = Varp.cache[i].anInt709;
+        int j = SettingUsagePointers.usuagePointerCache[i].usage;
         if (j == 0) {
             return;
         }
@@ -2877,11 +2889,11 @@ public class Client extends GameShell {
             } else {
                 obj = npcArray[npcIndices[j - sessionPlayerCount]];
             }
-            if (obj == null || !((Entity) (obj)).isVisible()) {
+            if (obj == null || !((Mobile) (obj)).isVisible()) {
                 continue;
             }
             if (obj instanceof NPC) {
-                NPCDef class5 = ((NPC) obj).desc;
+                NPCDef class5 = ((NPC) obj).npcDef;
                 if (class5.childrenIDs != null) {
                     class5 = class5.method161();
                 }
@@ -2893,7 +2905,7 @@ public class Client extends GameShell {
                 int l = 30;
                 Player class30_sub2_sub4_sub1_sub2 = (Player) obj;
                 if (class30_sub2_sub4_sub1_sub2.headIcon != 0) {
-                    method127(true, ((Entity) (obj)), ((Entity) (obj)).height + 15);
+                    method127(true, ((Mobile) (obj)), ((Mobile) (obj)).height + 15);
                     if (spriteDrawX > -1) {
                         for (int i2 = 0; i2 < 8; i2++) {
                             if ((class30_sub2_sub4_sub1_sub2.headIcon & 1 << i2) != 0) {
@@ -2904,71 +2916,71 @@ public class Client extends GameShell {
                     }
                 }
                 if (j >= 0 && headiconDrawType == 10 && otherPlayerID == playerIndices[j]) {
-                    method127(true, ((Entity) (obj)), ((Entity) (obj)).height + 15);
+                    method127(true, ((Mobile) (obj)), ((Mobile) (obj)).height + 15);
                     if (spriteDrawX > -1) {
                         headIcons[7].drawSprite(spriteDrawX - 12, spriteDrawY - l);
                     }
                 }
 
                 if (cSettings.headNames) {
-                    method127(true, ((Entity) (obj)), ((Entity) (obj)).height + 15);
+                    method127(true, ((Mobile) (obj)), ((Mobile) (obj)).height + 15);
                     int col = cSettings.headNamesColour;
                     smallFont.drawCenterText(Player.name, spriteDrawX, spriteDrawY, col);
                 }
 
             } else {
-                NPCDef class5_1 = ((NPC) obj).desc;
+                NPCDef class5_1 = ((NPC) obj).npcDef;
                 if (class5_1.headIcon >= 0 && class5_1.headIcon < headIcons.length) {
-                    method127(true, ((Entity) (obj)), ((Entity) (obj)).height + 15);
+                    method127(true, ((Mobile) (obj)), ((Mobile) (obj)).height + 15);
                     if (spriteDrawX > -1) {
                         headIcons[class5_1.headIcon].drawSprite(spriteDrawX - 12, spriteDrawY - 30);
                     }
                 }
                 if (headiconDrawType == 1 && anInt1222 == npcIndices[j - sessionPlayerCount] && loopCycle % 20 < 10) {
-                    method127(true, ((Entity) (obj)), ((Entity) (obj)).height + 15);
+                    method127(true, ((Mobile) (obj)), ((Mobile) (obj)).height + 15);
                     if (spriteDrawX > -1) {
                         headIcons[2].drawSprite(spriteDrawX - 12, spriteDrawY - 28);
                     }
                 }
             }
-            if (((Entity) (obj)).textSpoken != null && (j >= sessionPlayerCount || publicChatMode == 0 || publicChatMode == 3 || publicChatMode == 1 && isCurrentPlayerName(Player.name))) {
-                method127(true, ((Entity) (obj)), ((Entity) (obj)).height);
+            if (((Mobile) (obj)).textSpoken != null && (j >= sessionPlayerCount || publicChatMode == 0 || publicChatMode == 3 || publicChatMode == 1 && isCurrentPlayerName(Player.name))) {
+                method127(true, ((Mobile) (obj)), ((Mobile) (obj)).height);
                 if (spriteDrawX > -1 && anInt974 < cachedChatAmount) {
-                    anIntArray979[anInt974] = boldFont.getTextWidth(((Entity) (obj)).textSpoken) / 2;
+                    anIntArray979[anInt974] = boldFont.getTextWidth(((Mobile) (obj)).textSpoken) / 2;
                     anIntArray978[anInt974] = boldFont.basicCharSetHeight;
                     anIntArray976[anInt974] = spriteDrawX;
                     anIntArray977[anInt974] = spriteDrawY;
-                    textColourEffect[anInt974] = ((Entity) (obj)).anInt1513;
-                    textDrawType[anInt974] = ((Entity) (obj)).anInt1531;
-                    anIntArray982[anInt974] = ((Entity) (obj)).textCycle;
-                    aStringArray983[anInt974++] = ((Entity) (obj)).textSpoken;
-                    if (anInt1249 == 0 && ((Entity) (obj)).anInt1531 >= 1 && ((Entity) (obj)).anInt1531 <= 3) {
+                    textColourEffect[anInt974] = ((Mobile) (obj)).anInt1513;
+                    textDrawType[anInt974] = ((Mobile) (obj)).anInt1531;
+                    anIntArray982[anInt974] = ((Mobile) (obj)).textCycle;
+                    aStringArray983[anInt974++] = ((Mobile) (obj)).textSpoken;
+                    if (anInt1249 == 0 && ((Mobile) (obj)).anInt1531 >= 1 && ((Mobile) (obj)).anInt1531 <= 3) {
                         anIntArray978[anInt974] += 10;
                         anIntArray977[anInt974] += 5;
                     }
-                    if (anInt1249 == 0 && ((Entity) (obj)).anInt1531 == 4) {
+                    if (anInt1249 == 0 && ((Mobile) (obj)).anInt1531 == 4) {
                         anIntArray979[anInt974] = 60;
                     }
-                    if (anInt1249 == 0 && ((Entity) (obj)).anInt1531 == 5) {
+                    if (anInt1249 == 0 && ((Mobile) (obj)).anInt1531 == 5) {
                         anIntArray978[anInt974] += 5;
                     }
                 }
             }
             try { //added this, dunno if its right ??
-                if (((Entity) (obj)).loopCycleStatus > loopCycle) { //if were fighting (and getting hit??)
+                if (((Mobile) (obj)).loopCycleStatus > loopCycle) { //if were fighting (and getting hit??)
                     if (spriteDrawX > -1) { //spriteDrawX
-                        method127(true, ((Entity) (obj)), ((Entity) (obj)).height + 15); //npcScreenPos?
+                        method127(true, ((Mobile) (obj)), ((Mobile) (obj)).height + 15); //npcScreenPos?
 
                         //HP ABOVE HEADS
                         if (hp == true) //hp above heads
                         {
-                            smallFont.drawCenterShadeEffectText((new StringBuilder()).append(((Entity) (Entity) obj).currentHealth).append("/").append(((Entity) (Entity) obj).maxHealth).toString(), spriteDrawX, spriteDrawY - 9, 0xffffff, true);
+                            smallFont.drawCenterShadeEffectText((new StringBuilder()).append(((Mobile) (Mobile) obj).currentHealth).append("/").append(((Mobile) (Mobile) obj).maxHealth).toString(), spriteDrawX, spriteDrawY - 9, 0xffffff, true);
                         }
 
                         //HP BARS
                         if (HPBarID == 0 || HPBarID >= 7) { //old hpbar
 
-                            int i1 = (((Entity) (obj)).currentHealth * 56) / ((Entity) (obj)).maxHealth;
+                            int i1 = (((Mobile) (obj)).currentHealth * 56) / ((Mobile) (obj)).maxHealth;
                             if (i1 > 56) {
                                 i1 = 56;
                             }
@@ -2979,7 +2991,7 @@ public class Client extends GameShell {
 
 
                         } else { // id 1-6
-                            int HpPercent = (int) ((((Entity) (obj)).currentHealth * 56) / ((Entity) (obj)).maxHealth);
+                            int HpPercent = (int) ((((Mobile) (obj)).currentHealth * 56) / ((Mobile) (obj)).maxHealth);
                             if (HpPercent > 56) {
                                 HpPercent = 56;
                             }
@@ -3001,8 +3013,8 @@ public class Client extends GameShell {
             }
 
             for (int j1 = 0; j1 < 4; j1++) {
-                if (((Entity) (obj)).hitsLoopCycle[j1] > loopCycle) {
-                    method127(true, ((Entity) (obj)), ((Entity) (obj)).height / 2);
+                if (((Mobile) (obj)).hitsLoopCycle[j1] > loopCycle) {
+                    method127(true, ((Mobile) (obj)), ((Mobile) (obj)).height / 2);
                     if (spriteDrawX > -1) {
                         if (j1 == 1) {
                             spriteDrawY -= 20;
@@ -3015,9 +3027,9 @@ public class Client extends GameShell {
                             spriteDrawX += 15;
                             spriteDrawY -= 10;
                         }
-                        hitMarks[((Entity) (obj)).hitMarkTypes[j1]].drawSprite(spriteDrawX - 12, spriteDrawY - 12);
-                        smallFont.drawCenterText(String.valueOf(((Entity) (obj)).hitArray[j1]), spriteDrawX, spriteDrawY + 4, 0);
-                        smallFont.drawCenterText(String.valueOf(((Entity) (obj)).hitArray[j1]), spriteDrawX - 1, spriteDrawY + 3, 0xffffff);
+                        hitMarks[((Mobile) (obj)).hitMarkTypes[j1]].drawSprite(spriteDrawX - 12, spriteDrawY - 12);
+                        smallFont.drawCenterText(String.valueOf(((Mobile) (obj)).hitArray[j1]), spriteDrawX, spriteDrawY + 4, 0);
+                        smallFont.drawCenterText(String.valueOf(((Mobile) (obj)).hitArray[j1]), spriteDrawX - 1, spriteDrawY + 3, 0xffffff);
                     }
                 }
             }
@@ -3196,26 +3208,27 @@ public class Client extends GameShell {
                 class30_sub2_sub1_sub2.imgPixels = abyte3;
                 animatedPixels = abyte0;
                 Rasterizer.resetTexture(17);
-                anticheat11++;
-                if (anticheat11 > 1235) {
-                    anticheat11 = 0;
-                    stream.createFrame(226);
-                    stream.writeWordBigEndian(0);
-                    int l2 = stream.currentOffset;
-                    stream.writeWord(58722);
-                    stream.writeWordBigEndian(240);
-                    stream.writeWord((int) (Math.random() * 65536D));
-                    stream.writeWordBigEndian((int) (Math.random() * 256D));
-                    if ((int) (Math.random() * 2D) == 0) {
-                        stream.writeWord(51825);
-                    }
-                    stream.writeWordBigEndian((int) (Math.random() * 256D));
-                    stream.writeWord((int) (Math.random() * 65536D));
-                    stream.writeWord(7130);
-                    stream.writeWord((int) (Math.random() * 65536D));
-                    stream.writeWord(61657);
-                    stream.writeBytes(stream.currentOffset - l2);
-                }
+//                //@TODO Unhandled packet.
+                //anticheat11++;
+//                if (anticheat11 > 1235) {
+//                    anticheat11 = 0;
+//                    stream.createFrame(226);
+//                    stream.writeWordBigEndian(0);
+//                    int l2 = stream.currentOffset;
+//                    stream.writeWord(58722);
+//                    stream.writeWordBigEndian(240);
+//                    stream.writeWord((int) (Math.random() * 65536D));
+//                    stream.writeWordBigEndian((int) (Math.random() * 256D));
+//                    if ((int) (Math.random() * 2D) == 0) {
+//                        stream.writeWord(51825);
+//                    }
+//                    stream.writeWordBigEndian((int) (Math.random() * 256D));
+//                    stream.writeWord((int) (Math.random() * 65536D));
+//                    stream.writeWord(7130);
+//                    stream.writeWord((int) (Math.random() * 65536D));
+//                    stream.writeWord(61657);
+//                    stream.writeBytes(stream.currentOffset - l2);
+//                }
             }
             if (Rasterizer.textureLastUsed[24] >= j) {
                 IndexedImage class30_sub2_sub1_sub2_1 = Rasterizer.textureImages[24];
@@ -3274,9 +3287,9 @@ public class Client extends GameShell {
                 j = playerIndices[i];
             }
             Player class30_sub2_sub4_sub1_sub2 = playerArray[j];
-            if (class30_sub2_sub4_sub1_sub2 != null && ((Entity) (class30_sub2_sub4_sub1_sub2)).textCycle > 0) {
+            if (class30_sub2_sub4_sub1_sub2 != null && ((Mobile) (class30_sub2_sub4_sub1_sub2)).textCycle > 0) {
                 class30_sub2_sub4_sub1_sub2.textCycle--;
-                if (((Entity) (class30_sub2_sub4_sub1_sub2)).textCycle == 0) {
+                if (((Mobile) (class30_sub2_sub4_sub1_sub2)).textCycle == 0) {
                     class30_sub2_sub4_sub1_sub2.textSpoken = null;
                 }
             }
@@ -3285,9 +3298,9 @@ public class Client extends GameShell {
         for (int k = 0; k < npcCount; k++) {
             int l = npcIndices[k];
             NPC class30_sub2_sub4_sub1_sub1 = npcArray[l];
-            if (class30_sub2_sub4_sub1_sub1 != null && ((Entity) (class30_sub2_sub4_sub1_sub1)).textCycle > 0) {
+            if (class30_sub2_sub4_sub1_sub1 != null && ((Mobile) (class30_sub2_sub4_sub1_sub1)).textCycle > 0) {
                 class30_sub2_sub4_sub1_sub1.textCycle--;
-                if (((Entity) (class30_sub2_sub4_sub1_sub1)).textCycle == 0) {
+                if (((Mobile) (class30_sub2_sub4_sub1_sub1)).textCycle == 0) {
                     class30_sub2_sub4_sub1_sub1.textSpoken = null;
                 }
             }
@@ -3591,7 +3604,7 @@ public class Client extends GameShell {
         for (int j = 0; j < 7; j++) {
             charEditIDKits[j] = -1;
             for (int k = 0; k < IdentityKit.length; k++) {
-                if (IdentityKit.cache[k].notSelectable || IdentityKit.cache[k].bodyPartID != j + (charEditGender ? 0 : 7)) {
+                if (IdentityKit.identityCache[k].notSelectable || IdentityKit.identityCache[k].bodyPartID != j + (charEditGender ? 0 : 7)) {
                     continue;
                 }
                 charEditIDKits[j] = k;
@@ -3623,19 +3636,19 @@ public class Client extends GameShell {
                 i1 -= 32;
             }
             int j1 = class30_sub2_sub2.readBits(1);
-            class30_sub2_sub4_sub1_sub1.desc = NPCDef.forID(class30_sub2_sub2.readBits(12));
+            class30_sub2_sub4_sub1_sub1.npcDef = NPCDef.forID(class30_sub2_sub2.readBits(12));
             int k1 = class30_sub2_sub2.readBits(1);
             if (k1 == 1) {
                 sessionNPCsAwaitingUpdate[sessionNpcsAwaitingUpdatePtr++] = k;
             }
-            class30_sub2_sub4_sub1_sub1.boundDim = class30_sub2_sub4_sub1_sub1.desc.boundDim;
-            class30_sub2_sub4_sub1_sub1.anInt1504 = class30_sub2_sub4_sub1_sub1.desc.degreesToTurn;
-            class30_sub2_sub4_sub1_sub1.anInt1554 = class30_sub2_sub4_sub1_sub1.desc.walkAnimIndex;
-            class30_sub2_sub4_sub1_sub1.anInt1555 = class30_sub2_sub4_sub1_sub1.desc.turn180AnimIndex;
-            class30_sub2_sub4_sub1_sub1.anInt1556 = class30_sub2_sub4_sub1_sub1.desc.turn90CCWAnimIndex;
-            class30_sub2_sub4_sub1_sub1.anInt1557 = class30_sub2_sub4_sub1_sub1.desc.turn90CWAnimIndex;
-            class30_sub2_sub4_sub1_sub1.anInt1511 = class30_sub2_sub4_sub1_sub1.desc.idleAnimation;
-            class30_sub2_sub4_sub1_sub1.setPos(((Entity) (myPlayer)).pathX[0] + i1, ((Entity) (myPlayer)).pathY[0] + l, j1 == 1);
+            class30_sub2_sub4_sub1_sub1.boundDim = class30_sub2_sub4_sub1_sub1.npcDef.boundDim;
+            class30_sub2_sub4_sub1_sub1.anInt1504 = class30_sub2_sub4_sub1_sub1.npcDef.degreesToTurn;
+            class30_sub2_sub4_sub1_sub1.anInt1554 = class30_sub2_sub4_sub1_sub1.npcDef.walkAnimIndex;
+            class30_sub2_sub4_sub1_sub1.anInt1555 = class30_sub2_sub4_sub1_sub1.npcDef.turn180AnimIndex;
+            class30_sub2_sub4_sub1_sub1.anInt1556 = class30_sub2_sub4_sub1_sub1.npcDef.turn90CCWAnimIndex;
+            class30_sub2_sub4_sub1_sub1.anInt1557 = class30_sub2_sub4_sub1_sub1.npcDef.turn90CWAnimIndex;
+            class30_sub2_sub4_sub1_sub1.anInt1511 = class30_sub2_sub4_sub1_sub1.npcDef.idleAnimation;
+            class30_sub2_sub4_sub1_sub1.setPos(((Mobile) (myPlayer)).pathX[0] + i1, ((Mobile) (myPlayer)).pathY[0] + l, j1 == 1);
         }
         class30_sub2_sub2.finishBitAccess();
     }
@@ -3655,7 +3668,7 @@ public class Client extends GameShell {
     }
 
     public final void method47(boolean flag) {
-        if (((Entity) (myPlayer)).boundExtentX >> 7 == destX && ((Entity) (myPlayer)).boundExtentY >> 7 == destY) {
+        if (((Mobile) (myPlayer)).boundExtentX >> 7 == destX && ((Mobile) (myPlayer)).boundExtentY >> 7 == destY) {
             destX = 0;
         }
         int j = sessionPlayerCount;
@@ -3676,28 +3689,28 @@ public class Client extends GameShell {
                 continue;
             }
             class30_sub2_sub4_sub1_sub2.aBoolean1699 = false;
-            if ((lowMem && sessionPlayerCount > 50 || sessionPlayerCount > 200) && !flag && ((Entity) (class30_sub2_sub4_sub1_sub2)).anInt1517 == ((Entity) (class30_sub2_sub4_sub1_sub2)).anInt1511) {
+            if ((lowMem && sessionPlayerCount > 50 || sessionPlayerCount > 200) && !flag && ((Mobile) (class30_sub2_sub4_sub1_sub2)).anInt1517 == ((Mobile) (class30_sub2_sub4_sub1_sub2)).anInt1511) {
                 class30_sub2_sub4_sub1_sub2.aBoolean1699 = true;
             }
-            int j1 = ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentX >> 7;
-            int k1 = ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentY >> 7;
+            int j1 = ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentX >> 7;
+            int k1 = ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentY >> 7;
             if (j1 < 0 || j1 >= 104 || k1 < 0 || k1 >= 104) {
                 continue;
             }
             if (class30_sub2_sub4_sub1_sub2.aModel_1714 != null && loopCycle >= class30_sub2_sub4_sub1_sub2.anInt1707 && loopCycle < class30_sub2_sub4_sub1_sub2.anInt1708) {
                 class30_sub2_sub4_sub1_sub2.aBoolean1699 = false;
-                class30_sub2_sub4_sub1_sub2.anInt1709 = method42(plane, ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentY, true, ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentX);
-                worldController.method286(60, plane, ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentY, class30_sub2_sub4_sub1_sub2, ((Entity) (class30_sub2_sub4_sub1_sub2)).anInt1552, class30_sub2_sub4_sub1_sub2.anInt1722, ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentX, class30_sub2_sub4_sub1_sub2.anInt1709, class30_sub2_sub4_sub1_sub2.anInt1719, class30_sub2_sub4_sub1_sub2.anInt1721, i1, class30_sub2_sub4_sub1_sub2.anInt1720);
+                class30_sub2_sub4_sub1_sub2.anInt1709 = method42(plane, ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentY, true, ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentX);
+                worldController.method286(60, plane, ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentY, class30_sub2_sub4_sub1_sub2, ((Mobile) (class30_sub2_sub4_sub1_sub2)).anInt1552, class30_sub2_sub4_sub1_sub2.anInt1722, ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentX, class30_sub2_sub4_sub1_sub2.anInt1709, class30_sub2_sub4_sub1_sub2.anInt1719, class30_sub2_sub4_sub1_sub2.anInt1721, i1, class30_sub2_sub4_sub1_sub2.anInt1720);
                 continue;
             }
-            if ((((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentX & 0x7f) == 64 && (((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentY & 0x7f) == 64) {
+            if ((((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentX & 0x7f) == 64 && (((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentY & 0x7f) == 64) {
                 if (anIntArrayArray929[j1][k1] == anInt1265) {
                     continue;
                 }
                 anIntArrayArray929[j1][k1] = anInt1265;
             }
-            class30_sub2_sub4_sub1_sub2.anInt1709 = method42(plane, ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentY, true, ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentX);
-            worldController.addEntityToTile(plane, ((Entity) (class30_sub2_sub4_sub1_sub2)).anInt1552, class30_sub2_sub4_sub1_sub2.anInt1709, i1, ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentY, 60, ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentX, class30_sub2_sub4_sub1_sub2, ((Entity) (class30_sub2_sub4_sub1_sub2)).aBoolean1541);
+            class30_sub2_sub4_sub1_sub2.anInt1709 = method42(plane, ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentY, true, ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentX);
+            worldController.addEntityToTile(plane, ((Mobile) (class30_sub2_sub4_sub1_sub2)).anInt1552, class30_sub2_sub4_sub1_sub2.anInt1709, i1, ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentY, 60, ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentX, class30_sub2_sub4_sub1_sub2, ((Mobile) (class30_sub2_sub4_sub1_sub2)).aBoolean1541);
         }
 
     }
@@ -3757,7 +3770,7 @@ public class Client extends GameShell {
                     if (j1 == 1 && ++i2 >= IdentityKit.length) {
                         i2 = 0;
                     }
-                } while (IdentityKit.cache[i2].notSelectable || IdentityKit.cache[i2].bodyPartID != k + (charEditGender ? 0 : 7));
+                } while (IdentityKit.identityCache[i2].notSelectable || IdentityKit.identityCache[i2].bodyPartID != k + (charEditGender ? 0 : 7));
                 charEditIDKits[k] = i2;
                 charEditModelChanged = true;
             }
@@ -3846,10 +3859,10 @@ public class Client extends GameShell {
             int k4 = 24624 + l * 4 + (103 - i) * 512 * 4;
             int i5 = k1 >> 14 & 0x7fff;
             ObjectDef class46_2 = ObjectDef.forID(i5);
-            if (class46_2.anInt758 != -1) {
-                IndexedImage class30_sub2_sub1_sub2_2 = mapScenes[class46_2.anInt758];
+            if (class46_2.mapSceneID != -1) {
+                IndexedImage class30_sub2_sub1_sub2_2 = mapScenes[class46_2.mapSceneID];
                 if (class30_sub2_sub1_sub2_2 != null) {
-                    int i6 = (class46_2.objectWidth * 4 - class30_sub2_sub1_sub2_2.imgWidth) / 2;
+                    int i6 = (class46_2.sizeX * 4 - class30_sub2_sub1_sub2_2.imgWidth) / 2;
                     int j6 = (class46_2.objectHeight * 4 - class30_sub2_sub1_sub2_2.imgHeight) / 2;
                     class30_sub2_sub1_sub2_2.drawImage(48 + l * 4 + i6, 48 + (104 - i - class46_2.objectHeight) * 4 + j6);
                 }
@@ -3920,10 +3933,10 @@ public class Client extends GameShell {
             int j3 = i2 & 0x1f;
             int l3 = k1 >> 14 & 0x7fff;
             ObjectDef class46_1 = ObjectDef.forID(l3);
-            if (class46_1.anInt758 != -1) {
-                IndexedImage class30_sub2_sub1_sub2_1 = mapScenes[class46_1.anInt758];
+            if (class46_1.mapSceneID != -1) {
+                IndexedImage class30_sub2_sub1_sub2_1 = mapScenes[class46_1.mapSceneID];
                 if (class30_sub2_sub1_sub2_1 != null) {
-                    int j5 = (class46_1.objectWidth * 4 - class30_sub2_sub1_sub2_1.imgWidth) / 2;
+                    int j5 = (class46_1.sizeX * 4 - class30_sub2_sub1_sub2_1.imgWidth) / 2;
                     int k5 = (class46_1.objectHeight * 4 - class30_sub2_sub1_sub2_1.imgHeight) / 2;
                     class30_sub2_sub1_sub2_1.drawImage(48 + l * 4 + j5, 48 + (104 - i - class46_1.objectHeight) * 4 + k5);
                 }
@@ -3951,10 +3964,10 @@ public class Client extends GameShell {
         if (k1 != 0) {
             int j2 = k1 >> 14 & 0x7fff;
             ObjectDef class46 = ObjectDef.forID(j2);
-            if (class46.anInt758 != -1) {
-                IndexedImage class30_sub2_sub1_sub2 = mapScenes[class46.anInt758];
+            if (class46.mapSceneID != -1) {
+                IndexedImage class30_sub2_sub1_sub2 = mapScenes[class46.mapSceneID];
                 if (class30_sub2_sub1_sub2 != null) {
-                    int i4 = (class46.objectWidth * 4 - class30_sub2_sub1_sub2.imgWidth) / 2;
+                    int i4 = (class46.sizeX * 4 - class30_sub2_sub1_sub2.imgWidth) / 2;
                     int j4 = (class46.objectHeight * 4 - class30_sub2_sub1_sub2.imgHeight) / 2;
                     class30_sub2_sub1_sub2.drawImage(48 + l * 4 + i4, 48 + (104 - i - class46.objectHeight) * 4 + j4);
                 }
@@ -3962,7 +3975,7 @@ public class Client extends GameShell {
         }
     }
 
-    private final void loadTitleScreen() {
+    private void loadTitleScreen() {
         drawLoadingText(10, "Connecting To Fileserver");
         if (!currentlyDrawingFlames) {
             drawFlames = true;
@@ -4054,8 +4067,8 @@ public class Client extends GameShell {
             } else if (loopCycle >= class30_sub2_sub4_sub4.anInt1571) {
                 if (class30_sub2_sub4_sub4.anInt1590 > 0) {
                     NPC class30_sub2_sub4_sub1_sub1 = npcArray[class30_sub2_sub4_sub4.anInt1590 - 1];
-                    if (class30_sub2_sub4_sub1_sub1 != null && ((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentX >= 0 && ((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentX < 13312 && ((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentY >= 0 && ((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentY < 13312) {
-                        class30_sub2_sub4_sub4.method455(loopCycle, ((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentY, method42(class30_sub2_sub4_sub4.anInt1597, ((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentY, true, ((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentX) - class30_sub2_sub4_sub4.anInt1583, ((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentX, (byte) -83);
+                    if (class30_sub2_sub4_sub1_sub1 != null && ((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentX >= 0 && ((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentX < 13312 && ((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentY >= 0 && ((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentY < 13312) {
+                        class30_sub2_sub4_sub4.method455(loopCycle, ((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentY, method42(class30_sub2_sub4_sub4.anInt1597, ((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentY, true, ((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentX) - class30_sub2_sub4_sub4.anInt1583, ((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentX, (byte) -83);
                     }
                 }
                 if (class30_sub2_sub4_sub4.anInt1590 < 0) {
@@ -4066,8 +4079,8 @@ public class Client extends GameShell {
                     } else {
                         class30_sub2_sub4_sub1_sub2 = playerArray[j];
                     }
-                    if (class30_sub2_sub4_sub1_sub2 != null && ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentX >= 0 && ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentX < 13312 && ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentY >= 0 && ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentY < 13312) {
-                        class30_sub2_sub4_sub4.method455(loopCycle, ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentY, method42(class30_sub2_sub4_sub4.anInt1597, ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentY, true, ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentX) - class30_sub2_sub4_sub4.anInt1583, ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentX, (byte) -83);
+                    if (class30_sub2_sub4_sub1_sub2 != null && ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentX >= 0 && ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentX < 13312 && ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentY >= 0 && ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentY < 13312) {
+                        class30_sub2_sub4_sub4.method455(loopCycle, ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentY, method42(class30_sub2_sub4_sub4.anInt1597, ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentY, true, ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentX) - class30_sub2_sub4_sub4.anInt1583, ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentX, (byte) -83);
                     }
                 }
                 class30_sub2_sub4_sub4.method456(animationTimePassed, miniMapLock);
@@ -4398,7 +4411,7 @@ public class Client extends GameShell {
         if (WorldController.anInt470 != -1) {
             int k = WorldController.anInt470;
             int k1 = WorldController.anInt471;
-            boolean flag = method85(0, 0, 0, 0, ((Entity) (myPlayer)).pathY[0], 0, 0, k1, ((Entity) (myPlayer)).pathX[0], true, k);
+            boolean flag = method85(0, 0, 0, 0, ((Mobile) (myPlayer)).pathY[0], 0, 0, k1, ((Mobile) (myPlayer)).pathX[0], true, k);
             WorldController.anInt470 = -1;
             if (flag) {
                 crossX = super.clickX;
@@ -4681,19 +4694,19 @@ public class Client extends GameShell {
             int i2;
             int j2;
             if (l1 == 0 || l1 == 2) {
-                i2 = class46.objectWidth;
+                i2 = class46.sizeX;
                 j2 = class46.objectHeight;
             } else {
                 i2 = class46.objectHeight;
-                j2 = class46.objectWidth;
+                j2 = class46.sizeX;
             }
             int k2 = class46.anInt768;
             if (l1 != 0) {
                 k2 = (k2 << l1 & 0xf) + (k2 >> 4 - l1);
             }
-            method85(2, 0, j2, 0, ((Entity) (myPlayer)).pathY[0], i2, k2, j, ((Entity) (myPlayer)).pathX[0], false, k);
+            method85(2, 0, j2, 0, ((Mobile) (myPlayer)).pathY[0], i2, k2, j, ((Mobile) (myPlayer)).pathX[0], false, k);
         } else {
-            method85(2, l1, 0, k1 + 1, ((Entity) (myPlayer)).pathY[0], 0, 0, j, ((Entity) (myPlayer)).pathX[0], false, k);
+            method85(2, l1, 0, k1 + 1, ((Mobile) (myPlayer)).pathY[0], 0, 0, j, ((Mobile) (myPlayer)).pathX[0], false, k);
         }
         crossX = super.clickX;
         crossY = super.clickY;
@@ -4707,7 +4720,7 @@ public class Client extends GameShell {
         int l = 5;
         try {
             if (jagexFileStores[0] != null) {
-                jagexFileStore = jagexFileStores[0].decompress(index);
+                jagexFileStore = jagexFileStores[0].decompressFile(index);
             }
             if (jagexFileStore == null) {
                 //drawLoadingText(15, "Downloading Cache");
@@ -4850,13 +4863,10 @@ public class Client extends GameShell {
             inputTaken = true;
         }
         int j = menuActionCmd2[menuPos];
-        System.out.println(j +": menuActionCmd2");
         int k = menuActionCmd3[menuPos];
-        System.out.println(k +": menuActionCmd3");
         int l = menuActionID[menuPos];
-        System.out.println(l +": menuActionID");
         int i1 = menuActionCmd1[menuPos];
-        System.out.println(i1 +": menuActionCmd1");
+        //@TODO SHow debug.
         if (l >= 2000) {
             l -= 2000;
         }
@@ -5164,7 +5174,7 @@ public class Client extends GameShell {
                 mapMain.rsFrame.setVisible(true);
                 mapMain.rsFrame.toFront();
             } else {
-                mapMain = new MapMain();
+                mapMain = new Map();
                 mapMain.createFrame(765, 503);
             }
         }
@@ -5340,7 +5350,7 @@ public class Client extends GameShell {
         if (l == 20) {
             NPC class30_sub2_sub4_sub1_sub1_1 = npcArray[i1];
             if (class30_sub2_sub4_sub1_sub1_1 != null) {
-                method85(2, 0, 1, 0, ((Entity) (myPlayer)).pathY[0], 1, 0, ((Entity) (class30_sub2_sub4_sub1_sub1_1)).pathY[0], ((Entity) (myPlayer)).pathX[0], false, ((Entity) (class30_sub2_sub4_sub1_sub1_1)).pathX[0]);
+                method85(2, 0, 1, 0, ((Mobile) (myPlayer)).pathY[0], 1, 0, ((Mobile) (class30_sub2_sub4_sub1_sub1_1)).pathY[0], ((Mobile) (myPlayer)).pathX[0], false, ((Mobile) (class30_sub2_sub4_sub1_sub1_1)).pathX[0]);
                 crossX = super.clickX;
                 crossY = super.clickY;
                 crossType = 2;
@@ -5353,7 +5363,7 @@ public class Client extends GameShell {
         if (l == 27) {
             Player class30_sub2_sub4_sub1_sub2_2 = playerArray[i1];
             if (class30_sub2_sub4_sub1_sub2_2 != null) {
-                method85(2, 0, 1, 0, ((Entity) (myPlayer)).pathY[0], 1, 0, ((Entity) (class30_sub2_sub4_sub1_sub2_2)).pathY[0], ((Entity) (myPlayer)).pathX[0], false, ((Entity) (class30_sub2_sub4_sub1_sub2_2)).pathX[0]);
+                method85(2, 0, 1, 0, ((Mobile) (myPlayer)).pathY[0], 1, 0, ((Mobile) (class30_sub2_sub4_sub1_sub2_2)).pathY[0], ((Mobile) (myPlayer)).pathX[0], false, ((Mobile) (class30_sub2_sub4_sub1_sub2_2)).pathX[0]);
                 crossX = super.clickX;
                 crossY = super.clickY;
                 crossType = 2;
@@ -5377,7 +5387,7 @@ public class Client extends GameShell {
         if (l == 582) {
             NPC class30_sub2_sub4_sub1_sub1 = npcArray[i1];
             if (class30_sub2_sub4_sub1_sub1 != null) {
-                method85(2, 0, 1, 0, ((Entity) (myPlayer)).pathY[0], 1, 0, ((Entity) (class30_sub2_sub4_sub1_sub1)).pathY[0], ((Entity) (myPlayer)).pathX[0], false, ((Entity) (class30_sub2_sub4_sub1_sub1)).pathX[0]);
+                method85(2, 0, 1, 0, ((Mobile) (myPlayer)).pathY[0], 1, 0, ((Mobile) (class30_sub2_sub4_sub1_sub1)).pathY[0], ((Mobile) (myPlayer)).pathX[0], false, ((Mobile) (class30_sub2_sub4_sub1_sub1)).pathX[0]);
                 crossX = super.clickX;
                 crossY = super.clickY;
                 crossType = 2;
@@ -5391,9 +5401,9 @@ public class Client extends GameShell {
         }
 
         if (l == 234) {
-            boolean flag1 = method85(2, 0, 0, 0, ((Entity) (myPlayer)).pathY[0], 0, 0, k, ((Entity) (myPlayer)).pathX[0], false, j);
+            boolean flag1 = method85(2, 0, 0, 0, ((Mobile) (myPlayer)).pathY[0], 0, 0, k, ((Mobile) (myPlayer)).pathX[0], false, j);
             if (!flag1) {
-                flag1 = method85(2, 0, 1, 0, ((Entity) (myPlayer)).pathY[0], 1, 0, k, ((Entity) (myPlayer)).pathX[0], false, j);
+                flag1 = method85(2, 0, 1, 0, ((Mobile) (myPlayer)).pathY[0], 1, 0, k, ((Mobile) (myPlayer)).pathX[0], false, j);
             }
             crossX = super.clickX;
             crossY = super.clickY;
@@ -5416,9 +5426,9 @@ public class Client extends GameShell {
         }
 
         if (l == 511) {
-            boolean flag2 = method85(2, 0, 0, 0, ((Entity) (myPlayer)).pathY[0], 0, 0, k, ((Entity) (myPlayer)).pathX[0], false, j);
+            boolean flag2 = method85(2, 0, 0, 0, ((Mobile) (myPlayer)).pathY[0], 0, 0, k, ((Mobile) (myPlayer)).pathX[0], false, j);
             if (!flag2) {
-                flag2 = method85(2, 0, 1, 0, ((Entity) (myPlayer)).pathY[0], 1, 0, k, ((Entity) (myPlayer)).pathX[0], false, j);
+                flag2 = method85(2, 0, 1, 0, ((Mobile) (myPlayer)).pathY[0], 1, 0, k, ((Mobile) (myPlayer)).pathX[0], false, j);
             }
             crossX = super.clickX;
             crossY = super.clickY;
@@ -5465,7 +5475,7 @@ public class Client extends GameShell {
         if (l == 561) {
             Player class30_sub2_sub4_sub1_sub2 = playerArray[i1];
             if (class30_sub2_sub4_sub1_sub2 != null) {
-                method85(2, 0, 1, 0, ((Entity) (myPlayer)).pathY[0], 1, 0, ((Entity) (class30_sub2_sub4_sub1_sub2)).pathY[0], ((Entity) (myPlayer)).pathX[0], false, ((Entity) (class30_sub2_sub4_sub1_sub2)).pathX[0]);
+                method85(2, 0, 1, 0, ((Mobile) (myPlayer)).pathY[0], 1, 0, ((Mobile) (class30_sub2_sub4_sub1_sub2)).pathY[0], ((Mobile) (myPlayer)).pathX[0], false, ((Mobile) (class30_sub2_sub4_sub1_sub2)).pathX[0]);
                 crossX = super.clickX;
                 crossY = super.clickY;
                 crossType = 2;
@@ -5485,7 +5495,7 @@ public class Client extends GameShell {
         if (l == 779) {
             Player class30_sub2_sub4_sub1_sub2_1 = playerArray[i1];
             if (class30_sub2_sub4_sub1_sub2_1 != null) {
-                method85(2, 0, 1, 0, ((Entity) (myPlayer)).pathY[0], 1, 0, ((Entity) (class30_sub2_sub4_sub1_sub2_1)).pathY[0], ((Entity) (myPlayer)).pathX[0], false, ((Entity) (class30_sub2_sub4_sub1_sub2_1)).pathX[0]);
+                method85(2, 0, 1, 0, ((Mobile) (myPlayer)).pathY[0], 1, 0, ((Mobile) (class30_sub2_sub4_sub1_sub2_1)).pathY[0], ((Mobile) (myPlayer)).pathX[0], false, ((Mobile) (class30_sub2_sub4_sub1_sub2_1)).pathX[0]);
                 crossX = super.clickX;
                 crossY = super.clickY;
                 crossType = 2;
@@ -5607,7 +5617,7 @@ public class Client extends GameShell {
                     if (class30_sub2_sub4_sub1_sub2_7 == null || Player.name == null || !Player.name.equalsIgnoreCase(s7)) {
                         continue;
                     }
-                    method85(2, 0, 1, 0, ((Entity) (myPlayer)).pathY[0], 1, 0, ((Entity) (class30_sub2_sub4_sub1_sub2_7)).pathY[0], ((Entity) (myPlayer)).pathX[0], false, ((Entity) (class30_sub2_sub4_sub1_sub2_7)).pathX[0]);
+                    method85(2, 0, 1, 0, ((Mobile) (myPlayer)).pathY[0], 1, 0, ((Mobile) (class30_sub2_sub4_sub1_sub2_7)).pathY[0], ((Mobile) (myPlayer)).pathX[0], false, ((Mobile) (class30_sub2_sub4_sub1_sub2_7)).pathX[0]);
                     if (l == 484) {
                         stream.createFrame(139);
                         stream.method431(playerIndices[j3]);
@@ -5710,9 +5720,9 @@ public class Client extends GameShell {
         }
 
         if (l == 213) {
-            boolean flag3 = method85(2, 0, 0, 0, ((Entity) (myPlayer)).pathY[0], 0, 0, k, ((Entity) (myPlayer)).pathX[0], false, j);
+            boolean flag3 = method85(2, 0, 0, 0, ((Mobile) (myPlayer)).pathY[0], 0, 0, k, ((Mobile) (myPlayer)).pathX[0], false, j);
             if (!flag3) {
-                flag3 = method85(2, 0, 1, 0, ((Entity) (myPlayer)).pathY[0], 1, 0, k, ((Entity) (myPlayer)).pathX[0], false, j);
+                flag3 = method85(2, 0, 1, 0, ((Mobile) (myPlayer)).pathY[0], 1, 0, k, ((Mobile) (myPlayer)).pathX[0], false, j);
             }
             crossX = super.clickX;
             crossY = super.clickY;
@@ -5756,9 +5766,9 @@ public class Client extends GameShell {
             }
         }
         if (l == 652) {
-            boolean flag4 = method85(2, 0, 0, 0, ((Entity) (myPlayer)).pathY[0], 0, 0, k, ((Entity) (myPlayer)).pathX[0], false, j);
+            boolean flag4 = method85(2, 0, 0, 0, ((Mobile) (myPlayer)).pathY[0], 0, 0, k, ((Mobile) (myPlayer)).pathX[0], false, j);
             if (!flag4) {
-                flag4 = method85(2, 0, 1, 0, ((Entity) (myPlayer)).pathY[0], 1, 0, k, ((Entity) (myPlayer)).pathX[0], false, j);
+                flag4 = method85(2, 0, 1, 0, ((Mobile) (myPlayer)).pathY[0], 1, 0, k, ((Mobile) (myPlayer)).pathX[0], false, j);
             }
             crossX = super.clickX;
             crossY = super.clickY;
@@ -5770,9 +5780,9 @@ public class Client extends GameShell {
             stream.method433(i1);
         }
         if (l == 94) {
-            boolean flag5 = method85(2, 0, 0, 0, ((Entity) (myPlayer)).pathY[0], 0, 0, k, ((Entity) (myPlayer)).pathX[0], false, j);
+            boolean flag5 = method85(2, 0, 0, 0, ((Mobile) (myPlayer)).pathY[0], 0, 0, k, ((Mobile) (myPlayer)).pathX[0], false, j);
             if (!flag5) {
-                flag5 = method85(2, 0, 1, 0, ((Entity) (myPlayer)).pathY[0], 1, 0, k, ((Entity) (myPlayer)).pathX[0], false, j);
+                flag5 = method85(2, 0, 1, 0, ((Mobile) (myPlayer)).pathY[0], 1, 0, k, ((Mobile) (myPlayer)).pathX[0], false, j);
             }
             crossX = super.clickX;
             crossY = super.clickY;
@@ -5800,7 +5810,7 @@ public class Client extends GameShell {
         if (l == 225) {
             NPC class30_sub2_sub4_sub1_sub1_2 = npcArray[i1];
             if (class30_sub2_sub4_sub1_sub1_2 != null) {
-                method85(2, 0, 1, 0, ((Entity) (myPlayer)).pathY[0], 1, 0, ((Entity) (class30_sub2_sub4_sub1_sub1_2)).pathY[0], ((Entity) (myPlayer)).pathX[0], false, ((Entity) (class30_sub2_sub4_sub1_sub1_2)).pathX[0]);
+                method85(2, 0, 1, 0, ((Mobile) (myPlayer)).pathY[0], 1, 0, ((Mobile) (class30_sub2_sub4_sub1_sub1_2)).pathY[0], ((Mobile) (myPlayer)).pathX[0], false, ((Mobile) (class30_sub2_sub4_sub1_sub1_2)).pathX[0]);
                 crossX = super.clickX;
                 crossY = super.clickY;
                 crossType = 2;
@@ -5819,7 +5829,7 @@ public class Client extends GameShell {
         if (l == 965) {
             NPC class30_sub2_sub4_sub1_sub1_3 = npcArray[i1];
             if (class30_sub2_sub4_sub1_sub1_3 != null) {
-                method85(2, 0, 1, 0, ((Entity) (myPlayer)).pathY[0], 1, 0, ((Entity) (class30_sub2_sub4_sub1_sub1_3)).pathY[0], ((Entity) (myPlayer)).pathX[0], false, ((Entity) (class30_sub2_sub4_sub1_sub1_3)).pathX[0]);
+                method85(2, 0, 1, 0, ((Mobile) (myPlayer)).pathY[0], 1, 0, ((Mobile) (class30_sub2_sub4_sub1_sub1_3)).pathY[0], ((Mobile) (myPlayer)).pathX[0], false, ((Mobile) (class30_sub2_sub4_sub1_sub1_3)).pathX[0]);
                 crossX = super.clickX;
                 crossY = super.clickY;
                 crossType = 2;
@@ -5837,7 +5847,7 @@ public class Client extends GameShell {
         if (l == 413) {
             NPC class30_sub2_sub4_sub1_sub1_4 = npcArray[i1];
             if (class30_sub2_sub4_sub1_sub1_4 != null) {
-                method85(2, 0, 1, 0, ((Entity) (myPlayer)).pathY[0], 1, 0, ((Entity) (class30_sub2_sub4_sub1_sub1_4)).pathY[0], ((Entity) (myPlayer)).pathX[0], false, ((Entity) (class30_sub2_sub4_sub1_sub1_4)).pathX[0]);
+                method85(2, 0, 1, 0, ((Mobile) (myPlayer)).pathY[0], 1, 0, ((Mobile) (class30_sub2_sub4_sub1_sub1_4)).pathY[0], ((Mobile) (myPlayer)).pathX[0], false, ((Mobile) (class30_sub2_sub4_sub1_sub1_4)).pathX[0]);
                 crossX = super.clickX;
                 crossY = super.clickY;
                 crossType = 2;
@@ -5853,7 +5863,7 @@ public class Client extends GameShell {
         if (l == 1025) { //examine?
             NPC class30_sub2_sub4_sub1_sub1_5 = npcArray[i1];
             if (class30_sub2_sub4_sub1_sub1_5 != null) {
-                NPCDef class5 = class30_sub2_sub4_sub1_sub1_5.desc;
+                NPCDef class5 = class30_sub2_sub4_sub1_sub1_5.npcDef;
                 if (class5.childrenIDs != null) {
                     class5 = class5.method161();
                 }
@@ -5878,7 +5888,7 @@ public class Client extends GameShell {
         if (l == 412) {
             NPC class30_sub2_sub4_sub1_sub1_6 = npcArray[i1];
             if (class30_sub2_sub4_sub1_sub1_6 != null) {
-                method85(2, 0, 1, 0, ((Entity) (myPlayer)).pathY[0], 1, 0, ((Entity) (class30_sub2_sub4_sub1_sub1_6)).pathY[0], ((Entity) (myPlayer)).pathX[0], false, ((Entity) (class30_sub2_sub4_sub1_sub1_6)).pathX[0]);
+                method85(2, 0, 1, 0, ((Mobile) (myPlayer)).pathY[0], 1, 0, ((Mobile) (class30_sub2_sub4_sub1_sub1_6)).pathY[0], ((Mobile) (myPlayer)).pathX[0], false, ((Mobile) (class30_sub2_sub4_sub1_sub1_6)).pathX[0]);
                 crossX = super.clickX;
                 crossY = super.clickY;
                 crossType = 2;
@@ -5890,7 +5900,7 @@ public class Client extends GameShell {
         if (l == 365) {
             Player class30_sub2_sub4_sub1_sub2_3 = playerArray[i1];
             if (class30_sub2_sub4_sub1_sub2_3 != null) {
-                method85(2, 0, 1, 0, ((Entity) (myPlayer)).pathY[0], 1, 0, ((Entity) (class30_sub2_sub4_sub1_sub2_3)).pathY[0], ((Entity) (myPlayer)).pathX[0], false, ((Entity) (class30_sub2_sub4_sub1_sub2_3)).pathX[0]);
+                method85(2, 0, 1, 0, ((Mobile) (myPlayer)).pathY[0], 1, 0, ((Mobile) (class30_sub2_sub4_sub1_sub2_3)).pathY[0], ((Mobile) (myPlayer)).pathX[0], false, ((Mobile) (class30_sub2_sub4_sub1_sub2_3)).pathX[0]);
                 crossX = super.clickX;
                 crossY = super.clickY;
                 crossType = 2;
@@ -5903,7 +5913,7 @@ public class Client extends GameShell {
         if (l == 729) {
             Player class30_sub2_sub4_sub1_sub2_4 = playerArray[i1];
             if (class30_sub2_sub4_sub1_sub2_4 != null) {
-                method85(2, 0, 1, 0, ((Entity) (myPlayer)).pathY[0], 1, 0, ((Entity) (class30_sub2_sub4_sub1_sub2_4)).pathY[0], ((Entity) (myPlayer)).pathX[0], false, ((Entity) (class30_sub2_sub4_sub1_sub2_4)).pathX[0]);
+                method85(2, 0, 1, 0, ((Mobile) (myPlayer)).pathY[0], 1, 0, ((Mobile) (class30_sub2_sub4_sub1_sub2_4)).pathY[0], ((Mobile) (myPlayer)).pathX[0], false, ((Mobile) (class30_sub2_sub4_sub1_sub2_4)).pathX[0]);
                 crossX = super.clickX;
                 crossY = super.clickY;
                 crossType = 2;
@@ -5915,7 +5925,7 @@ public class Client extends GameShell {
         if (l == 577) {
             Player class30_sub2_sub4_sub1_sub2_5 = playerArray[i1];
             if (class30_sub2_sub4_sub1_sub2_5 != null) {
-                method85(2, 0, 1, 0, ((Entity) (myPlayer)).pathY[0], 1, 0, ((Entity) (class30_sub2_sub4_sub1_sub2_5)).pathY[0], ((Entity) (myPlayer)).pathX[0], false, ((Entity) (class30_sub2_sub4_sub1_sub2_5)).pathX[0]);
+                method85(2, 0, 1, 0, ((Mobile) (myPlayer)).pathY[0], 1, 0, ((Mobile) (class30_sub2_sub4_sub1_sub2_5)).pathY[0], ((Mobile) (myPlayer)).pathX[0], false, ((Mobile) (class30_sub2_sub4_sub1_sub2_5)).pathX[0]);
                 crossX = super.clickX;
                 crossY = super.clickY;
                 crossType = 2;
@@ -5932,9 +5942,9 @@ public class Client extends GameShell {
             stream.method431(i1 >> 14 & 0x7fff);
         }
         if (l == 567) {
-            boolean flag6 = method85(2, 0, 0, 0, ((Entity) (myPlayer)).pathY[0], 0, 0, k, ((Entity) (myPlayer)).pathX[0], false, j);
+            boolean flag6 = method85(2, 0, 0, 0, ((Mobile) (myPlayer)).pathY[0], 0, 0, k, ((Mobile) (myPlayer)).pathX[0], false, j);
             if (!flag6) {
-                flag6 = method85(2, 0, 1, 0, ((Entity) (myPlayer)).pathY[0], 1, 0, k, ((Entity) (myPlayer)).pathX[0], false, j);
+                flag6 = method85(2, 0, 1, 0, ((Mobile) (myPlayer)).pathY[0], 1, 0, k, ((Mobile) (myPlayer)).pathX[0], false, j);
             }
             crossX = super.clickX;
             crossY = super.clickY;
@@ -6013,7 +6023,7 @@ public class Client extends GameShell {
         if (l == 491) {
             Player class30_sub2_sub4_sub1_sub2_6 = playerArray[i1];
             if (class30_sub2_sub4_sub1_sub2_6 != null) {
-                method85(2, 0, 1, 0, ((Entity) (myPlayer)).pathY[0], 1, 0, ((Entity) (class30_sub2_sub4_sub1_sub2_6)).pathY[0], ((Entity) (myPlayer)).pathX[0], false, ((Entity) (class30_sub2_sub4_sub1_sub2_6)).pathX[0]);
+                method85(2, 0, 1, 0, ((Mobile) (myPlayer)).pathY[0], 1, 0, ((Mobile) (class30_sub2_sub4_sub1_sub2_6)).pathY[0], ((Mobile) (myPlayer)).pathX[0], false, ((Mobile) (class30_sub2_sub4_sub1_sub2_6)).pathX[0]);
                 crossX = super.clickX;
                 crossY = super.clickY;
                 crossType = 2;
@@ -6069,7 +6079,7 @@ public class Client extends GameShell {
         if (l == 478) {
             NPC class30_sub2_sub4_sub1_sub1_7 = npcArray[i1];
             if (class30_sub2_sub4_sub1_sub1_7 != null) {
-                method85(2, 0, 1, 0, ((Entity) (myPlayer)).pathY[0], 1, 0, ((Entity) (class30_sub2_sub4_sub1_sub1_7)).pathY[0], ((Entity) (myPlayer)).pathX[0], false, ((Entity) (class30_sub2_sub4_sub1_sub1_7)).pathX[0]);
+                method85(2, 0, 1, 0, ((Mobile) (myPlayer)).pathY[0], 1, 0, ((Mobile) (class30_sub2_sub4_sub1_sub1_7)).pathY[0], ((Mobile) (myPlayer)).pathX[0], false, ((Mobile) (class30_sub2_sub4_sub1_sub1_7)).pathX[0]);
                 crossX = super.clickX;
                 crossY = super.clickY;
                 crossType = 2;
@@ -6154,18 +6164,18 @@ public class Client extends GameShell {
             int j1 = i1 >> 14 & 0x7fff;
             ObjectDef class46 = ObjectDef.forID(j1);
             String s10;
-            if (class46.description != null) {
-                s10 = new String(class46.description);
+            if (class46.objDesc != null) {
+                s10 = new String(class46.objDesc);
             } else {
-                s10 = "It's a " + class46.name + ".";
+                s10 = "It's a " + class46.objName + ".";
             }
             pushMessage(s10, 0, "", clientRunning);
         }
 
         if (l == 244) {
-            boolean flag7 = method85(2, 0, 0, 0, ((Entity) (myPlayer)).pathY[0], 0, 0, k, ((Entity) (myPlayer)).pathX[0], false, j);
+            boolean flag7 = method85(2, 0, 0, 0, ((Mobile) (myPlayer)).pathY[0], 0, 0, k, ((Mobile) (myPlayer)).pathX[0], false, j);
             if (!flag7) {
-                flag7 = method85(2, 0, 1, 0, ((Entity) (myPlayer)).pathY[0], 1, 0, k, ((Entity) (myPlayer)).pathX[0], false, j);
+                flag7 = method85(2, 0, 1, 0, ((Mobile) (myPlayer)).pathY[0], 1, 0, k, ((Mobile) (myPlayer)).pathX[0], false, j);
             }
             crossX = super.clickX;
             crossY = super.clickY;
@@ -6194,8 +6204,8 @@ public class Client extends GameShell {
 
     public final void checkTutorialIsland() { //tutorial island areas
         anInt1251 = 0;
-        int posX = (((Entity) (myPlayer)).boundExtentX >> 7) + baseX;
-        int posY = (((Entity) (myPlayer)).boundExtentY >> 7) + baseY;
+        int posX = (((Mobile) (myPlayer)).boundExtentX >> 7) + baseX;
+        int posY = (((Mobile) (myPlayer)).boundExtentY >> 7) + baseY;
         if (posX >= 3053 && posX <= 3156 && posY >= 3056 && posY <= 3136) {
             anInt1251 = 1;
         }
@@ -6237,15 +6247,15 @@ public class Client extends GameShell {
             }
             j = l;
             if (k1 == 2 && worldController.method304(plane, i1, j1, l) >= 0) {
-                ObjectDef class46 = ObjectDef.forID(l1);
-                if (class46.childrenIDs != null) {
-                    class46 = class46.method580(true);
+                ObjectDef objectDef = ObjectDef.forID(l1);
+                if (objectDef.configObjectIDs != null) {
+                    objectDef = objectDef.getConfig();
                 }
-                if (class46 == null) {
+                if (objectDef == null) {
                     continue;
                 }
                 if (itemSelected == 1) {
-                    menuActionName[menuActionRow] = "Use " + selectedItemName + " with @cya@" + class46.name;
+                    menuActionName[menuActionRow] = "Use " + selectedItemName + " with @cya@" + objectDef.objName;
                     menuActionID[menuActionRow] = 62;
                     menuActionCmd1[menuActionRow] = l;
                     menuActionCmd2[menuActionRow] = i1;
@@ -6253,7 +6263,7 @@ public class Client extends GameShell {
                     menuActionRow++;
                 } else if (spellSelected == 1) {
                     if ((spellUsableOn & 4) == 4) {
-                        menuActionName[menuActionRow] = spellTooltip + " @cya@" + class46.name;
+                        menuActionName[menuActionRow] = spellTooltip + " @cya@" + objectDef.objName;
                         menuActionID[menuActionRow] = 956;
                         menuActionCmd1[menuActionRow] = l;
                         menuActionCmd2[menuActionRow] = i1;
@@ -6261,10 +6271,10 @@ public class Client extends GameShell {
                         menuActionRow++;
                     }
                 } else {
-                    if (class46.actions != null) {
+                    if (objectDef.objActions != null) {
                         for (int i2 = 4; i2 >= 0; i2--) {
-                            if (class46.actions[i2] != null) {
-                                menuActionName[menuActionRow] = class46.actions[i2] + " @cya@" + class46.name;
+                            if (objectDef.objActions[i2] != null) {
+                                menuActionName[menuActionRow] = objectDef.objActions[i2] + " @cya@" + objectDef.objName;
                                 if (i2 == 0) {
                                     menuActionID[menuActionRow] = 502;
                                 }
@@ -6288,12 +6298,12 @@ public class Client extends GameShell {
                         }
                     }
                     if (playerRights >= 2) {
-                        menuActionName[menuActionRow] = "Examine (OBJ) @cya@" + class46.name + "@gre@(" + "@whi@" + class46.type + "@gre@)";
+                        menuActionName[menuActionRow] = "Examine (OBJ) @cya@" + objectDef.objName + "@gre@(" + "@whi@" + objectDef.type + "@gre@)";
                     } else {
-                        menuActionName[menuActionRow] = "Examine @cya@" + class46.name;
+                        menuActionName[menuActionRow] = "Examine @cya@" + objectDef.objName;
                     }
                     menuActionID[menuActionRow] = 1226;
-                    menuActionCmd1[menuActionRow] = class46.type << 14;
+                    menuActionCmd1[menuActionRow] = objectDef.type << 14;
                     menuActionCmd2[menuActionRow] = i1;
                     menuActionCmd3[menuActionRow] = j1;
                     menuActionRow++;
@@ -6301,34 +6311,34 @@ public class Client extends GameShell {
             }
             if (k1 == 1) {
                 NPC class30_sub2_sub4_sub1_sub1 = npcArray[l1];
-                if (class30_sub2_sub4_sub1_sub1.desc.boundDim == 1 && (((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentX & 0x7f) == 64 && (((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentY & 0x7f) == 64) {
+                if (class30_sub2_sub4_sub1_sub1.npcDef.boundDim == 1 && (((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentX & 0x7f) == 64 && (((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentY & 0x7f) == 64) {
                     for (int j2 = 0; j2 < npcCount; j2++) {
                         NPC class30_sub2_sub4_sub1_sub1_1 = npcArray[npcIndices[j2]];
-                        if (class30_sub2_sub4_sub1_sub1_1 != null && class30_sub2_sub4_sub1_sub1_1 != class30_sub2_sub4_sub1_sub1 && class30_sub2_sub4_sub1_sub1_1.desc.boundDim == 1 && ((Entity) (class30_sub2_sub4_sub1_sub1_1)).boundExtentX == ((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentX && ((Entity) (class30_sub2_sub4_sub1_sub1_1)).boundExtentY == ((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentY) {
-                            buildNPCRightClickMenu(class30_sub2_sub4_sub1_sub1_1.desc, npcIndices[j2], j1, i1);
+                        if (class30_sub2_sub4_sub1_sub1_1 != null && class30_sub2_sub4_sub1_sub1_1 != class30_sub2_sub4_sub1_sub1 && class30_sub2_sub4_sub1_sub1_1.npcDef.boundDim == 1 && ((Mobile) (class30_sub2_sub4_sub1_sub1_1)).boundExtentX == ((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentX && ((Mobile) (class30_sub2_sub4_sub1_sub1_1)).boundExtentY == ((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentY) {
+                            buildNPCRightClickMenu(class30_sub2_sub4_sub1_sub1_1.npcDef, npcIndices[j2], j1, i1);
                         }
                     }
                     for (int l2 = 0; l2 < sessionPlayerCount; l2++) {
                         Player class30_sub2_sub4_sub1_sub2_1 = playerArray[playerIndices[l2]];
-                        if (class30_sub2_sub4_sub1_sub2_1 != null && ((Entity) (class30_sub2_sub4_sub1_sub2_1)).boundExtentX == ((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentX && ((Entity) (class30_sub2_sub4_sub1_sub2_1)).boundExtentY == ((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentY) {
+                        if (class30_sub2_sub4_sub1_sub2_1 != null && ((Mobile) (class30_sub2_sub4_sub1_sub2_1)).boundExtentX == ((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentX && ((Mobile) (class30_sub2_sub4_sub1_sub2_1)).boundExtentY == ((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentY) {
                             buildPlayerRightClickMenu(i1, playerIndices[l2], class30_sub2_sub4_sub1_sub2_1, j1);
                         }
                     }
                 }
-                buildNPCRightClickMenu(class30_sub2_sub4_sub1_sub1.desc, l1, j1, i1);
+                buildNPCRightClickMenu(class30_sub2_sub4_sub1_sub1.npcDef, l1, j1, i1);
             }
             if (k1 == 0) {
                 Player class30_sub2_sub4_sub1_sub2 = playerArray[l1];
-                if ((((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentX & 0x7f) == 64 && (((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentY & 0x7f) == 64) {
+                if ((((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentX & 0x7f) == 64 && (((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentY & 0x7f) == 64) {
                     for (int k2 = 0; k2 < npcCount; k2++) {
                         NPC class30_sub2_sub4_sub1_sub1_2 = npcArray[npcIndices[k2]];
-                        if (class30_sub2_sub4_sub1_sub1_2 != null && class30_sub2_sub4_sub1_sub1_2.desc.boundDim == 1 && ((Entity) (class30_sub2_sub4_sub1_sub1_2)).boundExtentX == ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentX && ((Entity) (class30_sub2_sub4_sub1_sub1_2)).boundExtentY == ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentY) {
-                            buildNPCRightClickMenu(class30_sub2_sub4_sub1_sub1_2.desc, npcIndices[k2], j1, i1);
+                        if (class30_sub2_sub4_sub1_sub1_2 != null && class30_sub2_sub4_sub1_sub1_2.npcDef.boundDim == 1 && ((Mobile) (class30_sub2_sub4_sub1_sub1_2)).boundExtentX == ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentX && ((Mobile) (class30_sub2_sub4_sub1_sub1_2)).boundExtentY == ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentY) {
+                            buildNPCRightClickMenu(class30_sub2_sub4_sub1_sub1_2.npcDef, npcIndices[k2], j1, i1);
                         }
                     }
                     for (int i3 = 0; i3 < sessionPlayerCount; i3++) {
                         Player class30_sub2_sub4_sub1_sub2_2 = playerArray[playerIndices[i3]];
-                        if (class30_sub2_sub4_sub1_sub2_2 != null && class30_sub2_sub4_sub1_sub2_2 != class30_sub2_sub4_sub1_sub2 && ((Entity) (class30_sub2_sub4_sub1_sub2_2)).boundExtentX == ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentX && ((Entity) (class30_sub2_sub4_sub1_sub2_2)).boundExtentY == ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentY) {
+                        if (class30_sub2_sub4_sub1_sub2_2 != null && class30_sub2_sub4_sub1_sub2_2 != class30_sub2_sub4_sub1_sub2 && ((Mobile) (class30_sub2_sub4_sub1_sub2_2)).boundExtentX == ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentX && ((Mobile) (class30_sub2_sub4_sub1_sub2_2)).boundExtentY == ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentY) {
                             buildPlayerRightClickMenu(i1, playerIndices[i3], class30_sub2_sub4_sub1_sub2_2, j1);
                         }
                     }
@@ -6339,11 +6349,11 @@ public class Client extends GameShell {
                 NodeList class19 = groundArray[plane][i1][j1];
                 if (class19 != null) {
                     for (Item class30_sub2_sub4_sub2 = (Item) class19.getFirst(); class30_sub2_sub4_sub2 != null; class30_sub2_sub4_sub2 = (Item) class19.getNext()) {
-                        ItemDef class8 = ItemDef.forID(class30_sub2_sub4_sub2.ID);
+                        ItemDef class8 = ItemDef.forID(class30_sub2_sub4_sub2.itemID);
                         if (itemSelected == 1) {
                             menuActionName[menuActionRow] = "Use " + selectedItemName + " with @lre@" + class8.name;
                             menuActionID[menuActionRow] = 511;
-                            menuActionCmd1[menuActionRow] = class30_sub2_sub4_sub2.ID;
+                            menuActionCmd1[menuActionRow] = class30_sub2_sub4_sub2.itemID;
                             menuActionCmd2[menuActionRow] = i1;
                             menuActionCmd3[menuActionRow] = j1;
                             menuActionRow++;
@@ -6351,7 +6361,7 @@ public class Client extends GameShell {
                             if ((spellUsableOn & 1) == 1) {
                                 menuActionName[menuActionRow] = spellTooltip + " @lre@" + class8.name;
                                 menuActionID[menuActionRow] = 94;
-                                menuActionCmd1[menuActionRow] = class30_sub2_sub4_sub2.ID;
+                                menuActionCmd1[menuActionRow] = class30_sub2_sub4_sub2.itemID;
                                 menuActionCmd2[menuActionRow] = i1;
                                 menuActionCmd3[menuActionRow] = j1;
                                 menuActionRow++;
@@ -6361,7 +6371,7 @@ public class Client extends GameShell {
                                 if (j3 == 2) {
                                     menuActionName[menuActionRow] = "Take @lre@" + class8.name;
                                     menuActionID[menuActionRow] = 234;
-                                    menuActionCmd1[menuActionRow] = class30_sub2_sub4_sub2.ID;
+                                    menuActionCmd1[menuActionRow] = class30_sub2_sub4_sub2.itemID;
                                     menuActionCmd2[menuActionRow] = i1;
                                     menuActionCmd3[menuActionRow] = j1;
                                     menuActionRow++;
@@ -6373,7 +6383,7 @@ public class Client extends GameShell {
                                 menuActionName[menuActionRow] = "Examine @lre@" + class8.name;
                             }
                             menuActionID[menuActionRow] = 1448;
-                            menuActionCmd1[menuActionRow] = class30_sub2_sub4_sub2.ID;
+                            menuActionCmd1[menuActionRow] = class30_sub2_sub4_sub2.itemID;
                             menuActionCmd2[menuActionRow] = i1;
                             menuActionCmd3[menuActionRow] = j1;
                             menuActionRow++;
@@ -6573,13 +6583,13 @@ public class Client extends GameShell {
         ObjectDef.nullLoader();
         NPCDef.nullLoader();
         ItemDef.nullLoader();
-        Flo.floorCache = null;
-        IdentityKit.cache = null;
+        Floor.floorCache = null;
+        IdentityKit.identityCache = null;
         RSInterface.interfaceCache = null;
-        Animation.animCache = null;
-        SpotAnim.cache = null;
+        Sequence.animCache = null;
+        SpotAnim.spotAnimCache = null;
         SpotAnim.modelCache = null;
-        Varp.cache = null;
+        SettingUsagePointers.usuagePointerCache = null;
         super.fullGameScreen = null;
         Player.mruNodes = null;
         Rasterizer.nullLoader();
@@ -6610,8 +6620,8 @@ public class Client extends GameShell {
         if (Signlink.mainApplet != null) {
             return Signlink.mainApplet;
         }
-        if (GameShell.gameFrame != null) {
-            return GameShell.gameFrame;
+        if (GameApplet.gameFrame != null) {
+            return GameApplet.gameFrame;
         } else {
             return this;
         }
@@ -6910,11 +6920,11 @@ public class Client extends GameShell {
                             myPlayer.anInt1531 = i3;
                             myPlayer.textCycle = 150;
                             if (playerRights == 2) {
-                                pushMessage(((Entity) (myPlayer)).textSpoken, 2, "@cr2@" + Player.name, clientRunning);
+                                pushMessage(((Mobile) (myPlayer)).textSpoken, 2, "@cr2@" + Player.name, clientRunning);
                             } else if (playerRights == 1) {
-                                pushMessage(((Entity) (myPlayer)).textSpoken, 2, "@cr1@" + Player.name, clientRunning);
+                                pushMessage(((Mobile) (myPlayer)).textSpoken, 2, "@cr1@" + Player.name, clientRunning);
                             } else {
-                                pushMessage(((Entity) (myPlayer)).textSpoken, 2, Player.name, clientRunning);
+                                pushMessage(((Mobile) (myPlayer)).textSpoken, 2, Player.name, clientRunning);
                             }
                             if (publicChatMode == 2) {
                                 publicChatMode = 3;
@@ -7146,7 +7156,7 @@ public class Client extends GameShell {
             if (charEditModelChanged) {
                 for (int k1 = 0; k1 < 7; k1++) {
                     int l1 = charEditIDKits[k1];
-                    if (l1 >= 0 && !IdentityKit.cache[l1].isBodyDownloaded()) {
+                    if (l1 >= 0 && !IdentityKit.identityCache[l1].isBodyDownloaded()) {
                         return;
                     }
                 }
@@ -7157,7 +7167,7 @@ public class Client extends GameShell {
                 for (int j2 = 0; j2 < 7; j2++) {
                     int k2 = charEditIDKits[j2];
                     if (k2 >= 0) {
-                        aclass30_sub2_sub4_sub6[i2++] = IdentityKit.cache[k2].getBodyModel();
+                        aclass30_sub2_sub4_sub6[i2++] = IdentityKit.identityCache[k2].getBodyModel();
                     }
                 }
 
@@ -7172,7 +7182,7 @@ public class Client extends GameShell {
                 }
 
                 class30_sub2_sub4_sub6.createBones((byte) -71);
-                class30_sub2_sub4_sub6.applyTransform(Animation.animCache[((Entity) (myPlayer)).anInt1511].animationFrameID2[0], 40542);
+                class30_sub2_sub4_sub6.applyTransform(Sequence.animCache[((Mobile) (myPlayer)).anInt1511].animationFrameID2[0], 40542);
                 class30_sub2_sub4_sub6.light(64, 850, -30, -50, -30, true);
                 class9.disabledMediaType = 5;
                 class9.disabledMediaID = 0;
@@ -7526,7 +7536,7 @@ public class Client extends GameShell {
         if (Signlink.mainApplet != null) {
             return Signlink.mainApplet.getDocumentBase().getHost().toLowerCase();
         }
-        if (GameShell.gameFrame != null) {
+        if (GameApplet.gameFrame != null) {
             return "";
         } else {
             return super.getDocumentBase().getHost().toLowerCase();
@@ -7826,7 +7836,7 @@ public class Client extends GameShell {
 //                anInt941 = 0;
                 //anInt1260 = 0;
                 resetImageProducers2();
-                RSFrame.trayIcon.displayMessage("-GaMeR X-'s Client", "Login sucessfull: " + myUsername + "", TrayIcon.MessageType.INFO);
+                GameFrame.trayIcon.displayMessage("-GaMeR X-'s Client", "Login sucessfull: " + myUsername + "", TrayIcon.MessageType.INFO);
                 return;
             }
 
@@ -8208,8 +8218,8 @@ public class Client extends GameShell {
                     i1 = -1;
                 }
                 int i2 = class30_sub2_sub2.readUnsignedByte();
-                if (i1 == ((Entity) (class30_sub2_sub4_sub1_sub1)).animation && i1 != -1) {
-                    int l2 = Animation.animCache[i1].anInt365;
+                if (i1 == ((Mobile) (class30_sub2_sub4_sub1_sub1)).animation && i1 != -1) {
+                    int l2 = Sequence.animCache[i1].anInt365;
                     if (l2 == 1) {
                         class30_sub2_sub4_sub1_sub1.anInt1527 = 0;
                         class30_sub2_sub4_sub1_sub1.anInt1528 = 0;
@@ -8219,13 +8229,13 @@ public class Client extends GameShell {
                     if (l2 == 2) {
                         class30_sub2_sub4_sub1_sub1.anInt1530 = 0;
                     }
-                } else if (i1 == -1 || ((Entity) (class30_sub2_sub4_sub1_sub1)).animation == -1 || Animation.animCache[i1].anInt359 >= Animation.animCache[((Entity) (class30_sub2_sub4_sub1_sub1)).animation].anInt359) {
+                } else if (i1 == -1 || ((Mobile) (class30_sub2_sub4_sub1_sub1)).animation == -1 || Sequence.animCache[i1].anInt359 >= Sequence.animCache[((Mobile) (class30_sub2_sub4_sub1_sub1)).animation].anInt359) {
                     class30_sub2_sub4_sub1_sub1.animation = i1;
                     class30_sub2_sub4_sub1_sub1.anInt1527 = 0;
                     class30_sub2_sub4_sub1_sub1.anInt1528 = 0;
                     class30_sub2_sub4_sub1_sub1.anInt1529 = i2;
                     class30_sub2_sub4_sub1_sub1.anInt1530 = 0;
-                    class30_sub2_sub4_sub1_sub1.anInt1542 = ((Entity) (class30_sub2_sub4_sub1_sub1)).pathLength;
+                    class30_sub2_sub4_sub1_sub1.anInt1542 = ((Mobile) (class30_sub2_sub4_sub1_sub1)).pathLength;
                 }
             }
             if ((l & 8) != 0) {
@@ -8243,16 +8253,16 @@ public class Client extends GameShell {
                 class30_sub2_sub4_sub1_sub1.anInt1523 = loopCycle + (k1 & 0xffff);
                 class30_sub2_sub4_sub1_sub1.anInt1521 = 0;
                 class30_sub2_sub4_sub1_sub1.anInt1522 = 0;
-                if (((Entity) (class30_sub2_sub4_sub1_sub1)).anInt1523 > loopCycle) {
+                if (((Mobile) (class30_sub2_sub4_sub1_sub1)).anInt1523 > loopCycle) {
                     class30_sub2_sub4_sub1_sub1.anInt1521 = -1;
                 }
-                if (((Entity) (class30_sub2_sub4_sub1_sub1)).anInt1520 == 65535) {
+                if (((Mobile) (class30_sub2_sub4_sub1_sub1)).anInt1520 == 65535) {
                     class30_sub2_sub4_sub1_sub1.anInt1520 = -1;
                 }
             }
             if ((l & 0x20) != 0) {
                 class30_sub2_sub4_sub1_sub1.interactingEntity = class30_sub2_sub2.readUnsignedWord();
-                if (((Entity) (class30_sub2_sub4_sub1_sub1)).interactingEntity == 65535) {
+                if (((Mobile) (class30_sub2_sub4_sub1_sub1)).interactingEntity == 65535) {
                     class30_sub2_sub4_sub1_sub1.interactingEntity = -1;
                 }
             }
@@ -8269,14 +8279,14 @@ public class Client extends GameShell {
                 class30_sub2_sub4_sub1_sub1.maxHealth = class30_sub2_sub2.method427();
             }
             if ((l & 2) != 0) {
-                class30_sub2_sub4_sub1_sub1.desc = NPCDef.forID(class30_sub2_sub2.method436());
-                class30_sub2_sub4_sub1_sub1.boundDim = class30_sub2_sub4_sub1_sub1.desc.boundDim;
-                class30_sub2_sub4_sub1_sub1.anInt1504 = class30_sub2_sub4_sub1_sub1.desc.degreesToTurn;
-                class30_sub2_sub4_sub1_sub1.anInt1554 = class30_sub2_sub4_sub1_sub1.desc.walkAnimIndex;
-                class30_sub2_sub4_sub1_sub1.anInt1555 = class30_sub2_sub4_sub1_sub1.desc.turn180AnimIndex;
-                class30_sub2_sub4_sub1_sub1.anInt1556 = class30_sub2_sub4_sub1_sub1.desc.turn90CCWAnimIndex;
-                class30_sub2_sub4_sub1_sub1.anInt1557 = class30_sub2_sub4_sub1_sub1.desc.turn90CWAnimIndex;
-                class30_sub2_sub4_sub1_sub1.anInt1511 = class30_sub2_sub4_sub1_sub1.desc.idleAnimation;
+                class30_sub2_sub4_sub1_sub1.npcDef = NPCDef.forID(class30_sub2_sub2.method436());
+                class30_sub2_sub4_sub1_sub1.boundDim = class30_sub2_sub4_sub1_sub1.npcDef.boundDim;
+                class30_sub2_sub4_sub1_sub1.anInt1504 = class30_sub2_sub4_sub1_sub1.npcDef.degreesToTurn;
+                class30_sub2_sub4_sub1_sub1.anInt1554 = class30_sub2_sub4_sub1_sub1.npcDef.walkAnimIndex;
+                class30_sub2_sub4_sub1_sub1.anInt1555 = class30_sub2_sub4_sub1_sub1.npcDef.turn180AnimIndex;
+                class30_sub2_sub4_sub1_sub1.anInt1556 = class30_sub2_sub4_sub1_sub1.npcDef.turn90CCWAnimIndex;
+                class30_sub2_sub4_sub1_sub1.anInt1557 = class30_sub2_sub4_sub1_sub1.npcDef.turn90CWAnimIndex;
+                class30_sub2_sub4_sub1_sub1.anInt1511 = class30_sub2_sub4_sub1_sub1.npcDef.idleAnimation;
             }
             if ((l & 4) != 0) {
                 class30_sub2_sub4_sub1_sub1.anInt1538 = class30_sub2_sub2.method434((byte) 108);
@@ -8567,7 +8577,7 @@ public class Client extends GameShell {
         drawLoadingText(12, "Unpacking cache");
         if (Signlink.cacheDatFile != null) {
             for (int i = 0; i < 5; i++) {
-                jagexFileStores[i] = new JagexFileStore(Signlink.cacheDatFile, Signlink.cacheIndexFiles[i], i + 1);
+                jagexFileStores[i] = new JagexFileHandle(Signlink.cacheDatFile, Signlink.cacheIndexFiles[i], i + 1);
             }
         }
         try {
@@ -9023,14 +9033,14 @@ public class Client extends GameShell {
 
 
             drawLoadingText(73, "Unpacking config");
-            Animation.unpackConfig(configArchive);
+            Sequence.unpackConfig(configArchive);
             ObjectDef.unpackConfig(configArchive);
-            Flo.unpackConfig(configArchive);
+            Floor.unpackConfig(configArchive);
             ItemDef.unpackConfig(configArchive);
             NPCDef.unpackConfig(configArchive);
             IdentityKit.unpackConfig(configArchive);
             SpotAnim.unpackConfig(configArchive);
-            Varp.unpackConfig(0, configArchive);
+            SettingUsagePointers.unpackConfig(configArchive);
             VarBit.unpackConfig(configArchive);
             ItemDef.isMembers = isMembers;
             if (!lowMem) {
@@ -9115,7 +9125,7 @@ public class Client extends GameShell {
             // sendQuest("", 13097); // sendQuest's go here.
 
 
-            RSFrame.trayIcon.displayMessage("-GaMeR X-'s Client", "Client Loading Complete!", TrayIcon.MessageType.INFO);
+            GameFrame.trayIcon.displayMessage("-GaMeR X-'s Client", "Client Loading Complete!", TrayIcon.MessageType.INFO);
 
 
 
@@ -9154,7 +9164,7 @@ public class Client extends GameShell {
             if (j1 > 15) {
                 j1 -= 32;
             }
-            class30_sub2_sub4_sub1_sub2.setPos(((Entity) (myPlayer)).pathX[0] + j1, ((Entity) (myPlayer)).pathY[0] + i1, l == 1);
+            class30_sub2_sub4_sub1_sub2.setPos(((Mobile) (myPlayer)).pathX[0] + j1, ((Mobile) (myPlayer)).pathY[0] + i1, l == 1);
         }
         stream.finishBitAccess();
     }
@@ -9180,9 +9190,9 @@ public class Client extends GameShell {
                 j1 = j1 * (minimapInt3 + 256) >> 8;
                 int k1 = j * i1 + i * j1 >> 11;
                 int l1 = j * j1 - i * i1 >> 11;
-                int i2 = ((Entity) (myPlayer)).boundExtentX + k1 >> 7;
-                int j2 = ((Entity) (myPlayer)).boundExtentY - l1 >> 7;
-                boolean flag1 = method85(1, 0, 0, 0, ((Entity) (myPlayer)).pathY[0], 0, 0, j2, ((Entity) (myPlayer)).pathX[0], true, i2);
+                int i2 = ((Mobile) (myPlayer)).boundExtentX + k1 >> 7;
+                int j2 = ((Mobile) (myPlayer)).boundExtentY - l1 >> 7;
+                boolean flag1 = method85(1, 0, 0, 0, ((Mobile) (myPlayer)).pathY[0], 0, 0, j2, ((Mobile) (myPlayer)).pathX[0], true, i2);
                 if (flag1) {
                     stream.writeWordBigEndian(i);
                     stream.writeWordBigEndian(j);
@@ -9191,8 +9201,8 @@ public class Client extends GameShell {
                     stream.writeWordBigEndian(minimapInt2);
                     stream.writeWordBigEndian(minimapInt3);
                     stream.writeWordBigEndian(89);
-                    stream.writeWord(((Entity) (myPlayer)).boundExtentX);
-                    stream.writeWord(((Entity) (myPlayer)).boundExtentY);
+                    stream.writeWord(((Mobile) (myPlayer)).boundExtentX);
+                    stream.writeWord(((Mobile) (myPlayer)).boundExtentY);
                     stream.writeWordBigEndian(anInt1264);
                     stream.writeWordBigEndian(63);
                 }
@@ -9301,12 +9311,12 @@ public class Client extends GameShell {
         for (int j = 0; j < npcCount; j++) {
             NPC npc = npcArray[npcIndices[j]];
             if (npc != null) {
-                entityUpdateBlock(46988, npc.desc.boundDim, npc);
+                entityUpdateBlock(46988, npc.npcDef.boundDim, npc);
             }
         }
     }
 
-    public final void entityUpdateBlock(int i, int j, Entity entity) {
+    public final void entityUpdateBlock(int i, int j, Mobile entity) {
 
         if (entity.boundExtentX < 128 || entity.boundExtentY < 128 || entity.boundExtentX >= 13184 || entity.boundExtentY >= 13184) {
             entity.animation = -1;
@@ -9337,7 +9347,7 @@ public class Client extends GameShell {
         method101(entity);
     }
 
-    public final void method97(Entity class30_sub2_sub4_sub1, boolean flag) {
+    public final void method97(Mobile class30_sub2_sub4_sub1, boolean flag) {
         int i = class30_sub2_sub4_sub1.anInt1547 - loopCycle;
         int j = class30_sub2_sub4_sub1.anInt1543 * 128 + class30_sub2_sub4_sub1.boundDim * 64;
         int k = class30_sub2_sub4_sub1.anInt1545 * 128 + class30_sub2_sub4_sub1.boundDim * 64;
@@ -9361,8 +9371,8 @@ public class Client extends GameShell {
         }
     }
 
-    public final void method98(Entity class30_sub2_sub4_sub1) {
-        if (class30_sub2_sub4_sub1.anInt1548 == loopCycle || class30_sub2_sub4_sub1.animation == -1 || class30_sub2_sub4_sub1.anInt1529 != 0 || class30_sub2_sub4_sub1.anInt1528 + 1 > Animation.animCache[class30_sub2_sub4_sub1.animation].getFrameLength(class30_sub2_sub4_sub1.anInt1527)) {
+    public final void method98(Mobile class30_sub2_sub4_sub1) {
+        if (class30_sub2_sub4_sub1.anInt1548 == loopCycle || class30_sub2_sub4_sub1.animation == -1 || class30_sub2_sub4_sub1.anInt1529 != 0 || class30_sub2_sub4_sub1.anInt1528 + 1 > Sequence.animCache[class30_sub2_sub4_sub1.animation].getFrameLength(class30_sub2_sub4_sub1.anInt1527)) {
             int i = class30_sub2_sub4_sub1.anInt1548 - class30_sub2_sub4_sub1.anInt1547;
             int j = loopCycle - class30_sub2_sub4_sub1.anInt1547;
             int k = class30_sub2_sub4_sub1.anInt1543 * 128 + class30_sub2_sub4_sub1.boundDim * 64;
@@ -9388,14 +9398,14 @@ public class Client extends GameShell {
         class30_sub2_sub4_sub1.anInt1552 = class30_sub2_sub4_sub1.turnDirection;
     }
 
-    public final void method99(Entity entity) {
+    public final void method99(Mobile entity) {
         entity.anInt1517 = entity.anInt1511;
         if (entity.pathLength == 0) {
             entity.anInt1503 = 0;
             return;
         }
         if (entity.animation != -1 && entity.anInt1529 == 0) {
-            Animation class20 = Animation.animCache[entity.animation];
+            Sequence class20 = Sequence.animCache[entity.animation];
             if (entity.anInt1542 > 0 && class20.anInt363 == 0) {
                 entity.anInt1503++;
                 return;
@@ -9501,7 +9511,7 @@ public class Client extends GameShell {
         }
     }
 
-    public final void method100(Entity class30_sub2_sub4_sub1, int i) {
+    public final void method100(Mobile class30_sub2_sub4_sub1, int i) {
         if (i >= 0) {
             return;
         }
@@ -9511,8 +9521,8 @@ public class Client extends GameShell {
         if (class30_sub2_sub4_sub1.interactingEntity != -1 && class30_sub2_sub4_sub1.interactingEntity < 32768) {
             NPC class30_sub2_sub4_sub1_sub1 = npcArray[class30_sub2_sub4_sub1.interactingEntity];
             if (class30_sub2_sub4_sub1_sub1 != null) {
-                int i1 = class30_sub2_sub4_sub1.boundExtentX - ((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentX;
-                int k1 = class30_sub2_sub4_sub1.boundExtentY - ((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentY;
+                int i1 = class30_sub2_sub4_sub1.boundExtentX - ((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentX;
+                int k1 = class30_sub2_sub4_sub1.boundExtentY - ((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentY;
                 if (i1 != 0 || k1 != 0) {
                     class30_sub2_sub4_sub1.turnDirection = (int) (Math.atan2(i1, k1) * 325.94900000000001D) & 0x7ff;
                 }
@@ -9525,8 +9535,8 @@ public class Client extends GameShell {
             }
             Player class30_sub2_sub4_sub1_sub2 = playerArray[j];
             if (class30_sub2_sub4_sub1_sub2 != null) {
-                int l1 = class30_sub2_sub4_sub1.boundExtentX - ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentX;
-                int i2 = class30_sub2_sub4_sub1.boundExtentY - ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentY;
+                int l1 = class30_sub2_sub4_sub1.boundExtentX - ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentX;
+                int i2 = class30_sub2_sub4_sub1.boundExtentY - ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentY;
                 if (l1 != 0 || i2 != 0) {
                     class30_sub2_sub4_sub1.turnDirection = (int) (Math.atan2(l1, i2) * 325.94900000000001D) & 0x7ff;
                 }
@@ -9561,10 +9571,10 @@ public class Client extends GameShell {
         }
     }
 
-    public final void method101(Entity class30_sub2_sub4_sub1) {
+    public final void method101(Mobile class30_sub2_sub4_sub1) {
         class30_sub2_sub4_sub1.aBoolean1541 = false;
         if (class30_sub2_sub4_sub1.anInt1517 != -1) {
-            Animation class20 = Animation.animCache[class30_sub2_sub4_sub1.anInt1517];
+            Sequence class20 = Sequence.animCache[class30_sub2_sub4_sub1.anInt1517];
             class30_sub2_sub4_sub1.anInt1519++;
             if (class30_sub2_sub4_sub1.anInt1518 < class20.frameCount && class30_sub2_sub4_sub1.anInt1519 > class20.getFrameLength(class30_sub2_sub4_sub1.anInt1518)) {
                 class30_sub2_sub4_sub1.anInt1519 = 0;
@@ -9579,7 +9589,7 @@ public class Client extends GameShell {
             if (class30_sub2_sub4_sub1.anInt1521 < 0) {
                 class30_sub2_sub4_sub1.anInt1521 = 0;
             }
-            Animation class20_1 = SpotAnim.cache[class30_sub2_sub4_sub1.anInt1520].animationSequence;
+            Sequence class20_1 = SpotAnim.spotAnimCache[class30_sub2_sub4_sub1.anInt1520].animationSequence;
             for (class30_sub2_sub4_sub1.anInt1522++; class30_sub2_sub4_sub1.anInt1521 < class20_1.frameCount && class30_sub2_sub4_sub1.anInt1522 > class20_1.getFrameLength(class30_sub2_sub4_sub1.anInt1521); class30_sub2_sub4_sub1.anInt1521++) {
                 class30_sub2_sub4_sub1.anInt1522 -= class20_1.getFrameLength(class30_sub2_sub4_sub1.anInt1521);
             }
@@ -9589,14 +9599,14 @@ public class Client extends GameShell {
             }
         }
         if (class30_sub2_sub4_sub1.animation != -1 && class30_sub2_sub4_sub1.anInt1529 <= 1) {
-            Animation class20_2 = Animation.animCache[class30_sub2_sub4_sub1.animation];
+            Sequence class20_2 = Sequence.animCache[class30_sub2_sub4_sub1.animation];
             if (class20_2.anInt363 == 1 && class30_sub2_sub4_sub1.anInt1542 > 0 && class30_sub2_sub4_sub1.anInt1547 <= loopCycle && class30_sub2_sub4_sub1.anInt1548 < loopCycle) {
                 class30_sub2_sub4_sub1.anInt1529 = 1;
                 return;
             }
         }
         if (class30_sub2_sub4_sub1.animation != -1 && class30_sub2_sub4_sub1.anInt1529 == 0) {
-            Animation class20_3 = Animation.animCache[class30_sub2_sub4_sub1.animation];
+            Sequence class20_3 = Sequence.animCache[class30_sub2_sub4_sub1.animation];
             for (class30_sub2_sub4_sub1.anInt1528++; class30_sub2_sub4_sub1.anInt1527 < class20_3.frameCount && class30_sub2_sub4_sub1.anInt1528 > class20_3.getFrameLength(class30_sub2_sub4_sub1.anInt1527); class30_sub2_sub4_sub1.anInt1527++) {
                 class30_sub2_sub4_sub1.anInt1528 -= class20_3.getFrameLength(class30_sub2_sub4_sub1.anInt1527);
             }
@@ -10556,7 +10566,7 @@ public class Client extends GameShell {
                     if (i7 == -1) {
                         class30_sub2_sub4_sub6 = class9_1.getAnimatedModel(-1, -1, flag2);
                     } else {
-                        Animation class20 = Animation.animCache[i7];
+                        Sequence class20 = Sequence.animCache[i7];
                         class30_sub2_sub4_sub6 = class9_1.getAnimatedModel(class20.animationFrameID1[class9_1.animationLength], class20.animationFrameID2[class9_1.animationLength], flag2);
                     }
                     if (class30_sub2_sub4_sub6 != null) {
@@ -10652,10 +10662,10 @@ public class Client extends GameShell {
             class30_sub2_sub4_sub1_sub2.anInt1523 = loopCycle + (k & 0xffff);
             class30_sub2_sub4_sub1_sub2.anInt1521 = 0;
             class30_sub2_sub4_sub1_sub2.anInt1522 = 0;
-            if (((Entity) (class30_sub2_sub4_sub1_sub2)).anInt1523 > loopCycle) {
+            if (((Mobile) (class30_sub2_sub4_sub1_sub2)).anInt1523 > loopCycle) {
                 class30_sub2_sub4_sub1_sub2.anInt1521 = -1;
             }
-            if (((Entity) (class30_sub2_sub4_sub1_sub2)).anInt1520 == 65535) {
+            if (((Mobile) (class30_sub2_sub4_sub1_sub2)).anInt1520 == 65535) {
                 class30_sub2_sub4_sub1_sub2.anInt1520 = -1;
             }
         }
@@ -10665,8 +10675,8 @@ public class Client extends GameShell {
                 l = -1;
             }
             int i2 = class30_sub2_sub2.method427();
-            if (l == ((Entity) (class30_sub2_sub4_sub1_sub2)).animation && l != -1) {
-                int i3 = Animation.animCache[l].anInt365;
+            if (l == ((Mobile) (class30_sub2_sub4_sub1_sub2)).animation && l != -1) {
+                int i3 = Sequence.animCache[l].anInt365;
                 if (i3 == 1) {
                     class30_sub2_sub4_sub1_sub2.anInt1527 = 0;
                     class30_sub2_sub4_sub1_sub2.anInt1528 = 0;
@@ -10676,22 +10686,22 @@ public class Client extends GameShell {
                 if (i3 == 2) {
                     class30_sub2_sub4_sub1_sub2.anInt1530 = 0;
                 }
-            } else if (l == -1 || ((Entity) (class30_sub2_sub4_sub1_sub2)).animation == -1 || Animation.animCache[l].anInt359 >= Animation.animCache[((Entity) (class30_sub2_sub4_sub1_sub2)).animation].anInt359) {
+            } else if (l == -1 || ((Mobile) (class30_sub2_sub4_sub1_sub2)).animation == -1 || Sequence.animCache[l].anInt359 >= Sequence.animCache[((Mobile) (class30_sub2_sub4_sub1_sub2)).animation].anInt359) {
                 class30_sub2_sub4_sub1_sub2.animation = l;
                 class30_sub2_sub4_sub1_sub2.anInt1527 = 0;
                 class30_sub2_sub4_sub1_sub2.anInt1528 = 0;
                 class30_sub2_sub4_sub1_sub2.anInt1529 = i2;
                 class30_sub2_sub4_sub1_sub2.anInt1530 = 0;
-                class30_sub2_sub4_sub1_sub2.anInt1542 = ((Entity) (class30_sub2_sub4_sub1_sub2)).pathLength;
+                class30_sub2_sub4_sub1_sub2.anInt1542 = ((Mobile) (class30_sub2_sub4_sub1_sub2)).pathLength;
             }
         }
         if ((i & 4) != 0) {
             class30_sub2_sub4_sub1_sub2.textSpoken = class30_sub2_sub2.readString();
-            if (((Entity) (class30_sub2_sub4_sub1_sub2)).textSpoken.charAt(0) == '~') {
-                class30_sub2_sub4_sub1_sub2.textSpoken = ((Entity) (class30_sub2_sub4_sub1_sub2)).textSpoken.substring(1);
-                pushMessage(((Entity) (class30_sub2_sub4_sub1_sub2)).textSpoken, 2, Player.name, clientRunning);
+            if (((Mobile) (class30_sub2_sub4_sub1_sub2)).textSpoken.charAt(0) == '~') {
+                class30_sub2_sub4_sub1_sub2.textSpoken = ((Mobile) (class30_sub2_sub4_sub1_sub2)).textSpoken.substring(1);
+                pushMessage(((Mobile) (class30_sub2_sub4_sub1_sub2)).textSpoken, 2, Player.name, clientRunning);
             } else if (class30_sub2_sub4_sub1_sub2 == myPlayer) {
-                pushMessage(((Entity) (class30_sub2_sub4_sub1_sub2)).textSpoken, 2, Player.name, clientRunning);
+                pushMessage(((Mobile) (class30_sub2_sub4_sub1_sub2)).textSpoken, 2, Player.name, clientRunning);
             }
             class30_sub2_sub4_sub1_sub2.anInt1513 = 0;
             class30_sub2_sub4_sub1_sub2.anInt1531 = 0;
@@ -10742,7 +10752,7 @@ public class Client extends GameShell {
         }
         if ((i & 1) != 0) {
             class30_sub2_sub4_sub1_sub2.interactingEntity = class30_sub2_sub2.method434((byte) 108);
-            if (((Entity) (class30_sub2_sub4_sub1_sub2)).interactingEntity == 65535) {
+            if (((Mobile) (class30_sub2_sub4_sub1_sub2)).interactingEntity == 65535) {
                 class30_sub2_sub4_sub1_sub2.interactingEntity = -1;
             }
         }
@@ -10778,8 +10788,8 @@ public class Client extends GameShell {
 
     public final void method108() {
         try {
-            int j = ((Entity) (myPlayer)).boundExtentX + anInt1278;
-            int k = ((Entity) (myPlayer)).boundExtentY + anInt1131;
+            int j = ((Mobile) (myPlayer)).boundExtentX + anInt1278;
+            int k = ((Mobile) (myPlayer)).boundExtentY + anInt1131;
             if (anInt1014 - j < -500 || anInt1014 - j > 500 || anInt1015 - k < -500 || anInt1015 - k > 500) {
                 anInt1014 = j;
                 anInt1015 = k;
@@ -10868,7 +10878,7 @@ public class Client extends GameShell {
                 return;
             }
         } catch (Exception _ex) {
-            Signlink.reportError("glfc_ex " + ((Entity) (myPlayer)).boundExtentX + "," + ((Entity) (myPlayer)).boundExtentY + "," + anInt1014 + "," + anInt1015 + "," + anInt1069 + "," + anInt1070 + "," + baseX + "," + baseY);
+            Signlink.reportError("glfc_ex " + ((Mobile) (myPlayer)).boundExtentX + "," + ((Mobile) (myPlayer)).boundExtentY + "," + anInt1014 + "," + anInt1015 + "," + anInt1069 + "," + anInt1070 + "," + baseX + "," + baseY);
             throw new RuntimeException("eek");
         }
     }
@@ -11449,7 +11459,7 @@ public class Client extends GameShell {
                     l = class9_1.disabledAnimation;
                 }
                 if (l != -1) {
-                    Animation class20 = Animation.animCache[l];
+                    Sequence class20 = Sequence.animCache[l];
                     for (class9_1.animationDelay += i; class9_1.animationDelay > class20.getFrameLength(class9_1.animationLength);) {
                         class9_1.animationDelay -= class20.getFrameLength(class9_1.animationLength) + 1;
                         class9_1.animationLength++;
@@ -11474,8 +11484,8 @@ public class Client extends GameShell {
         if (yCameraCurve < 310) {
             int k = xCameraPos >> 7;
             int l = yCameraPos >> 7;
-            int i1 = ((Entity) (myPlayer)).boundExtentX >> 7;
-            int j1 = ((Entity) (myPlayer)).boundExtentY >> 7;
+            int i1 = ((Mobile) (myPlayer)).boundExtentX >> 7;
+            int j1 = ((Mobile) (myPlayer)).boundExtentY >> 7;
             if ((tileSettingBits[plane][k][l] & 4) != 0) {
                 j = plane;
             }
@@ -11543,7 +11553,7 @@ public class Client extends GameShell {
                 }
             }
         }
-        if ((tileSettingBits[plane][((Entity) (myPlayer)).boundExtentX >> 7][((Entity) (myPlayer)).boundExtentY >> 7] & 4) != 0) {
+        if ((tileSettingBits[plane][((Mobile) (myPlayer)).boundExtentX >> 7][((Mobile) (myPlayer)).boundExtentY >> 7] & 4) != 0) {
             j = plane;
         }
         return j;
@@ -11582,6 +11592,7 @@ public class Client extends GameShell {
         throw new RuntimeException();
     }
 
+    @Override
     public String getParameter(String s) {
         if (Signlink.mainApplet != null) {
             return Signlink.mainApplet.getParameter(s);
@@ -11682,7 +11693,7 @@ public class Client extends GameShell {
                     int l3 = class37.configId;
                     int i4 = class37.leastSignificantBit;
                     int j4 = class37.mostSignificantBit;
-                    int k4 = anIntArray1232[j4 - i4];
+                    int k4 = BITFIELD_MAX_VALUE[j4 - i4];
                     k1 = sessionSettings[l3] >> i4 & k4;
                 }
                 if (j1 == 15) {
@@ -11695,10 +11706,10 @@ public class Client extends GameShell {
                     byte0 = 3;
                 }
                 if (j1 == 18) {
-                    k1 = (((Entity) (myPlayer)).boundExtentX >> 7) + baseX;
+                    k1 = (((Mobile) (myPlayer)).boundExtentX >> 7) + baseX;
                 }
                 if (j1 == 19) {
-                    k1 = (((Entity) (myPlayer)).boundExtentY >> 7) + baseY;
+                    k1 = (((Mobile) (myPlayer)).boundExtentY >> 7) + baseY;
                 }
                 if (j1 == 20) {
                     k1 = ai[l++];
@@ -11826,8 +11837,8 @@ public class Client extends GameShell {
         int i = minimapAngle + minimapInt2 & 0x7ff; //minimapInt1
 
 
-        int j = 48 + ((Entity) (myPlayer)).boundExtentX / 32;
-        int l2 = 464 - ((Entity) (myPlayer)).boundExtentY / 32;
+        int j = 48 + ((Mobile) (myPlayer)).boundExtentX / 32;
+        int l2 = 464 - ((Mobile) (myPlayer)).boundExtentY / 32;
 
         for (int x = 0; x < minimapShape2.length; x++) {
             minimapShape2[x] = 172;
@@ -11869,8 +11880,8 @@ public class Client extends GameShell {
 
 
         for (int j5 = 0; j5 < numOfMapMarkers; j5++) { //your dot??
-            int k = (markPosX[j5] * 4 + 2) - ((Entity) (myPlayer)).boundExtentX / 32;
-            int i3 = (markPosY[j5] * 4 + 2) - ((Entity) (myPlayer)).boundExtentY / 32;
+            int k = (markPosX[j5] * 4 + 2) - ((Mobile) (myPlayer)).boundExtentX / 32;
+            int i3 = (markPosY[j5] * 4 + 2) - ((Mobile) (myPlayer)).boundExtentY / 32;
             markMinimap(markGraphic[j5], k, i3, false);
         }
 
@@ -11878,8 +11889,8 @@ public class Client extends GameShell {
             for (int l5 = 0; l5 < 104; l5++) {
                 NodeList class19 = groundArray[plane][k5][l5];
                 if (class19 != null) {
-                    int l = (k5 * 4 + 2) - ((Entity) (myPlayer)).boundExtentX / 32;
-                    int j3 = (l5 * 4 + 2) - ((Entity) (myPlayer)).boundExtentY / 32;
+                    int l = (k5 * 4 + 2) - ((Mobile) (myPlayer)).boundExtentX / 32;
+                    int j3 = (l5 * 4 + 2) - ((Mobile) (myPlayer)).boundExtentY / 32;
                     markMinimap(mapDotItem, l, j3, false);
                 }
             }
@@ -11888,13 +11899,13 @@ public class Client extends GameShell {
         for (int i6 = 0; i6 < npcCount; i6++) { //NPC's
             NPC class30_sub2_sub4_sub1_sub1 = npcArray[npcIndices[i6]];
             if (class30_sub2_sub4_sub1_sub1 != null && class30_sub2_sub4_sub1_sub1.isVisible()) {
-                NPCDef class5 = class30_sub2_sub4_sub1_sub1.desc;
+                NPCDef class5 = class30_sub2_sub4_sub1_sub1.npcDef;
                 if (class5.childrenIDs != null) {
                     class5 = class5.method161();
                 }
                 if (class5 != null && class5.drawMinimapDot && class5.clickable) {
-                    int i1 = ((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentX / 32 - ((Entity) (myPlayer)).boundExtentX / 32;
-                    int k3 = ((Entity) (class30_sub2_sub4_sub1_sub1)).boundExtentY / 32 - ((Entity) (myPlayer)).boundExtentY / 32;
+                    int i1 = ((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentX / 32 - ((Mobile) (myPlayer)).boundExtentX / 32;
+                    int k3 = ((Mobile) (class30_sub2_sub4_sub1_sub1)).boundExtentY / 32 - ((Mobile) (myPlayer)).boundExtentY / 32;
                     markMinimap(mapDotNPC, i1, k3, false);
                 }
             }
@@ -11902,8 +11913,8 @@ public class Client extends GameShell {
         for (int j6 = 0; j6 < sessionPlayerCount; j6++) { //players
             Player class30_sub2_sub4_sub1_sub2 = playerArray[playerIndices[j6]];
             if (class30_sub2_sub4_sub1_sub2 != null && class30_sub2_sub4_sub1_sub2.isVisible()) {
-                int j1 = ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentX / 32 - ((Entity) (myPlayer)).boundExtentX / 32;
-                int l3 = ((Entity) (class30_sub2_sub4_sub1_sub2)).boundExtentY / 32 - ((Entity) (myPlayer)).boundExtentY / 32;
+                int j1 = ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentX / 32 - ((Mobile) (myPlayer)).boundExtentX / 32;
+                int l3 = ((Mobile) (class30_sub2_sub4_sub1_sub2)).boundExtentY / 32 - ((Mobile) (myPlayer)).boundExtentY / 32;
                 boolean flag1 = false;
                 long l6 = TextClass.longForName(Player.name);
                 for (int k6 = 0; k6 < friendsCount; k6++) {
@@ -11931,29 +11942,29 @@ public class Client extends GameShell {
             if (headiconDrawType == 1 && anInt1222 >= 0 && anInt1222 < npcArray.length) {
                 NPC class30_sub2_sub4_sub1_sub1_1 = npcArray[anInt1222];
                 if (class30_sub2_sub4_sub1_sub1_1 != null) {
-                    int k1 = ((Entity) (class30_sub2_sub4_sub1_sub1_1)).boundExtentX / 32 - ((Entity) (myPlayer)).boundExtentX / 32;
-                    int i4 = ((Entity) (class30_sub2_sub4_sub1_sub1_1)).boundExtentY / 32 - ((Entity) (myPlayer)).boundExtentY / 32;
+                    int k1 = ((Mobile) (class30_sub2_sub4_sub1_sub1_1)).boundExtentX / 32 - ((Mobile) (myPlayer)).boundExtentX / 32;
+                    int i4 = ((Mobile) (class30_sub2_sub4_sub1_sub1_1)).boundExtentY / 32 - ((Mobile) (myPlayer)).boundExtentY / 32;
                     drawMinimapArrow(mapMarker, i4, k1);
                 }
             }
             if (headiconDrawType == 2) {
-                int l1 = ((anInt934 - baseX) * 4 + 2) - ((Entity) (myPlayer)).boundExtentX / 32;
-                int j4 = ((anInt935 - baseY) * 4 + 2) - ((Entity) (myPlayer)).boundExtentY / 32;
+                int l1 = ((anInt934 - baseX) * 4 + 2) - ((Mobile) (myPlayer)).boundExtentX / 32;
+                int j4 = ((anInt935 - baseY) * 4 + 2) - ((Mobile) (myPlayer)).boundExtentY / 32;
                 drawMinimapArrow(mapMarker, j4, l1);
             }
             if (headiconDrawType == 10 && otherPlayerID >= 0 && otherPlayerID < playerArray.length) {
                 Player class30_sub2_sub4_sub1_sub2_1 = playerArray[otherPlayerID];
                 if (class30_sub2_sub4_sub1_sub2_1 != null) {
-                    int i2 = ((Entity) (class30_sub2_sub4_sub1_sub2_1)).boundExtentX / 32 - ((Entity) (myPlayer)).boundExtentX / 32;
-                    int k4 = ((Entity) (class30_sub2_sub4_sub1_sub2_1)).boundExtentY / 32 - ((Entity) (myPlayer)).boundExtentY / 32;
+                    int i2 = ((Mobile) (class30_sub2_sub4_sub1_sub2_1)).boundExtentX / 32 - ((Mobile) (myPlayer)).boundExtentX / 32;
+                    int k4 = ((Mobile) (class30_sub2_sub4_sub1_sub2_1)).boundExtentY / 32 - ((Mobile) (myPlayer)).boundExtentY / 32;
                     drawMinimapArrow(mapMarker, k4, i2);
                 }
             }
         }
 
         if (destX != 0) { //should we draw the flag???
-            int j2 = (destX * 4 + 2) - ((Entity) (myPlayer)).boundExtentX / 32;
-            int l4 = (destY * 4 + 2) - ((Entity) (myPlayer)).boundExtentY / 32;
+            int j2 = (destX * 4 + 2) - ((Mobile) (myPlayer)).boundExtentX / 32;
+            int l4 = (destY * 4 + 2) - ((Mobile) (myPlayer)).boundExtentY / 32;
             markMinimap(mapFlag, j2, l4, false);
         }
 
@@ -11972,7 +11983,7 @@ public class Client extends GameShell {
         gameArea.initDrawingArea(); //draw gamescreen
     }
 
-    public final void method127(boolean flag, Entity class30_sub2_sub4_sub1, int i) {
+    public final void method127(boolean flag, Mobile class30_sub2_sub4_sub1, int i) {
         if (!flag) {
             pktType = inStream.readUnsignedByte();
         }
@@ -12069,7 +12080,7 @@ public class Client extends GameShell {
 
     }
 
-    private final void method130(int i, int j, int k, int l, int i1, int j1, int k1,
+    private void method130(int i, int j, int k, int l, int i1, int j1, int k1,
             int l1, int i2, int j2) {
         ObjectTile class30_sub1 = null;
         for (ObjectTile class30_sub1_1 = (ObjectTile) gameObjectSpawnNode.reverseGetFirst(); class30_sub1_1 != null; class30_sub1_1 = (ObjectTile) gameObjectSpawnNode.reverseGetNext()) {
@@ -12617,10 +12628,10 @@ public class Client extends GameShell {
                 NodeList class19_1 = groundArray[plane][j3][i6];
                 if (class19_1 != null) {
                     for (Item class30_sub2_sub4_sub2_3 = (Item) class19_1.reverseGetFirst(); class30_sub2_sub4_sub2_3 != null; class30_sub2_sub4_sub2_3 = (Item) class19_1.reverseGetNext()) {
-                        if (class30_sub2_sub4_sub2_3.ID != (l8 & 0x7fff) || class30_sub2_sub4_sub2_3.anInt1559 != k11) {
+                        if (class30_sub2_sub4_sub2_3.itemID != (l8 & 0x7fff) || class30_sub2_sub4_sub2_3.itemCount != k11) {
                             continue;
                         }
-                        class30_sub2_sub4_sub2_3.anInt1559 = l13;
+                        class30_sub2_sub4_sub2_3.itemCount = l13;
                         break;
                     }
 
@@ -12637,7 +12648,7 @@ public class Client extends GameShell {
             int l11 = stream.readUnsignedByte();
             int i14 = l11 >> 4 & 0xf;
             int i16 = l11 & 7;
-            if (((Entity) (myPlayer)).pathX[0] >= k3 - i14 && ((Entity) (myPlayer)).pathX[0] <= k3 + i14 && ((Entity) (myPlayer)).pathY[0] >= j6 - i14 && ((Entity) (myPlayer)).pathY[0] <= j6 + i14 && waveOn && !lowMem && anInt1062 < 50) {
+            if (((Mobile) (myPlayer)).pathX[0] >= k3 - i14 && ((Mobile) (myPlayer)).pathX[0] <= k3 + i14 && ((Mobile) (myPlayer)).pathY[0] >= j6 - i14 && ((Mobile) (myPlayer)).pathY[0] <= j6 + i14 && waveOn && !lowMem && anInt1062 < 50) {
                 anIntArray1207[anInt1062] = i9;
                 anIntArray1241[anInt1062] = i16;
                 anIntArray1250[anInt1062] = Sounds.anIntArray326[i9];
@@ -12653,8 +12664,8 @@ public class Client extends GameShell {
             int j14 = stream.readUnsignedWord();
             if (k6 >= 0 && j9 >= 0 && k6 < 104 && j9 < 104 && i12 != playerID) {
                 Item class30_sub2_sub4_sub2_2 = new Item();
-                class30_sub2_sub4_sub2_2.ID = i1;
-                class30_sub2_sub4_sub2_2.anInt1559 = j14;
+                class30_sub2_sub4_sub2_2.itemID = i1;
+                class30_sub2_sub4_sub2_2.itemCount = j14;
                 if (groundArray[plane][k6][j9] == null) {
                     groundArray[plane][k6][j9] = new NodeList();
                 }
@@ -12672,7 +12683,7 @@ public class Client extends GameShell {
                 NodeList class19 = groundArray[plane][i4][l6];
                 if (class19 != null) {
                     for (Item class30_sub2_sub4_sub2 = (Item) class19.reverseGetFirst(); class30_sub2_sub4_sub2 != null; class30_sub2_sub4_sub2 = (Item) class19.reverseGetNext()) {
-                        if (class30_sub2_sub4_sub2.ID != (k9 & 0x7fff)) {
+                        if (class30_sub2_sub4_sub2.itemID != (k9 & 0x7fff)) {
                             continue;
                         }
                         class30_sub2_sub4_sub2.unlink();
@@ -12702,7 +12713,7 @@ public class Client extends GameShell {
                 int l19 = intGroundArray[plane][j4 + 1][i7 + 1];
                 int k20 = intGroundArray[plane][j4][i7 + 1];
                 if (j16 == 0) {
-                    Object1 class10 = worldController.method296(plane, j4, i7);
+                    WallObject class10 = worldController.method296(plane, j4, i7);
                     if (class10 != null) {
                         int k21 = class10.uid >> 14 & 0x7fff;
                         if (j12 == 2) {
@@ -12714,13 +12725,13 @@ public class Client extends GameShell {
                     }
                 }
                 if (j16 == 1) {
-                    Object2 class26 = worldController.method297(j4, 866, i7, plane);
+                    WallDecoration class26 = worldController.method297(j4, 866, i7, plane);
                     if (class26 != null) {
                         class26.aClass30_Sub2_Sub4_504 = new AnimableObject(class26.uid >> 14 & 0x7fff, 0, 4, i19, (byte) 7, l19, j18, k20, j17, false);
                     }
                 }
                 if (j16 == 2) {
-                    NPCFloorTile class28 = worldController.getNPCFloorTile(j4, i7, plane);
+                    InteractableObject class28 = worldController.getNPCFloorTile(j4, i7, plane);
                     if (j12 == 11) {
                         j12 = 10;
                     }
@@ -12729,9 +12740,9 @@ public class Client extends GameShell {
                     }
                 }
                 if (j16 == 3) {
-                    Object3 class49 = worldController.method299(i7, j4, plane);
+                    GroundDecoration class49 = worldController.method299(i7, j4, plane);
                     if (class49 != null) {
-                        class49.animable = new AnimableObject(class49.uid >> 14 & 0x7fff, k14, 22, i19, (byte) 7, l19, j18, k20, j17, false);
+                        class49.entity = new AnimableObject(class49.uid >> 14 & 0x7fff, k14, 22, i19, (byte) 7, l19, j18, k20, j17, false);
                     }
                 }
             }
@@ -12765,17 +12776,17 @@ public class Client extends GameShell {
                 int j22 = intGroundArray[plane][k4 + 1][j7];
                 int k22 = intGroundArray[plane][k4 + 1][j7 + 1];
                 int l22 = intGroundArray[plane][k4][j7 + 1];
-                Model class30_sub2_sub4_sub6 = class46.method578(j19, i20, i22, j22, k22, l22, -1);
+                Model class30_sub2_sub4_sub6 = class46.renderObject(j19, i20, i22, j22, k22, l22, -1);
                 if (class30_sub2_sub4_sub6 != null) {
                     method130(404, k17 + 1, -1, 0, l20, j7, 0, plane, k4, l14 + 1);
                     class30_sub2_sub4_sub1_sub2.anInt1707 = l14 + loopCycle;
                     class30_sub2_sub4_sub1_sub2.anInt1708 = k17 + loopCycle;
                     class30_sub2_sub4_sub1_sub2.aModel_1714 = class30_sub2_sub4_sub6;
-                    int i23 = class46.objectWidth;
+                    int i23 = class46.sizeX;
                     int j23 = class46.objectHeight;
                     if (i20 == 1 || i20 == 3) {
                         i23 = class46.objectHeight;
-                        j23 = class46.objectWidth;
+                        j23 = class46.sizeX;
                     }
                     class30_sub2_sub4_sub1_sub2.anInt1711 = k4 * 128 + i23 * 64;
                     class30_sub2_sub4_sub1_sub2.anInt1713 = j7 * 128 + j23 * 64;
@@ -12834,8 +12845,8 @@ public class Client extends GameShell {
             int i13 = bigRegionY + (i8 & 7);
             if (l10 >= 0 && i13 >= 0 && l10 < 104 && i13 < 104) {
                 Item class30_sub2_sub4_sub2_1 = new Item();
-                class30_sub2_sub4_sub2_1.ID = k2;
-                class30_sub2_sub4_sub2_1.anInt1559 = j5;
+                class30_sub2_sub4_sub2_1.itemID = k2;
+                class30_sub2_sub4_sub2_1.itemCount = j5;
                 if (groundArray[plane][l10][i13] == null) {
                     groundArray[plane][l10][i13] = new NodeList();
                 }
@@ -13003,11 +13014,11 @@ public class Client extends GameShell {
                 if (j1 == 2) {
                     worldController.method293(j, -978, i1, i);
                     ObjectDef class46_1 = ObjectDef.forID(j2);
-                    if (i1 + class46_1.objectWidth > 103 || i + class46_1.objectWidth > 103 || i1 + class46_1.objectHeight > 103 || i + class46_1.objectHeight > 103) {
+                    if (i1 + class46_1.sizeX > 103 || i + class46_1.sizeX > 103 || i1 + class46_1.objectHeight > 103 || i + class46_1.objectHeight > 103) {
                         return;
                     }
                     if (class46_1.aBoolean767) {
-                        tileSettings[j].method216(l2, class46_1.objectWidth, i1, i, (byte) 6, class46_1.objectHeight, class46_1.aBoolean757);
+                        tileSettings[j].method216(l2, class46_1.sizeX, i1, i, (byte) 6, class46_1.objectHeight, class46_1.aBoolean757);
                     }
                 }
                 if (j1 == 3) {
@@ -13028,7 +13039,7 @@ public class Client extends GameShell {
         }
     }
 
-    private final void method143(int i, Stream class30_sub2_sub2, int j) {
+    private void method143(int i, Stream class30_sub2_sub2, int j) {
         anInt839 = 0;
         if (j != 9759) {
             pktType = class30_sub2_sub2.readUnsignedByte();
@@ -13040,7 +13051,7 @@ public class Client extends GameShell {
         method49(i, (byte) 2, class30_sub2_sub2);
         for (int k = 0; k < anInt839; k++) {
             int l = anIntArray840[k];
-            if (((Entity) (playerArray[l])).anInt1537 != loopCycle) {
+            if (((Mobile) (playerArray[l])).anInt1537 != loopCycle) {
                 playerArray[l] = null;
             }
         }
@@ -13491,8 +13502,8 @@ public class Client extends GameShell {
                     NPC class30_sub2_sub4_sub1_sub1 = npcArray[j24];
                     if (class30_sub2_sub4_sub1_sub1 != null) {
                         for (int j29 = 0; j29 < 10; j29++) {
-                            ((Entity) (class30_sub2_sub4_sub1_sub1)).pathX[j29] -= i17;
-                            ((Entity) (class30_sub2_sub4_sub1_sub1)).pathY[j29] -= j21;
+                            ((Mobile) (class30_sub2_sub4_sub1_sub1)).pathX[j29] -= i17;
+                            ((Mobile) (class30_sub2_sub4_sub1_sub1)).pathY[j29] -= j21;
                         }
                         class30_sub2_sub4_sub1_sub1.boundExtentX -= i17 * 128;
                         class30_sub2_sub4_sub1_sub1.boundExtentY -= j21 * 128;
@@ -13502,8 +13513,8 @@ public class Client extends GameShell {
                     Player class30_sub2_sub4_sub1_sub2 = playerArray[i27];
                     if (class30_sub2_sub4_sub1_sub2 != null) {
                         for (int i31 = 0; i31 < 10; i31++) {
-                            ((Entity) (class30_sub2_sub4_sub1_sub2)).pathX[i31] -= i17;
-                            ((Entity) (class30_sub2_sub4_sub1_sub2)).pathY[i31] -= j21;
+                            ((Mobile) (class30_sub2_sub4_sub1_sub2)).pathX[i31] -= i17;
+                            ((Mobile) (class30_sub2_sub4_sub1_sub2)).pathY[i31] -= j21;
                         }
                         class30_sub2_sub4_sub1_sub2.boundExtentX -= i17 * 128;
                         class30_sub2_sub4_sub1_sub2.boundExtentY -= j21 * 128;
@@ -14335,7 +14346,7 @@ public class Client extends GameShell {
             }
             int k = minimapAngle + anInt896 & 0x7ff;
             //setCameraPos(600 + i * 3, i, anInt1014, method42(plane, ((Entity) (aClass30_Sub2_Sub4_Sub1_Sub2_1126)).y, true, ((Entity) (aClass30_Sub2_Sub4_Sub1_Sub2_1126)).x) - 50, k, anInt1015);
-            setCameraPos(CameraPos2 + i * CameraPos1, i, anInt1014, method42(plane, ((Entity) (myPlayer)).boundExtentY, true, ((Entity) (myPlayer)).boundExtentX) - 50, k, anInt1015);
+            setCameraPos(CameraPos2 + i * CameraPos1, i, anInt1014, method42(plane, ((Mobile) (myPlayer)).boundExtentY, true, ((Mobile) (myPlayer)).boundExtentX) - 50, k, anInt1015);
         }
         int j;
         if (!inCutscene) {

@@ -2,7 +2,7 @@ package client.drawing;
 
 // Fully Renamed.
 
-import client.NodeSub;
+import client.node.NodeSub;
 
 
 public class DrawingArea extends NodeSub {

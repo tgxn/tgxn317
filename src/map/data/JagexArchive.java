@@ -1,71 +1,66 @@
 package map.data;
 
-import map.Class4;
+// Fully Renamed - gamerx - 14.11.11
 
 public final class JagexArchive {
     
-    public byte aByteArray93[];
-    public int anInt94;
-    public int anIntArray95[];
-    public int anIntArray96[];
-    public int anIntArray97[];
-    public int anIntArray98[];
-    public boolean aBoolean99;
-
-    public JagexArchive(byte abyte0[]) {
-        method75(abyte0);
-    }
-
-    public void method75(byte abyte0[]) {
-        Stream class1_sub1_sub2 = new Stream(abyte0);
-        int i = class1_sub1_sub2.getShortInt();
-        int j = class1_sub1_sub2.getShortInt();
-        if (j != i) {
-            byte abyte1[] = new byte[i];
-            Class4.method73(abyte1, i, abyte0, j, 6);
-            aByteArray93 = abyte1;
-            class1_sub1_sub2 = new Stream(aByteArray93);
-            aBoolean99 = true;
+    public byte[] outputData;
+    public int readSize;
+    public int[] myNameIndexes;
+    public int[] myFileSizes;
+    public int[] myOnDiskFileSizes;
+    public int[] myFileOffsets;
+    private boolean isCompressed;
+    
+    public JagexArchive(byte datFile[]) {
+        Stream stream = new Stream(datFile);
+        int archiveSize = stream.getShortInt();
+        int actualFileSize = stream.getShortInt();
+        if (actualFileSize != archiveSize) {
+            byte out[] = new byte[archiveSize];
+            client.data.BZ2InputStream.decompressBuffer(out, archiveSize, datFile, actualFileSize, 6);
+            outputData = out;
+            stream = new Stream(outputData);
+            isCompressed = true;
         } else {
-            aByteArray93 = abyte0;
-            aBoolean99 = false;
+            outputData = datFile;
+            isCompressed = false;
         }
-        anInt94 = class1_sub1_sub2.getShort();
-        anIntArray95 = new int[anInt94];
-        anIntArray96 = new int[anInt94];
-        anIntArray97 = new int[anInt94];
-        anIntArray98 = new int[anInt94];
-        int k = class1_sub1_sub2.currentOffset + anInt94 * 10;
-        for (int l = 0; l < anInt94; l++) {
-            anIntArray95[l] = class1_sub1_sub2.getInt();
-            anIntArray96[l] = class1_sub1_sub2.getShortInt();
-            anIntArray97[l] = class1_sub1_sub2.getShortInt();
-            anIntArray98[l] = k;
-            k += anIntArray97[l];
+        readSize = stream.getShort();
+        myNameIndexes = new int[readSize];
+        myFileSizes = new int[readSize];
+        myOnDiskFileSizes = new int[readSize];
+        myFileOffsets = new int[readSize];
+        int k = stream.currentOffset + readSize * 10;
+        for (int pos = 0; pos < readSize; pos++) {
+            myNameIndexes[pos] = stream.getInt();
+            myFileSizes[pos] = stream.getShortInt();
+            myOnDiskFileSizes[pos] = stream.getShortInt();
+            myFileOffsets[pos] = k;
+            k += myOnDiskFileSizes[pos];
         }
     }
-
-    public byte[] getDataForName(String toLoad) {
-        byte abyte0[] = null;
-        int i = 0;
-        toLoad = toLoad.toUpperCase();
-        for (int j = 0; j < toLoad.length(); j++) {
-            i = (i * 61 + toLoad.charAt(j)) - 32;
+    
+    public byte[] getDataForName(String archiveToLoad) {
+        int intDatToLoad = 0;
+        archiveToLoad = archiveToLoad.toUpperCase();
+        for (int pos = 0; pos < archiveToLoad.length(); pos++) {
+            intDatToLoad = (intDatToLoad * 61 + archiveToLoad.charAt(pos)) - 32;
         }
-
-        for (int k = 0; k < anInt94; k++) {
-            if (anIntArray95[k] == i) {
-                if (abyte0 == null) {
-                    abyte0 = new byte[anIntArray96[k]];
+        byte loadedData[] = null;
+        for (int readLoop = 0; readLoop < readSize; readLoop++) {
+            if (myNameIndexes[readLoop] == intDatToLoad) {
+                if (loadedData == null) {
+                    loadedData = new byte[myFileSizes[readLoop]];
                 }
-                if (!aBoolean99) {
-                    Class4.method73(abyte0, anIntArray96[k], aByteArray93, anIntArray97[k], anIntArray98[k]);
+                if (!isCompressed) {
+                    client.data.BZ2InputStream.decompressBuffer(loadedData, myFileSizes[readLoop], outputData, myOnDiskFileSizes[readLoop], myFileOffsets[readLoop]);
                 } else {
-                    for (int l = 0; l < anIntArray96[k]; l++) {
-                        abyte0[l] = aByteArray93[anIntArray98[k] + l];
+                    for (int pos = 0; pos < myFileSizes[readLoop]; pos++) {
+                        loadedData[pos] = outputData[myFileOffsets[readLoop] + pos];
                     }
                 }
-                return abyte0;
+                return loadedData;
             }
         }
         return null;

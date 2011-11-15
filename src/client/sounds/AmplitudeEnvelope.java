@@ -2,7 +2,7 @@ package client.sounds;
 
 // Class 29.
 
-import client.Stream;
+import client.data.Stream;
 
 // 99% refactored.
 

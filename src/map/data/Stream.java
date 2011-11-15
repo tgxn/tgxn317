@@ -1,50 +1,52 @@
 package map.data;
 
+// Fully Renamed - gamerx - 14.11.11
+
 public class Stream {
     
-    public byte buffer[];
+    public byte streamBuffer[];
     public int currentOffset;
     
     public Stream() {
     }
 
-    public Stream(byte abyte0[]) {
-        buffer = abyte0;
+    public Stream(byte byteArray[]) {
+        streamBuffer = byteArray;
         currentOffset = 0;
     }
 
     public int getInt() {
         currentOffset += 4;
-        return ((buffer[currentOffset - 4] & 0xff) << 24)
-                + ((buffer[currentOffset - 3] & 0xff) << 16)
-                + ((buffer[currentOffset - 2] & 0xff) << 8)
-                + (buffer[currentOffset - 1] & 0xff);
+        return ((streamBuffer[currentOffset - 4] & 0xff) << 24)
+                + ((streamBuffer[currentOffset - 3] & 0xff) << 16)
+                + ((streamBuffer[currentOffset - 2] & 0xff) << 8)
+                + (streamBuffer[currentOffset - 1] & 0xff);
     }
 
     public int getUnsignedByte() {
-        return buffer[currentOffset++] & 0xff;
+        return streamBuffer[currentOffset++] & 0xff;
     }
 
     public byte getByte() {
-        return buffer[currentOffset++];
+        return streamBuffer[currentOffset++];
     }
 
     public int getShort() {
         currentOffset += 2;
-        return ((buffer[currentOffset - 2] & 0xff) << 8)
-                + (buffer[currentOffset - 1] & 0xff);
+        return ((streamBuffer[currentOffset - 2] & 0xff) << 8)
+                + (streamBuffer[currentOffset - 1] & 0xff);
     }
-
+    
     public String getString() {
-        int i = currentOffset;
-        while (buffer[currentOffset++] != 10) ;
-        return new String(buffer, i, currentOffset - i - 1);
+        int offset = currentOffset;
+        while (streamBuffer[currentOffset++] != 10);
+        return new String(streamBuffer, offset, currentOffset - offset - 1);
     }
-
+    
     public int getShortInt() {
         currentOffset += 3;
-        return ((buffer[currentOffset - 3] & 0xff) << 16)
-                + ((buffer[currentOffset - 2] & 0xff) << 8)
-                + (buffer[currentOffset - 1] & 0xff);
+        return ((streamBuffer[currentOffset - 3] & 0xff) << 16)
+                + ((streamBuffer[currentOffset - 2] & 0xff) << 8)
+                + (streamBuffer[currentOffset - 1] & 0xff);
     }
 }

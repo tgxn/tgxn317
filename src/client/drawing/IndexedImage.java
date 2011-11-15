@@ -2,8 +2,8 @@ package client.drawing;
 
 // Fully Renamed.
 
-import client.Stream;
-import client.fileio.JagexArchive;
+import client.data.Stream;
+import client.data.JagexArchive;
 
 public final class IndexedImage extends DrawingArea {
     

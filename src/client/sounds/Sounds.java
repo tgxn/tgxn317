@@ -1,6 +1,6 @@
 package client.sounds;
 
-import client.Stream;
+import client.data.Stream;
 import client.sounds.SoundTrack;
 
 

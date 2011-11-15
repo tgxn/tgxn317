@@ -1,6 +1,6 @@
 package client.sounds;
 
-import client.Stream;
+import client.data.Stream;
 
 public class Class39 { //FrequencyGenerator?
 

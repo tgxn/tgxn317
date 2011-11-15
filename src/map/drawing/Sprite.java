@@ -1,14 +1,8 @@
 package map.drawing;
 
-
-
-
-
-
-import map.drawing.DrawingArea;
 import java.awt.*;
 import java.awt.image.PixelGrabber;
-import map.RSApplet;
+import map.instance.RSApplet;
 
 public class Sprite extends DrawingArea {
     

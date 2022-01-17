@@ -61,7 +61,7 @@ public final class TextClass {
     }
     
     // Something to do with the login ip address and dns lookups. not sure what?
-    public static String method586(int i) {
+    public static String decodeDNS(int i) {
         return (i >> 24 & 0xff) + "." + (i >> 16 & 0xff) + "." + (i >> 8 & 0xff) + "." + (i & 0xff);
     }
 

@@ -7,7 +7,7 @@ import client.object.ObjectDef;
 import client.data.Stream;
 import client.drawing.Rasterizer;
 import client.ondemand.OnDemandFetcher;
-import client.animation.AnimableObject;
+import client.animation.ObjectOnTile;
 import client.animation.Entity;
 
 public final class MapRegion {
@@ -541,7 +541,7 @@ public final class MapRegion {
             if (class46.animationID == -1 && class46.configObjectIDs == null) {
                 obj = class46.renderObject(22, j1, k1, l1, i2, j2, -1);
             } else {
-                obj = new AnimableObject(i1, j1, 22, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
+                obj = new ObjectOnTile(i1, j1, 22, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
             }
             class25.method280(k, k2, i, ((Entity) (obj)), byte0, l2, l);
             if (class46.aBoolean767 && class46.hasActions && class11 != null) {
@@ -554,7 +554,7 @@ public final class MapRegion {
             if (class46.animationID == -1 && class46.configObjectIDs == null) {
                 obj1 = class46.renderObject(10, j1, k1, l1, i2, j2, -1);
             } else {
-                obj1 = new AnimableObject(i1, j1, 10, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
+                obj1 = new ObjectOnTile(i1, j1, 10, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
             }
             if (obj1 != null) {
                 int i5 = 0;
@@ -604,7 +604,7 @@ public final class MapRegion {
             if (class46.animationID == -1 && class46.configObjectIDs == null) {
                 obj2 = class46.renderObject(j, j1, k1, l1, i2, j2, -1);
             } else {
-                obj2 = new AnimableObject(i1, j1, j, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
+                obj2 = new ObjectOnTile(i1, j1, j, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
             }
             class25.method284(l2, k2, 1, ((Entity) (obj2)), 1, k, 0, (byte) 110, i, l);
             if (j >= 12 && j <= 17 && j != 13 && k > 0) {
@@ -620,7 +620,7 @@ public final class MapRegion {
             if (class46.animationID == -1 && class46.configObjectIDs == null) {
                 obj3 = class46.renderObject(0, j1, k1, l1, i2, j2, -1);
             } else {
-                obj3 = new AnimableObject(i1, j1, 0, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
+                obj3 = new ObjectOnTile(i1, j1, 0, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
             }
             class25.method282(anIntArray152[j1], ((Entity) (obj3)), true, l2, i, byte0, l, null, k2, 0, k);
             if (j1 == 0) {
@@ -669,7 +669,7 @@ public final class MapRegion {
             if (class46.animationID == -1 && class46.configObjectIDs == null) {
                 obj4 = class46.renderObject(1, j1, k1, l1, i2, j2, -1);
             } else {
-                obj4 = new AnimableObject(i1, j1, 1, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
+                obj4 = new ObjectOnTile(i1, j1, 1, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
             }
             class25.method282(anIntArray140[j1], ((Entity) (obj4)), true, l2, i, byte0, l, null, k2, 0, k);
             if (class46.aBoolean779) {
@@ -696,8 +696,8 @@ public final class MapRegion {
                 obj11 = class46.renderObject(2, 4 + j1, k1, l1, i2, j2, -1);
                 obj12 = class46.renderObject(2, i3, k1, l1, i2, j2, -1);
             } else {
-                obj11 = new AnimableObject(i1, 4 + j1, 2, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
-                obj12 = new AnimableObject(i1, i3, 2, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
+                obj11 = new ObjectOnTile(i1, 4 + j1, 2, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
+                obj12 = new ObjectOnTile(i1, i3, 2, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
             }
             class25.method282(anIntArray152[j1], ((Entity) (obj11)), true, l2, i, byte0, l, ((Entity) (obj12)), k2, anIntArray152[i3], k);
             if (class46.aBoolean764) {
@@ -728,7 +728,7 @@ public final class MapRegion {
             if (class46.animationID == -1 && class46.configObjectIDs == null) {
                 obj5 = class46.renderObject(3, j1, k1, l1, i2, j2, -1);
             } else {
-                obj5 = new AnimableObject(i1, j1, 3, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
+                obj5 = new ObjectOnTile(i1, j1, 3, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
             }
             class25.method282(anIntArray140[j1], ((Entity) (obj5)), true, l2, i, byte0, l, null, k2, 0, k);
             if (class46.aBoolean779) {
@@ -752,7 +752,7 @@ public final class MapRegion {
             if (class46.animationID == -1 && class46.configObjectIDs == null) {
                 obj6 = class46.renderObject(j, j1, k1, l1, i2, j2, -1);
             } else {
-                obj6 = new AnimableObject(i1, j1, j, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
+                obj6 = new ObjectOnTile(i1, j1, j, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
             }
             class25.method284(l2, k2, 1, ((Entity) (obj6)), 1, k, 0, (byte) 110, i, l);
             if (class46.aBoolean767 && class11 != null) {
@@ -787,7 +787,7 @@ public final class MapRegion {
             if (class46.animationID == -1 && class46.configObjectIDs == null) {
                 obj7 = class46.renderObject(4, 0, k1, l1, i2, j2, -1);
             } else {
-                obj7 = new AnimableObject(i1, 0, 4, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
+                obj7 = new ObjectOnTile(i1, 0, 4, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
             }
             class25.method283(l2, i, j1 * 512, k, 0, k2, ((Entity) (obj7)), l, byte0, 0, anIntArray152[j1]);
             return;
@@ -802,7 +802,7 @@ public final class MapRegion {
             if (class46.animationID == -1 && class46.configObjectIDs == null) {
                 obj13 = class46.renderObject(4, 0, k1, l1, i2, j2, -1);
             } else {
-                obj13 = new AnimableObject(i1, 0, 4, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
+                obj13 = new ObjectOnTile(i1, 0, 4, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
             }
             class25.method283(l2, i, j1 * 512, k, anIntArray137[j1] * i4, k2, ((Entity) (obj13)), l, byte0, anIntArray144[j1] * i4, anIntArray152[j1]);
             return;
@@ -812,7 +812,7 @@ public final class MapRegion {
             if (class46.animationID == -1 && class46.configObjectIDs == null) {
                 obj8 = class46.renderObject(4, 0, k1, l1, i2, j2, -1);
             } else {
-                obj8 = new AnimableObject(i1, 0, 4, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
+                obj8 = new ObjectOnTile(i1, 0, 4, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
             }
             class25.method283(l2, i, j1, k, 0, k2, ((Entity) (obj8)), l, byte0, 0, 256);
             return;
@@ -822,7 +822,7 @@ public final class MapRegion {
             if (class46.animationID == -1 && class46.configObjectIDs == null) {
                 obj9 = class46.renderObject(4, 0, k1, l1, i2, j2, -1);
             } else {
-                obj9 = new AnimableObject(i1, 0, 4, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
+                obj9 = new ObjectOnTile(i1, 0, 4, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
             }
             class25.method283(l2, i, j1, k, 0, k2, ((Entity) (obj9)), l, byte0, 0, 512);
             return;
@@ -832,7 +832,7 @@ public final class MapRegion {
             if (class46.animationID == -1 && class46.configObjectIDs == null) {
                 obj10 = class46.renderObject(4, 0, k1, l1, i2, j2, -1);
             } else {
-                obj10 = new AnimableObject(i1, 0, 4, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
+                obj10 = new ObjectOnTile(i1, 0, 4, l1, (byte) 7, i2, k1, j2, class46.animationID, true);
             }
             class25.method283(l2, i, j1, k, 0, k2, ((Entity) (obj10)), l, byte0, 0, 768);
         }
@@ -1127,7 +1127,7 @@ public final class MapRegion {
             if (class46.animationID == -1 && class46.configObjectIDs == null) {
                 obj = class46.renderObject(22, i, l1, i2, j2, k2, -1);
             } else {
-                obj = new AnimableObject(j1, i, 22, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
+                obj = new ObjectOnTile(j1, i, 22, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
             }
             class25.method280(k1, l2, j, ((Entity) (obj)), byte1, i3, i1);
             if (class46.aBoolean767 && class46.hasActions) {
@@ -1140,7 +1140,7 @@ public final class MapRegion {
             if (class46.animationID == -1 && class46.configObjectIDs == null) {
                 obj1 = class46.renderObject(10, i, l1, i2, j2, k2, -1);
             } else {
-                obj1 = new AnimableObject(j1, i, 10, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
+                obj1 = new ObjectOnTile(j1, i, 10, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
             }
             if (obj1 != null) {
                 int j5 = 0;
@@ -1168,7 +1168,7 @@ public final class MapRegion {
             if (class46.animationID == -1 && class46.configObjectIDs == null) {
                 obj2 = class46.renderObject(k, i, l1, i2, j2, k2, -1);
             } else {
-                obj2 = new AnimableObject(j1, i, k, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
+                obj2 = new ObjectOnTile(j1, i, k, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
             }
             class25.method284(i3, l2, 1, ((Entity) (obj2)), 1, k1, 0, (byte) 110, j, i1);
             if (class46.aBoolean767) {
@@ -1181,7 +1181,7 @@ public final class MapRegion {
             if (class46.animationID == -1 && class46.configObjectIDs == null) {
                 obj3 = class46.renderObject(0, i, l1, i2, j2, k2, -1);
             } else {
-                obj3 = new AnimableObject(j1, i, 0, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
+                obj3 = new ObjectOnTile(j1, i, 0, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
             }
             class25.method282(anIntArray152[i], ((Entity) (obj3)), true, i3, j, byte1, i1, null, l2, 0, k1);
             if (class46.aBoolean767) {
@@ -1194,7 +1194,7 @@ public final class MapRegion {
             if (class46.animationID == -1 && class46.configObjectIDs == null) {
                 obj4 = class46.renderObject(1, i, l1, i2, j2, k2, -1);
             } else {
-                obj4 = new AnimableObject(j1, i, 1, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
+                obj4 = new ObjectOnTile(j1, i, 1, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
             }
             class25.method282(anIntArray140[i], ((Entity) (obj4)), true, i3, j, byte1, i1, null, l2, 0, k1);
             if (class46.aBoolean767) {
@@ -1210,8 +1210,8 @@ public final class MapRegion {
                 obj11 = class46.renderObject(2, 4 + i, l1, i2, j2, k2, -1);
                 obj12 = class46.renderObject(2, j3, l1, i2, j2, k2, -1);
             } else {
-                obj11 = new AnimableObject(j1, 4 + i, 2, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
-                obj12 = new AnimableObject(j1, j3, 2, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
+                obj11 = new ObjectOnTile(j1, 4 + i, 2, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
+                obj12 = new ObjectOnTile(j1, j3, 2, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
             }
             class25.method282(anIntArray152[i], ((Entity) (obj11)), true, i3, j, byte1, i1, ((Entity) (obj12)), l2, anIntArray152[j3], k1);
             if (class46.aBoolean767) {
@@ -1224,7 +1224,7 @@ public final class MapRegion {
             if (class46.animationID == -1 && class46.configObjectIDs == null) {
                 obj5 = class46.renderObject(3, i, l1, i2, j2, k2, -1);
             } else {
-                obj5 = new AnimableObject(j1, i, 3, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
+                obj5 = new ObjectOnTile(j1, i, 3, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
             }
             class25.method282(anIntArray140[i], ((Entity) (obj5)), true, i3, j, byte1, i1, null, l2, 0, k1);
             if (class46.aBoolean767) {
@@ -1237,7 +1237,7 @@ public final class MapRegion {
             if (class46.animationID == -1 && class46.configObjectIDs == null) {
                 obj6 = class46.renderObject(k, i, l1, i2, j2, k2, -1);
             } else {
-                obj6 = new AnimableObject(j1, i, k, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
+                obj6 = new ObjectOnTile(j1, i, k, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
             }
             class25.method284(i3, l2, 1, ((Entity) (obj6)), 1, k1, 0, (byte) 110, j, i1);
             if (class46.aBoolean767) {
@@ -1272,7 +1272,7 @@ public final class MapRegion {
             if (class46.animationID == -1 && class46.configObjectIDs == null) {
                 obj7 = class46.renderObject(4, 0, l1, i2, j2, k2, -1);
             } else {
-                obj7 = new AnimableObject(j1, 0, 4, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
+                obj7 = new ObjectOnTile(j1, 0, 4, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
             }
             class25.method283(i3, j, i * 512, k1, 0, l2, ((Entity) (obj7)), i1, byte1, 0, anIntArray152[i]);
             return;
@@ -1287,7 +1287,7 @@ public final class MapRegion {
             if (class46.animationID == -1 && class46.configObjectIDs == null) {
                 obj13 = class46.renderObject(4, 0, l1, i2, j2, k2, -1);
             } else {
-                obj13 = new AnimableObject(j1, 0, 4, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
+                obj13 = new ObjectOnTile(j1, 0, 4, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
             }
             class25.method283(i3, j, i * 512, k1, anIntArray137[i] * j4, l2, ((Entity) (obj13)), i1, byte1, anIntArray144[i] * j4, anIntArray152[i]);
             return;
@@ -1297,7 +1297,7 @@ public final class MapRegion {
             if (class46.animationID == -1 && class46.configObjectIDs == null) {
                 obj8 = class46.renderObject(4, 0, l1, i2, j2, k2, -1);
             } else {
-                obj8 = new AnimableObject(j1, 0, 4, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
+                obj8 = new ObjectOnTile(j1, 0, 4, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
             }
             class25.method283(i3, j, i, k1, 0, l2, ((Entity) (obj8)), i1, byte1, 0, 256);
             return;
@@ -1307,7 +1307,7 @@ public final class MapRegion {
             if (class46.animationID == -1 && class46.configObjectIDs == null) {
                 obj9 = class46.renderObject(4, 0, l1, i2, j2, k2, -1);
             } else {
-                obj9 = new AnimableObject(j1, 0, 4, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
+                obj9 = new ObjectOnTile(j1, 0, 4, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
             }
             class25.method283(i3, j, i, k1, 0, l2, ((Entity) (obj9)), i1, byte1, 0, 512);
             return;
@@ -1317,7 +1317,7 @@ public final class MapRegion {
             if (class46.animationID == -1 && class46.configObjectIDs == null) {
                 obj10 = class46.renderObject(4, 0, l1, i2, j2, k2, -1);
             } else {
-                obj10 = new AnimableObject(j1, 0, 4, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
+                obj10 = new ObjectOnTile(j1, 0, 4, i2, (byte) 7, j2, l1, k2, class46.animationID, true);
             }
             class25.method283(i3, j, i, k1, 0, l2, ((Entity) (obj10)), i1, byte1, 0, 768);
         }

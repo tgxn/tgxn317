@@ -1,20 +1,26 @@
 package client.tile;
 
+// Fully Refactored - gamerx - 16.11.11
+
 import client.animation.Entity;
 
-
+/**
+ *
+ * @knownas Class28, Object5
+ * @author gamerx
+ */
 public final class InteractableObject {
     
-    public int anInt517;
-    public int anInt518;
-    public int anInt519;
-   public  int anInt520;
+    public int zPos;
+    public int worldZ;
+    public int worldX;
+    public int worldY;
     public Entity heldEntity;
-    public int anInt522;
-    public int anInt523;
-    public int anInt524;
-    public int anInt525;
-    public int anInt526;
+    public int rotation;
+    public int tileLeft;
+    public int tileRight;
+    public int tileTop;
+    public int tileBottom;
     public int anInt527;
     public int anInt528;
     public int uid;

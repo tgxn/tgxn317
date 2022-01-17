@@ -37,7 +37,7 @@ public class RSInterface {
     public int hoverType;
     public int invSpritePadX;
     public int disabledColor;
-    public int disabledMediaType;
+    public int mediaType;
     public int disabledMediaID;
     public boolean deletesTargetSlot;
     public int parentID;
@@ -553,7 +553,7 @@ public class RSInterface {
             if (rsInterface.interfaceType == 6) {
                 int readValue = data.readUnsignedByte();
                 if (readValue != 0) {
-                    rsInterface.disabledMediaType = 1;
+                    rsInterface.mediaType = 1;
                     rsInterface.disabledMediaID = (readValue - 1 << 8) + data.readUnsignedByte();
                 }
                 readValue = data.readUnsignedByte();
@@ -661,7 +661,7 @@ public class RSInterface {
             model = NPCDef.forID(modelID).getHeadModel();
         }
         if (modelType == 3) {
-            model = Client.myPlayer.getPlayerModel();
+            model = Client.sessionPlayer.getPlayerModel();
         }
         if (modelType == 4) {
             model = ItemDef.forID(modelID).getInventoryModel(50);
@@ -705,7 +705,7 @@ public class RSInterface {
         if (enabled) {
             animatedModel = getModelByType(enabledMediaType, enabledMediaID);
         } else {
-            animatedModel = getModelByType(disabledMediaType, disabledMediaID);
+            animatedModel = getModelByType(mediaType, disabledMediaID);
         }
         if (animatedModel == null) {
             return null;

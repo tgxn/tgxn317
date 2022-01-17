@@ -1,23 +1,31 @@
 package client.tile;
 
+// Fully Renamed - gamerx - 16.11.11
+
+/**
+ * Tile handler for plain tiles.
+ *
+ * @knownas Class43
+ * @author gamerx
+ */
 public final class PlainTile {
 
-    public int anInt716;
-    public int anInt717;
-    public int anInt718;
-    public int anInt719;
+    public int colourA;
+    public int colourB;
+    public int colourD;
+    public int colourC;
     public int texture;
-    public boolean aBoolean721;
+    public boolean flat;
     public int rgbColor;
 
-    public PlainTile(int i, int j, int k, int l, int i1, int j1, boolean flag) {
-        aBoolean721 = true;
-        anInt716 = i;
-        anInt717 = j;
-        anInt718 = k;
-        anInt719 = l;
-        texture = i1;
-        rgbColor = j1;
-        aBoolean721 = flag;
+    public PlainTile(int cA, int cB, int cD, int cC, int tex, int cRGB, boolean isFlat) {
+        flat = true;
+        colourA = cA;
+        colourB = cB;
+        colourD = cD;
+        colourC = cC;
+        texture = tex;
+        rgbColor = cRGB;
+        flat = isFlat;
     }
 }

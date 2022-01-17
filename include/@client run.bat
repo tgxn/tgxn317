@@ -22,7 +22,7 @@ echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 echo    . C l i e n t   o u t p u t   b e l o w .
 echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 echo.
-"%HOMEDRIVE%\Program Files (x86)\Java\jre6\bin\java.exe" -Xmx1000m -cp .;lib/jl1.0.1.jar;lib/basicplayer3.0.jar client/Client
+java -Xmx1000m -cp .;lib/jl1.0.1.jar;lib/basicplayer3.0.jar client/Client
 exit
 
 
